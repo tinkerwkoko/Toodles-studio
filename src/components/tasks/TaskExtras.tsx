@@ -44,37 +44,37 @@ export function TaskExtras({
         </div>
       </fieldset>
 
-      <div className="sm:col-span-2">
-        <label className="flex min-h-11 cursor-pointer items-center gap-3 rounded-2xl border border-lilac-200 bg-cream px-4 py-2.5">
+      <div className="sm:col-span-1 flex flex-col justify-end">
+        <label className="flex min-h-[42px] cursor-pointer items-center gap-2.5 rounded-2xl border border-lilac-200 bg-cream px-3 py-2 transition hover:bg-lilac-50">
           <input
             type="checkbox"
             checked={values.reminder}
             onChange={(event) => patch({ reminder: event.target.checked })}
-            className="h-5 w-5 accent-lilac-500"
+            className="h-4 w-4 rounded accent-accent shrink-0"
           />
-          <span className="text-sm font-semibold text-ink">
+          <span className="text-xs font-title font-medium text-ink leading-tight">
             Remind me on this device
-            <span className="block text-xs font-normal text-ink-soft">
-              Only while Toodles is open, and only after you allow notifications.
+            <span className="block text-[11px] font-sans font-normal text-ink-soft">
+              While open, with notifications allowed
             </span>
           </span>
         </label>
       </div>
 
-      <div className="sm:col-span-2">
-        <Field label="Tags" htmlFor="task-tags" hint="Press Enter or type a comma to add a tag.">
-          <div className="flex flex-wrap items-center gap-2 rounded-2xl border border-lilac-200 bg-cream p-2">
+      <div className="sm:col-span-1">
+        <Field label="Tags" htmlFor="task-tags">
+          <div className="flex flex-wrap items-center gap-1.5 rounded-2xl border border-lilac-200 bg-cream px-2 py-1.5 min-h-[42px]">
             {values.tags.map((tag) => (
               <span
                 key={tag}
-                className="inline-flex items-center gap-1 rounded-full bg-lilac-100 px-2.5 py-1 text-xs font-bold text-lilac-700"
+                className="inline-flex items-center gap-1 rounded-full bg-lilac-100 px-2 py-0.5 text-xs font-sans text-ink"
               >
                 {tag}
                 <button
                   type="button"
                   aria-label={`Remove tag ${tag}`}
                   onClick={() => patch({ tags: values.tags.filter((item) => item !== tag) })}
-                  className="grid h-5 w-5 place-items-center rounded-full hover:bg-lilac-200"
+                  className="grid h-4 w-4 place-items-center rounded-full hover:bg-lilac-200"
                 >
                   <span aria-hidden="true">×</span>
                 </button>
@@ -91,8 +91,8 @@ export function TaskExtras({
                 }
               }}
               onBlur={onCommitTag}
-              placeholder={values.tags.length === 0 ? 'study, home, later' : 'Add another'}
-              className="min-w-32 flex-1 bg-transparent px-2 py-1.5 text-sm outline-none placeholder:text-ink-soft/70"
+              placeholder={values.tags.length === 0 ? 'study, home...' : '+ tag'}
+              className="min-w-20 flex-1 bg-transparent px-1 text-xs outline-none placeholder:text-ink-soft/70 font-sans"
             />
           </div>
         </Field>

@@ -5,6 +5,11 @@ import tailwindcss from '@tailwindcss/vite';
 // Toodles is a fully static, local-first app: no backend, no env vars, no keys.
 export default defineConfig({
   plugins: [react(), tailwindcss()],
+  server: {
+    host: '0.0.0.0',
+    port: 3000,
+    allowedHosts: true,
+  },
   build: {
     outDir: 'dist',
   },

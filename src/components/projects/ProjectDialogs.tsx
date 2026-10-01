@@ -49,6 +49,8 @@ export function ProjectDialogs({
             description: project.description,
             color: project.color,
             emoji: project.emoji,
+            icon: project.icon,
+            cover: project.cover,
           }}
           submitLabel="Save changes"
           onSubmit={saveProject}
@@ -70,7 +72,7 @@ export function ProjectDialogs({
               onClick={() => {
                 actions.deleteProject(project.id, { mode: 'move', moveTo: null });
                 onCloseDelete();
-                pushToast('Project deleted — its tasks were kept');
+                pushToast('Project deleted: its tasks were kept');
                 navigate('/projects');
               }}
             >

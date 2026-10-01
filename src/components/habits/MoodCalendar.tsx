@@ -1,7 +1,9 @@
 import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { CatFace } from '../CatFace';
 import type { DateString, MoodLevel, MoodLog } from '../../types';
 import { WEEKDAY_MIN, formatMonthYear, monthGrid, todayString } from '../../lib/date';
 import { moodMeta } from '../../lib/mood';
+import { accent } from '../../lib/color';
 import { cx } from '../../lib/cx';
 
 export interface MoodCalendarProps {
@@ -61,6 +63,7 @@ export function MoodCalendar({
 
         {cells.map((cell) => {
           const mood = byDate.get(cell.date);
+          const meta = mood ? moodMeta(mood) : null;
           const isSelected = cell.date === selected;
           return (
             <button
@@ -68,32 +71,33 @@ export function MoodCalendar({
               type="button"
               role="gridcell"
               onClick={() => onSelect(cell.date)}
-              aria-label={`${cell.date}${mood ? ` — ${moodMeta(mood).label}` : ' — no mood logged'}`}
+              aria-label={`${cell.date}${mood ? `: ${meta?.label}` : ': no mood logged'}`}
               aria-pressed={isSelected}
               className={cx(
-                'flex aspect-square flex-col items-center justify-center rounded-xl border text-xs font-bold transition',
-                !cell.inMonth && 'opacity-40',
+                'relative flex aspect-square flex-col items-center justify-center rounded-2xl border text-xs font-bold transition p-1',
+                !cell.inMonth && 'opacity-25',
                 isSelected
-                  ? 'border-lilac-300 bg-lilac-300 text-ink'
-                  : 'border-lilac-200 bg-lilac-50 text-ink hover:bg-lilac-100',
-                cell.date === today && !isSelected && 'ring-2 ring-lilac-300',
+                  ? 'border-accent ring-2 ring-accent/40 shadow-sm'
+                  : 'border-lilac-200 hover:border-accent/40',
+                mood
+                  ? meta ? accent(meta.color).soft : 'bg-lilac-50'
+                  : 'bg-cream text-ink-soft hover:bg-lilac-50',
+                cell.date === today && !isSelected && 'ring-2 ring-accent/30',
               )}
             >
-              <span>{cell.day}</span>
-              <span
-                aria-hidden="true"
-                className={cx(
-                  'mt-0.5 h-2.5 w-2.5 rounded-full',
-                  mood ? 'bg-lilac-300' : 'bg-transparent',
-                )}
-              />
+              <span className="text-[11px] leading-none mb-0.5 text-ink font-title">{cell.day}</span>
+              {mood ? (
+                <CatFace mood={mood} size={26} decorative />
+              ) : (
+                <span className="h-2.5 w-2.5 rounded-full bg-lilac-200/50" />
+              )}
             </button>
           );
         })}
       </div>
 
       <p className="text-xs text-ink-soft">
-        Dots are days you logged a mood. Pick any day to change what you wrote.
+        The cat faces show how you felt each day. Pick any day to log or update.
       </p>
     </div>
   );

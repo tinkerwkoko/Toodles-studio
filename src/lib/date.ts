@@ -237,6 +237,7 @@ export function formatDurationWords(from: DateString, to: DateString): string {
 
 export function greetingTimeOfDay(now = new Date()): 'morning' | 'afternoon' | 'evening' | 'night' {
   const hour = now.getHours();
+  if (hour < 5) return 'night';
   if (hour < 12) return 'morning';
   if (hour < 18) return 'afternoon';
   if (hour < 22) return 'evening';

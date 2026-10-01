@@ -135,7 +135,7 @@ export function TaskForm({
 
       <div className="flex flex-col gap-3 border-t border-lilac-200 pt-4 sm:flex-row sm:items-center sm:justify-between">
         <p className="text-xs text-ink-soft">
-          {hint ?? 'A title is all you need — everything else can wait until later.'}
+          {hint ?? 'A title is all you need. Everything else can wait until later.'}
         </p>
         <div className="flex items-center gap-2">
           {onDelete && (

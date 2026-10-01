@@ -5,6 +5,7 @@ import type {
   BoardColumn,
   DateString,
   DiaryEntry,
+  FocusSession,
   Habit,
   MoodLevel,
   NewDiaryEntryInput,
@@ -33,6 +34,7 @@ import {
   storageAvailable,
   writeData,
 } from './storage';
+import { applyTheme } from '../lib/theme';
 import {
   addSubtaskToTask,
   clearMood,
@@ -91,7 +93,11 @@ export function ToodlesProvider({ children }: { children: ReactNode }) {
     setData((current) => updater(current));
   }, []);
 
-  // Keep two tabs of the same browser in sync — still device-local, no server.
+  useEffect(() => {
+    applyTheme(data.settings.theme);
+  }, [data.settings.theme]);
+
+  // Keep two tabs of the same browser in sync: still device-local, no server.
   useEffect(() => {
     function handleStorage(event: StorageEvent): void {
       if (event.key !== 'toodles' || !event.newValue) return;
@@ -192,6 +198,18 @@ export function ToodlesProvider({ children }: { children: ReactNode }) {
       deleteHabit: (id) => mutate((current) => removeHabit(current, id)),
       toggleHabitCheck: (habitId, date) =>
         mutate((current) => toggleHabitCheck(current, habitId, date)),
+
+      logFocusSession: (sessionInput: Omit<FocusSession, 'id'>) => {
+        const session: FocusSession = {
+          ...sessionInput,
+          id: newId(),
+        };
+        mutate((current) => ({
+          ...current,
+          focusSessions: [session, ...(current.focusSessions ?? [])],
+        }));
+        return session;
+      },
 
       updateSettings: (patch: Partial<AppSettings>) =>
         mutate((current) => ({ ...current, settings: { ...current.settings, ...patch } })),

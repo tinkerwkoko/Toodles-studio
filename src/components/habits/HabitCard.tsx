@@ -76,7 +76,7 @@ export function HabitCard({ habit, checks, weekStartsOn, onEdit }: HabitCardProp
               type="button"
               disabled={!scheduled}
               onClick={() => actions.toggleHabitCheck(habit.id, day.date)}
-              aria-label={`${habit.name} on ${day.date}${done ? ' — done' : ''}`}
+              aria-label={`${habit.name} on ${day.date}${done ? ': done' : ''}`}
               aria-pressed={done}
               className={cx(
                 'grid h-10 flex-1 place-items-center rounded-xl border text-xs font-bold transition',

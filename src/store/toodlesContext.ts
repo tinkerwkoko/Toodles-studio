@@ -5,6 +5,7 @@ import type {
   BoardColumn,
   DateString,
   DiaryEntry,
+  FocusSession,
   Habit,
   MoodLevel,
   NewDiaryEntryInput,
@@ -59,6 +60,8 @@ export interface ToodlesActions {
   updateHabit: (id: string, patch: Partial<Habit>) => void;
   deleteHabit: (id: string) => void;
   toggleHabitCheck: (habitId: string, date: DateString) => void;
+
+  logFocusSession: (session: Omit<FocusSession, 'id'>) => FocusSession;
 
   updateSettings: (patch: Partial<AppSettings>) => void;
   exportData: () => string;

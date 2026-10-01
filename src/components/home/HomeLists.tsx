@@ -61,7 +61,7 @@ export function HomeLists({ overdue, upcoming, projects, onOpenTask, onCreate }:
           </Link>
         </div>
         {upcoming.length === 0 ? (
-          <p className="text-sm text-ink-soft">Nothing planned yet — a good time to look ahead.</p>
+          <p className="text-sm text-ink-soft">Nothing planned yet. A good time to look ahead.</p>
         ) : (
           <ul className="space-y-1.5">
             {upcoming.slice(0, 3).map((task) => (

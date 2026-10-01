@@ -3,7 +3,7 @@ import { Cat, type CatPose } from '../Cat';
 import { cx } from '../../lib/cx';
 
 export interface EmptyStateProps {
-  /** One warm sentence — never a cold "no data" message. */
+  /** One warm sentence: never a cold "no data" message. */
   sentence: string;
   title?: string;
   actionLabel?: string;

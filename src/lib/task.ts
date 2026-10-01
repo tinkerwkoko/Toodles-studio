@@ -18,8 +18,15 @@ export function isTaskOverdue(task: Task): boolean {
   return task.status === 'todo' && isPast(task.dueDate);
 }
 
-export function isTaskDueToday(task: Task): boolean {
-  return task.status === 'todo' && task.dueDate === todayString();
+export function isTaskDueToday(task: Task, today = todayString()): boolean {
+  if (task.status !== 'todo') return false;
+  // If any task starts today regardless of the deadline, it should be in today's list
+  if (task.startDate === today) return true;
+  // If the deadline is today
+  if (task.dueDate === today) return true;
+  // If the task started on or before today and is still active
+  if (task.startDate && task.startDate <= today) return true;
+  return false;
 }
 
 export function isTaskCompletedToday(task: Task, today = todayString()): boolean {
@@ -30,13 +37,18 @@ export function filterByScope(tasks: Task[], scope: TaskScope): Task[] {
   const today = todayString();
   switch (scope) {
     case 'today':
-      return tasks.filter((task) => task.status === 'todo' && task.dueDate === today);
+      return tasks.filter((task) => isTaskDueToday(task, today));
     case 'upcoming':
       return tasks.filter(
-        (task) => task.status === 'todo' && !!task.dueDate && task.dueDate > today,
+        (task) =>
+          task.status === 'todo' &&
+          !isTaskDueToday(task, today) &&
+          ((!!task.dueDate && task.dueDate > today) || (!!task.startDate && task.startDate > today)),
       );
     case 'overdue':
-      return tasks.filter((task) => task.status === 'todo' && !!task.dueDate && task.dueDate < today);
+      return tasks.filter(
+        (task) => task.status === 'todo' && !!task.dueDate && task.dueDate < today,
+      );
     case 'completed':
       return tasks.filter((task) => task.status === 'done');
     case 'all':

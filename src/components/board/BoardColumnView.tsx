@@ -155,7 +155,7 @@ export function BoardColumnView({
         body={
           <p>
             The column disappears. Its {tasks.length === 0 ? 'cards' : `${tasks.length} card${tasks.length === 1 ? '' : 's'}`}{' '}
-            {total > 1 ? 'move to the first remaining column — nothing is deleted.' : 'would be removed along with it.'}
+            {total > 1 ? 'move to the first remaining column. Nothing is deleted.' : 'would be removed along with it.'}
           </p>
         }
         onCancel={() => setConfirmDelete(false)}

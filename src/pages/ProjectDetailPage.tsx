@@ -18,7 +18,7 @@ import { useUi } from '../store/useUi';
 
 type ProjectView = 'list' | 'board';
 
-/** `/projects/:id` — project header, task list and kanban board. */
+/** `/projects/:id`: project header, task list and kanban board. */
 export function ProjectDetailPage() {
   const { id: projectId } = useParams();
   const navigate = useNavigate();

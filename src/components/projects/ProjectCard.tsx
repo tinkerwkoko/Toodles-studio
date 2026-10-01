@@ -3,6 +3,7 @@ import { Columns3, ListChecks } from 'lucide-react';
 import type { BoardColumn, Project, Task } from '../../types';
 import { accent } from '../../lib/color';
 import { ProgressBar } from '../ui/ProgressBar';
+import { ProjectIconDisplay } from './ProjectIconDisplay';
 import { cx } from '../../lib/cx';
 
 export interface ProjectCardProps {
@@ -30,9 +31,12 @@ export function ProjectCard({ project, tasks, columns }: ProjectCardProps) {
       <div className="flex items-start gap-3">
         <span
           aria-hidden="true"
-          className={cx('grid h-12 w-12 shrink-0 place-items-center rounded-2xl text-2xl', tone.soft)}
+          className={cx(
+            'grid h-12 w-12 shrink-0 place-items-center rounded-2xl overflow-hidden',
+            tone.soft,
+          )}
         >
-          {project.emoji}
+          <ProjectIconDisplay icon={project.icon} emoji={project.emoji} size={22} />
         </span>
         <div className="min-w-0 flex-1">
           <h2 className="truncate font-title text-lg font-medium text-ink">{project.name}</h2>

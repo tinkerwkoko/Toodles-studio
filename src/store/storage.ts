@@ -13,6 +13,7 @@ import type {
   RepeatRule,
   Subtask,
   Task,
+  FocusSession,
   ToodlesData,
 } from '../types';
 import { createEmptyData, newId } from '../lib/factories';
@@ -82,12 +83,17 @@ const MOODS: readonly MoodLevel[] = ['happy', 'good', 'okay', 'low', 'difficult'
 
 /* --------------------------------------------------------- normalisation */
 
+const THEMES = ['system', 'light', 'dark'] as const;
+
 function normaliseSettings(raw: unknown): AppSettings {
   const record = isRecord(raw) ? raw : {};
   return {
     displayName: str(record.displayName).slice(0, 60),
     weekStartsOn: record.weekStartsOn === 0 ? 0 : 1,
     splashSeenAt: nullableStr(record.splashSeenAt),
+    theme: oneOf(record.theme, THEMES, 'system'),
+    sidebarOpen: bool(record.sidebarOpen, true),
+    tagsSeeded: bool(record.tagsSeeded, false),
   };
 }
 
@@ -167,6 +173,7 @@ function normaliseDiaryEntry(raw: unknown): DiaryEntry | null {
     mood: typeof raw.mood === 'string' ? oneOf(raw.mood, MOODS, 'okay') : null,
     projectId: nullableStr(raw.projectId),
     tags: stringList(raw.tags),
+    photos: stringList(raw.photos),
     createdAt: isoOf(raw.createdAt),
     updatedAt: isoOf(raw.updatedAt),
   };
@@ -252,6 +259,7 @@ export function normaliseData(raw: unknown): ToodlesData {
     habitChecks: normaliseList(record.habitChecks, normaliseHabitCheck).filter((check) =>
       habitIds.has(check.habitId),
     ),
+    focusSessions: Array.isArray(record.focusSessions) ? (record.focusSessions as FocusSession[]) : [],
   };
 }
 
@@ -265,7 +273,21 @@ function migrate(data: ToodlesData, fromVersion: number): ToodlesData {
   if (fromVersion > SCHEMA_VERSION) {
     console.warn('[toodles] local data comes from a newer version; reading best effort');
   }
-  return { ...data, version: SCHEMA_VERSION };
+  let migrated = { ...data };
+  if (fromVersion < 2) {
+    migrated = {
+      ...migrated,
+      settings: {
+        ...migrated.settings,
+        theme: migrated.settings.theme || 'system',
+        sidebarOpen: migrated.settings.sidebarOpen ?? true,
+        tagsSeeded: migrated.settings.tagsSeeded ?? false,
+      },
+      tags: migrated.tags ?? [],
+      focusSessions: migrated.focusSessions ?? [],
+    };
+  }
+  return { ...migrated, version: SCHEMA_VERSION };
 }
 
 /** Reads and repairs the stored workspace. Never throws. */

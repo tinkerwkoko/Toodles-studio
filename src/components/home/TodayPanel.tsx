@@ -106,7 +106,7 @@ export function HabitsSnapshot() {
                   {habit.name}
                 </span>
                 <span className={cx('text-xs font-bold', tone.text)}>
-                  {streak > 0 ? `${streak} day${streak === 1 ? '' : 's'}` : '—'}
+                  {streak > 0 ? `${streak} day${streak === 1 ? '' : 's'}` : '0'}
                 </span>
               </li>
             );

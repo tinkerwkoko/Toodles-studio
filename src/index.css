@@ -1,107 +1,218 @@
 @import 'tailwindcss';
 
 /* ------------------------------------------------------------------
-   Toodles design tokens — mauve and cream.
-   Tailwind v4: these become utilities (bg-lilac-100, text-ink, ...).
+   Toodles CSS variables - light and dark palettes.
    ------------------------------------------------------------------ */
+:root {
+  --bg: #f8f2ef;
+  --sidebar: #f1e7e6;
+  --card: #fffcfa;
+  --primary: #d9bfcc;
+  --primary-hover: #cfafbf;
+  --border: #e4d0d9;
+  --divider: #efe3e1;
+  --text: #4a3540;
+  --text-2: #85697a;
+  --text-faint: #a58c99;
+  --accent: #b592a4;
+  --peach: #f4c3a8;
+  --peach-ink: #5a4238;
+  --peach-deep: #e59f7c;
+  --cream: #fff6ef;
+  --cream-border: #ebd3c4;
+
+  --stat-focused: #f4c3a8;
+  --stat-upcoming: #d3e2ec;
+  --stat-overdue: #f0d5d5;
+  --stat-projects: #dce6d3;
+  --stat-completed: #eadfea;
+
+  --mood-difficult: #eadfea;
+  --mood-low: #d3e2ec;
+  --mood-okay: #f6eac2;
+  --mood-good: #dce6d3;
+  --mood-happy: #f4d5c4;
+
+  --cat-body: #fffcfa;
+  --cat-outline: #b592a4;
+
+  --mint-bg: #dce6d3;
+  --butter-bg: #f6eac2;
+  --sky-bg: #d3e2ec;
+  --rose-bg: #f0d5d5;
+}
+
+[data-theme='dark'] {
+  --bg: #1e1824;
+  --sidebar: #261f2d;
+  --card: #2e2636;
+  --primary: #cba8bc;
+  --primary-hover: #d8b8ca;
+  --border: #44374d;
+  --divider: #382d40;
+  --text: #ece2ea;
+  --text-2: #bfaec0;
+  --text-faint: #8e7b8f;
+  --accent: #d4a9bf;
+  --peach: #f2c2a6;
+  --peach-ink: #ece2ea;
+  --peach-deep: #e29c78;
+  --cream: #2e2636;
+  --cream-border: #44374d;
+
+  --mint-bg: #233428;
+  --butter-bg: #352e1f;
+  --sky-bg: #1f3042;
+  --rose-bg: #3c232c;
+
+  --stat-focused: #3a2820;
+  --stat-upcoming: #1f3042;
+  --stat-overdue: #3c2027;
+  --stat-projects: #233428;
+  --stat-completed: #332437;
+
+  --mood-difficult: #362539;
+  --mood-low: #1f3042;
+  --mood-okay: #362e1e;
+  --mood-good: #233428;
+  --mood-happy: #3c2921;
+
+  --cat-body: #ebdfe7;
+  --cat-outline: #5c4454;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) {
+    --bg: #1e1824;
+    --sidebar: #261f2d;
+    --card: #2e2636;
+    --primary: #cba8bc;
+    --primary-hover: #d8b8ca;
+    --border: #44374d;
+    --divider: #382d40;
+    --text: #ece2ea;
+    --text-2: #bfaec0;
+    --text-faint: #8e7b8f;
+    --accent: #d4a9bf;
+    --peach: #f2c2a6;
+    --peach-ink: #ece2ea;
+    --peach-deep: #e29c78;
+    --cream: #2e2636;
+    --cream-border: #44374d;
+
+    --mint-bg: #233428;
+    --butter-bg: #352e1f;
+    --sky-bg: #1f3042;
+    --rose-bg: #3c232c;
+
+    --stat-focused: #3a2820;
+    --stat-upcoming: #1f3042;
+    --stat-overdue: #3c2027;
+    --stat-projects: #233428;
+    --stat-completed: #332437;
+
+    --mood-difficult: #362539;
+    --mood-low: #1f3042;
+    --mood-okay: #362e1e;
+    --mood-good: #233428;
+    --mood-happy: #3c2921;
+
+    --cat-body: #ebdfe7;
+    --cat-outline: #5c4454;
+  }
+}
+
 @theme {
-  /* Type: Chewy for display, Fredoka for item titles, Handlee for body. */
   --font-display: 'Chewy', cursive;
   --font-title: 'Fredoka', sans-serif;
   --font-sans: 'Handlee', cursive;
 
-  /* Core palette */
-  --color-lilac-50: #f8f2ef; /* page background */
-  --color-lilac-100: #f1e7e6; /* sidebar + icon rail */
-  --color-lilac-200: #e4d0d9; /* borders and dividers */
-  --color-lilac-300: #d9bfcc; /* selected states */
-  --color-lilac-400: #c9a9b8; /* subtle accent marks */
-  --color-lilac-500: #d9bfcc; /* primary buttons, active nav */
-  --color-lilac-600: #b592a4; /* hover / stronger accent */
-  --color-lilac-700: #4a3540; /* headings and strong text */
+  --color-lilac-50: var(--bg);
+  --color-lilac-100: var(--sidebar);
+  --color-lilac-200: var(--border);
+  --color-lilac-300: var(--primary);
+  --color-lilac-400: var(--primary-hover);
+  --color-lilac-500: var(--primary);
+  --color-lilac-600: var(--primary-hover);
+  --color-lilac-700: var(--text);
 
-  --color-ink: #4a3540; /* main text */
-  --color-ink-soft: #85697a; /* secondary text and inactive icons */
-  --color-cream: #fffcfa; /* cards, inputs, modals, bottom nav */
+  --color-ink: var(--text);
+  --color-ink-soft: var(--text-2);
+  --color-cream: var(--card);
 
-  /* Tags and chips */
-  --color-peach-100: #fff6ef;
-  --color-peach-200: #ebd3c4;
-  --color-peach-300: #f4c3a8; /* highlighted labels, progress track */
-  --color-peach-500: #e59f7c; /* progress fill */
-  --color-peach-700: #5a4238; /* text on peach */
+  --color-peach-100: var(--cream);
+  --color-peach-200: var(--cream-border);
+  --color-peach-300: var(--peach);
+  --color-peach-500: var(--peach-deep);
+  --color-peach-700: var(--peach-ink);
 
-  /* Pastel set shared by kanban columns, cards and subtasks */
-  --color-mint-100: #dce6d3;
-  --color-mint-200: #dce6d3;
-  --color-mint-300: #dce6d3;
-  --color-mint-500: #b7c9ac;
-  --color-mint-700: #4a3540;
+  --color-mint-100: var(--mint-bg);
+  --color-mint-200: var(--border);
+  --color-mint-300: #b7c9ac;
+  --color-mint-500: #8fa883;
+  --color-mint-700: var(--text);
 
-  --color-butter-100: #f6eac2;
-  --color-butter-200: #f6eac2;
-  --color-butter-300: #f6eac2;
-  --color-butter-500: #e3d39a;
-  --color-butter-700: #4a3540;
+  --color-butter-100: var(--butter-bg);
+  --color-butter-200: var(--border);
+  --color-butter-300: #e3d39a;
+  --color-butter-500: #c9b673;
+  --color-butter-700: var(--text);
 
-  --color-sky-100: #d3e2ec;
-  --color-sky-200: #d3e2ec;
-  --color-sky-300: #d3e2ec;
-  --color-sky-500: #a9c4d6;
-  --color-sky-700: #4a3540;
+  --color-sky-100: var(--sky-bg);
+  --color-sky-200: var(--border);
+  --color-sky-300: #a9c4d6;
+  --color-sky-500: #7d9fb5;
+  --color-sky-700: var(--text);
 
-  /* Warm tan — used for overdue and other "needs attention" states. */
-  --color-rose-100: #f3dccb;
-  --color-rose-200: #f3dccb;
-  --color-rose-300: #f3dccb;
-  --color-rose-500: #d9bfcc;
-  --color-rose-700: #4a3540;
+  --color-rose-100: var(--rose-bg);
+  --color-rose-200: var(--border);
+  --color-rose-300: #d9bfcc;
+  --color-rose-500: #ba95a9;
+  --color-rose-700: var(--text);
 
-  /* Home stat tiles, in order */
-  --color-stat-1: #d3e2ec;   /* upcoming - sky tint */
-  --color-stat-2: #f3dccb;   /* overdue - rose tint */
-  --color-stat-3: #dce6d3;   /* projects - mint tint */
-  --color-stat-4: #eadfea;   /* completed - cream tint */
+  --color-stat-1: var(--stat-upcoming);
+  --color-stat-2: var(--stat-overdue);
+  --color-stat-3: var(--stat-projects);
+  --color-stat-4: var(--stat-completed);
+  --color-stat-focused: var(--stat-focused);
+  --color-stat-upcoming: var(--stat-upcoming);
+  --color-stat-overdue: var(--stat-overdue);
+  --color-stat-projects: var(--stat-projects);
+  --color-stat-completed: var(--stat-completed);
 
-  /* Mood tints: Difficult, Low, Okay, Good, Happy */
-  --color-mood-difficult: #eadfea;
-  --color-mood-low: #d3e2ec;
-  --color-mood-okay: #f6eac2;
-  --color-mood-good: #dce6d3;
-  --color-mood-happy: #f4d5c4;
+  --color-mood-difficult: var(--mood-difficult);
+  --color-mood-low: var(--mood-low);
+  --color-mood-okay: var(--mood-okay);
+  --color-mood-good: var(--mood-good);
+  --color-mood-happy: var(--mood-happy);
 
-  /* Project cards / banner */
-  --color-cream-banner: #fff6ef;
-  --color-cream-border: #ebd3c4;
+  --color-cream-banner: var(--cream);
+  --color-cream-border: var(--cream-border);
+  --color-divider: var(--divider);
+  --color-text-faint: var(--text-faint);
+  --color-accent: var(--accent);
 
-  /* Dividers and hairlines */
-  --color-divider: #efe3e1;
+  --color-cat-body: var(--cat-body);
+  --color-cat-outline: var(--cat-outline);
 
-  /* Text hierarchy */
-  --color-text-faint: #a58c99;
-
-  /* Flat, quiet surfaces: no heavy shadows. */
-  --shadow-soft: 0 1px 2px rgb(74 53 64 / 0.04);
-  --shadow-lift: 0 4px 12px rgb(74 53 64 / 0.08);
+  --shadow-soft: none;
+  --shadow-lift: none;
   --shadow-pop: none;
 
-  --radius-4xl: 2rem;
-  /* Cards and inputs use 16px corners. */
-  --radius-card: 16px;
-  --radius-field: 16px;
+  --radius-card: 20px;
+  --radius-field: 12px;
+  --radius-button: 9999px;
 
-  /* Body copy 15px, tags 13px. */
-  --text-xs: 13px;
+  --text-xs: 12px;
   --text-sm: 14px;
   --text-base: 15px;
 
-  --animate-fade-in: fade-in 320ms ease-out both;
-  --animate-slide-up: slide-up 320ms cubic-bezier(0.22, 1, 0.36, 1) both;
-  --animate-pop: pop 420ms cubic-bezier(0.22, 1, 0.36, 1) both;
+  --animate-fade-in: fade-in 250ms ease-out both;
+  --animate-slide-up: slide-up 250ms cubic-bezier(0.22, 1, 0.36, 1) both;
+  --animate-pop: pop 300ms cubic-bezier(0.22, 1, 0.36, 1) both;
   --animate-blink: blink 5.5s ease-in-out infinite;
   --animate-float: float 4.5s ease-in-out infinite;
   --animate-snooze: snooze 3.4s ease-in-out infinite;
-  --animate-grow: grow 2s ease-out forwards;
 }
 
 @keyframes fade-in {
@@ -116,7 +227,7 @@
 @keyframes slide-up {
   from {
     opacity: 0;
-    transform: translateY(24px);
+    transform: translateY(16px);
   }
   to {
     opacity: 1;
@@ -126,11 +237,11 @@
 
 @keyframes pop {
   0% {
-    transform: scale(0.5);
+    transform: scale(0.6);
     opacity: 0;
   }
-  55% {
-    transform: scale(1.12);
+  60% {
+    transform: scale(1.08);
     opacity: 1;
   }
   100% {
@@ -153,10 +264,10 @@
 @keyframes float {
   0%,
   100% {
-    transform: translateY(0) rotate(-1.5deg);
+    transform: translateY(0) rotate(-1deg);
   }
   50% {
-    transform: translateY(-6px) rotate(1.5deg);
+    transform: translateY(-4px) rotate(1deg);
   }
 }
 
@@ -166,16 +277,7 @@
     transform: translateY(0) scale(1);
   }
   50% {
-    transform: translateY(-3px) scale(1.02);
-  }
-}
-
-@keyframes grow {
-  from {
-    width: 4%;
-  }
-  to {
-    width: 100%;
+    transform: translateY(-2px) scale(1.02);
   }
 }
 
@@ -188,10 +290,10 @@
   body {
     margin: 0;
     min-height: 100dvh;
-    background-color: var(--color-lilac-50);
-    color: var(--color-ink);
+    background-color: var(--bg);
+    color: var(--text);
     font-family: var(--font-sans);
-    font-size: 15px;
+    font-size: 16px;
     line-height: 1.55;
     -webkit-font-smoothing: antialiased;
     overflow-x: hidden;
@@ -204,18 +306,18 @@
     font-family: var(--font-display);
     font-weight: 400;
     letter-spacing: 0.01em;
-    color: var(--color-ink);
+    color: var(--text);
   }
 
   h1 {
-    font-size: 36px;
+    font-size: 30px;
     line-height: 1.15;
   }
 
   h2,
   h3,
   h4 {
-    font-size: 20px;
+    font-size: 18px;
   }
 
   * {
@@ -223,9 +325,9 @@
   }
 
   :focus-visible {
-    outline: 2px solid var(--color-ink-soft);
+    outline: 2px solid var(--text-2);
     outline-offset: 2px;
-    border-radius: 0.75rem;
+    border-radius: 9px;
   }
 
   input,
@@ -237,11 +339,10 @@
   }
 
   ::selection {
-    background: var(--color-lilac-200);
+    background: var(--primary);
   }
 }
 
-/* Utilities ------------------------------------------------------- */
 @utility no-scrollbar {
   scrollbar-width: none;
   &::-webkit-scrollbar {
@@ -249,7 +350,6 @@
   }
 }
 
-/* Keeps the bottom nav from overlapping content on notched phones. */
 @utility pb-safe {
   padding-bottom: env(safe-area-inset-bottom, 0px);
 }

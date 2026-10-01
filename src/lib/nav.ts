@@ -1,49 +1,71 @@
 import {
-  AlarmClock,
+  BarChart3,
+  BookOpen,
   BookOpenText,
-  CalendarDays,
-  CheckCircle2,
-  FolderHeart,
+  Calendar,
+  Folder,
   Home,
   ListChecks,
   Settings,
   Smile,
+  Target,
   type LucideIcon,
 } from 'lucide-react';
 
 export interface NavItem {
   to: string;
   label: string;
+  shortLabel?: string;
   icon: LucideIcon;
-  /** Short label used in tight spots like the tablet icon rail. */
-  shortLabel: string;
 }
 
-/** Desktop sidebar order — also the order used by the tablet rail. */
-export const NAV_ITEMS: NavItem[] = [
-  { to: '/', label: 'Overview', shortLabel: 'Home', icon: Home },
-  { to: '/today', label: 'Today', shortLabel: 'Today', icon: CalendarDays },
-  { to: '/upcoming', label: 'Upcoming', shortLabel: 'Soon', icon: AlarmClock },
-  { to: '/tasks', label: 'All tasks', shortLabel: 'Tasks', icon: ListChecks },
-  { to: '/completed', label: 'Completed', shortLabel: 'Done', icon: CheckCircle2 },
-  { to: '/projects', label: 'Projects', shortLabel: 'Projects', icon: FolderHeart },
-  { to: '/diary', label: 'Notes & diary', shortLabel: 'Notes', icon: BookOpenText },
-  { to: '/wellbeing', label: 'Mood & habits', shortLabel: 'Mood', icon: Smile },
+/**
+ * All navigation items for IconRail or quick reference.
+ */
+export const NAV_ITEMS: Required<NavItem>[] = [
+  { to: '/', label: 'My Nook', shortLabel: 'Nook', icon: Home },
+  { to: '/tasks', label: 'Tasks', shortLabel: 'Tasks', icon: ListChecks },
+  { to: '/calendar', label: 'Calendar', shortLabel: 'Calendar', icon: Calendar },
+  { to: '/projects', label: 'Projects', shortLabel: 'Projects', icon: Folder },
+  { to: '/focus', label: 'Focus', shortLabel: 'Focus', icon: Target },
+  { to: '/study', label: 'Study', shortLabel: 'Study', icon: BookOpen },
+  { to: '/diary', label: 'Diary', shortLabel: 'Diary', icon: BookOpenText },
+  { to: '/wellbeing', label: 'Mood & habits', shortLabel: 'Habits', icon: Smile },
+  { to: '/analytics', label: 'Analytics', shortLabel: 'Stats', icon: BarChart3 },
   { to: '/settings', label: 'Settings', shortLabel: 'Settings', icon: Settings },
 ];
 
-/** Overdue lives one tap away from Upcoming, so it is not in the main rail. */
-export const OVERDUE_ITEM: NavItem = {
-  to: '/overdue',
-  label: 'Overdue',
-  shortLabel: 'Late',
-  icon: AlarmClock,
-};
+/**
+ * Sidebar navigation items for existing pages:
+ */
+export const SIDEBAR_ITEMS: NavItem[] = [
+  { to: '/', label: 'My Nook', icon: Home },
+  { to: '/tasks', label: 'Tasks', icon: ListChecks },
+  { to: '/calendar', label: 'Calendar', icon: Calendar },
+  { to: '/projects', label: 'Projects', icon: Folder },
+  { to: '/focus', label: 'Focus', icon: Target },
+  { to: '/study', label: 'Study', icon: BookOpen },
+  { to: '/diary', label: 'Diary', icon: BookOpenText },
+  { to: '/wellbeing', label: 'Mood and habits', icon: Smile },
+  { to: '/analytics', label: 'Analytics', icon: BarChart3 },
+  { to: '/settings', label: 'Settings', icon: Settings },
+];
 
-/** Phone bottom bar: Home · Tasks · + · Projects · Settings. */
-export const MOBILE_ITEMS: NavItem[] = [
-  NAV_ITEMS[0] as NavItem,
-  NAV_ITEMS[3] as NavItem,
-  NAV_ITEMS[5] as NavItem,
-  NAV_ITEMS[8] as NavItem,
+/**
+ * Mobile bottom nav items: My Nook, Tasks, Projects (plus center +, and More sheet).
+ */
+export const MOBILE_PRIMARY_ITEMS: NavItem[] = [
+  { to: '/', label: 'My Nook', icon: Home },
+  { to: '/tasks', label: 'Tasks', icon: ListChecks },
+  { to: '/calendar', label: 'Calendar', icon: Calendar },
+  { to: '/projects', label: 'Projects', icon: Folder },
+];
+
+export const MOBILE_MORE_ITEMS: NavItem[] = [
+  { to: '/focus', label: 'Focus', icon: Target },
+  { to: '/study', label: 'Study', icon: BookOpen },
+  { to: '/diary', label: 'Diary', icon: BookOpenText },
+  { to: '/wellbeing', label: 'Mood and habits', icon: Smile },
+  { to: '/analytics', label: 'Analytics', icon: BarChart3 },
+  { to: '/settings', label: 'Settings', icon: Settings },
 ];

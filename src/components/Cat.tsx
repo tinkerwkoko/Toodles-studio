@@ -9,15 +9,15 @@ export interface CatProps {
   title?: string;
 }
 
-const FUR = '#FFFCFA';
-const LINE = '#B592A4';
-const BLUSH = '#F4C3A8';
-const NOSE = '#F4C3A8';
-const FACE = '#4A3540';
-const ACCENT = '#D9BFCC';
+const FUR = 'var(--color-cat-body, #FFFCFA)';
+const LINE = 'var(--color-cat-outline, #B592A4)';
+const BLUSH = 'var(--color-peach-300, #F4C3A8)';
+const NOSE = 'var(--color-peach-300, #F4C3A8)';
+const FACE = 'var(--color-ink, #4A3540)';
+const ACCENT = 'var(--color-lilac-300, #D9BFCC)';
 
 /**
- * Toodles — an original round, sleepy cat drawn in plain SVG.
+ * Toodles: an original round, sleepy cat drawn in plain SVG.
  * Not based on any existing character or artwork.
  */
 export function Cat({
@@ -56,7 +56,7 @@ export function Cat({
         {/* chest tuft */}
         <path
           d="M80 96c-6 6-6 12 0 16 6-4 6-10 0-16z"
-          fill="#FFFCFA"
+          fill={FUR}
           stroke={LINE}
           strokeWidth={2.5}
           strokeLinejoin="round"

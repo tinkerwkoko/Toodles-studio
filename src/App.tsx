@@ -1,16 +1,19 @@
 import { useState } from 'react';
-import { BrowserRouter, Link, Route, Routes } from 'react-router-dom';
+import { BrowserRouter, Link, Navigate, Route, Routes } from 'react-router-dom';
 import { Cat } from './components/Cat';
 import { AppShell } from './components/layout/AppShell';
 import { WelcomeScreen } from './components/WelcomeScreen';
-import { CompletedPage } from './pages/CompletedPage';
 import { DiaryPage } from './pages/DiaryPage';
+import { CalendarPage } from './pages/CalendarPage';
+import { FocusPage } from './pages/FocusPage';
 import { HomePage } from './pages/HomePage';
 import { ProjectDetailPage } from './pages/ProjectDetailPage';
 import { ProjectsPage } from './pages/ProjectsPage';
 import { SettingsPage } from './pages/SettingsPage';
+import { StudyPage } from './pages/StudyPage';
 import { TasksPage } from './pages/TasksPage';
 import { WellbeingPage } from './pages/WellbeingPage';
+import { AnalyticsPage } from './pages/AnalyticsPage';
 import { ToodlesProvider } from './store/ToodlesProvider';
 import { UiProvider } from './store/UiProvider';
 
@@ -29,13 +32,17 @@ export default function App() {
           <AppShell>
             <Routes>
               <Route path="/" element={<HomePage />} />
-              <Route path="/tasks" element={<TasksPage scope="all" />} />
-              <Route path="/today" element={<TasksPage scope="today" />} />
-              <Route path="/upcoming" element={<TasksPage scope="upcoming" />} />
-              <Route path="/overdue" element={<TasksPage scope="overdue" />} />
-              <Route path="/completed" element={<CompletedPage />} />
+              <Route path="/tasks" element={<TasksPage />} />
+              <Route path="/calendar" element={<CalendarPage />} />
+              <Route path="/today" element={<Navigate to="/tasks?tab=today" replace />} />
+              <Route path="/upcoming" element={<Navigate to="/tasks?tab=upcoming" replace />} />
+              <Route path="/overdue" element={<Navigate to="/tasks?tab=overdue" replace />} />
+              <Route path="/completed" element={<Navigate to="/tasks?tab=completed" replace />} />
               <Route path="/projects" element={<ProjectsPage />} />
               <Route path="/projects/:id" element={<ProjectDetailPage />} />
+              <Route path="/focus" element={<FocusPage />} />
+              <Route path="/study" element={<StudyPage />} />
+              <Route path="/analytics" element={<AnalyticsPage />} />
               <Route path="/diary" element={<DiaryPage />} />
               <Route path="/wellbeing" element={<WellbeingPage />} />
               <Route path="/settings" element={<SettingsPage />} />

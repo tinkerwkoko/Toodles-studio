@@ -1,139 +1,113 @@
 import { useMemo } from 'react';
 import { Link } from 'react-router-dom';
-import { Plus } from 'lucide-react';
-import { Button } from '../components/ui/Button';
-import { Card } from '../components/ui/Card';
-import { EmptyState } from '../components/ui/EmptyState';
-import { PageHeader } from '../components/ui/PageHeader';
-import { TaskList } from '../components/tasks/TaskList';
+import { Cat } from '../components/Cat';
 import { HeroCard } from '../components/home/HeroCard';
-import { HomeStats, HomeTiles } from '../components/home/HomeStats';
-import { HabitsSnapshot, MoodSnapshot, RecentEntry } from '../components/home/TodayPanel';
-import { HomeLists } from '../components/home/HomeLists';
+import { NookStats } from '../components/home/NookStats';
+import { TodayListCard } from '../components/home/TodayListCard';
+import { ComingUpList } from '../components/home/ComingUpList';
+import { TodayFeelingCard } from '../components/home/TodayFeelingCard';
+import { TodayHabitsCard } from '../components/home/TodayHabitsCard';
+import { ProjectCard } from '../components/projects/ProjectCard';
 import { formatLongDay, greetingTimeOfDay, todayString } from '../lib/date';
-import { completionStreak, filterByScope, isTaskCompletedToday, sortTasks } from '../lib/task';
+import { filterByScope } from '../lib/task';
+import { columnsForProject } from '../store/mutations';
 import { useToodles } from '../store/useToodles';
-import { useUi } from '../store/useUi';
-
-const GREETINGS: Record<ReturnType<typeof greetingTimeOfDay>, string> = {
-  morning: 'Good morning ✨',
-  afternoon: 'Good afternoon 🌤️',
-  evening: 'Good evening 🌙',
-  night: 'Still awake? 🌌',
-};
 
 export function HomePage() {
   const { data } = useToodles();
-  const { openCreate, setDetailTaskId } = useUi();
   const today = todayString();
+  const timeOfDay = greetingTimeOfDay();
+  const isNight = timeOfDay === 'night';
 
-  const todaysTasks = useMemo(
-    () => sortTasks(filterByScope(data.tasks, 'today'), 'smart'),
-    [data.tasks],
+  const greetingHeading =
+    timeOfDay === 'morning'
+      ? 'Good morning'
+      : timeOfDay === 'afternoon'
+        ? 'Good afternoon'
+        : timeOfDay === 'evening'
+          ? 'Good evening'
+          : 'Still awake?';
+
+  const counts = useMemo(
+    () => ({
+      upcoming: filterByScope(data.tasks, 'upcoming').length,
+      overdue: filterByScope(data.tasks, 'overdue').length,
+      projects: data.projects.filter((p) => !p.archived).length,
+      completed: filterByScope(data.tasks, 'completed').length,
+    }),
+    [data.tasks, data.projects],
   );
-  const [latestEntry] = [...data.diaryEntries].sort((a, b) => b.date.localeCompare(a.date));
 
-  const isBrandNew =
-    data.tasks.length === 0 &&
-    data.projects.length === 0 &&
-    data.diaryEntries.length === 0 &&
-    data.habits.length === 0 &&
-    data.moods.length === 0;
+  const activeProjects = useMemo(
+    () => data.projects.filter((p) => !p.archived).slice(0, 3),
+    [data.projects],
+  );
 
   return (
-    <div className="pb-4">
-      <PageHeader
-        title={GREETINGS[greetingTimeOfDay()]}
-        subtitle={formatLongDay(today)}
-        pose={isBrandNew ? undefined : 'sleepy'}
-        actions={
-          <Button
-            className="hidden sm:inline-flex"
-            onClick={() => openCreate('task')}
-            icon={<Plus size={18} aria-hidden="true" />}
-          >
-            New task
-          </Button>
-        }
+    <div className="space-y-6">
+      {/* Top greeting on the far left with cat face sitting beside it */}
+      <div className="flex flex-col gap-1">
+        <div className="flex items-center gap-3">
+          <h1 className="font-display text-3xl sm:text-4xl text-ink leading-tight">
+            {greetingHeading}
+          </h1>
+          <Cat pose={isNight ? 'sleepy' : 'happy'} size={44} animated />
+        </div>
+        <p className="font-sans text-sm text-ink-soft">
+          {formatLongDay(today)}
+        </p>
+      </div>
+
+      {/* Your cozy corner card with mascot cat */}
+      <HeroCard hasTasks={data.tasks.length > 0} />
+
+      {/* 5-tile stat strip */}
+      <NookStats
+        upcomingCount={counts.upcoming}
+        overdueCount={counts.overdue}
+        projectCount={counts.projects}
+        completedCount={counts.completed}
       />
 
-      {isBrandNew ? (
-        <>
-          <HeroCard />
-          <Card padding="lg" className="text-center">
-            <h2 className="text-lg">A gentle start</h2>
-            <p className="mx-auto mt-2 max-w-lg text-sm text-ink-soft">
-              Toodles keeps tasks, projects, boards, your diary, moods and habits in one quiet
-              place. There is no account and no cloud — what you write stays in this browser.
-            </p>
-          </Card>
-        </>
-      ) : (
-        <>
-          <HomeStats
-            dueToday={todaysTasks.length}
-            completedToday={data.tasks.filter((task) => isTaskCompletedToday(task, today)).length}
-            streak={completionStreak(data.tasks)}
-            openCount={filterByScope(data.tasks, 'all').length}
-            projectCount={data.projects.length}
-          />
-
-          <HomeTiles
-            upcoming={filterByScope(data.tasks, 'upcoming').length}
-            overdue={filterByScope(data.tasks, 'overdue').length}
-            projectCount={data.projects.length}
-            diaryCount={data.diaryEntries.length}
-            recentDiaryDate={latestEntry ? formatLongDay(latestEntry.date) : null}
-            habitCount={data.habits.filter((habit) => !habit.archived).length}
-            completed={filterByScope(data.tasks, 'completed').length}
-          />
-
-          <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_380px] lg:items-start">
-            <section aria-label="Today's tasks" className="space-y-3">
-              <div className="flex items-center justify-between gap-2">
-                <h2 className="text-lg">Today&rsquo;s list</h2>
-                <Link to="/tasks" className="text-xs font-bold text-lilac-700 hover:underline">
-                  See everything
-                </Link>
-              </div>
-              <TaskList
-                tasks={todaysTasks.slice(0, 8)}
-                onOpen={(task) => setDetailTaskId(task.id)}
-                emptyState={
-                  <EmptyState
-                    small
-                    pose="happy"
-                    sentence="Nothing is due today. Add something small if you feel like it."
-                    actionLabel="Add a task"
-                    onAction={() => openCreate('task')}
-                  />
-                }
-              />
-              {todaysTasks.length > 8 && (
-                <Link
-                  to="/today"
-                  className="inline-block text-sm font-bold text-lilac-700 hover:underline"
-                >
-                  + {todaysTasks.length - 8} more for today
-                </Link>
-              )}
-            </section>
-
-            <div className="space-y-4">
-              <MoodSnapshot />
-              <HabitsSnapshot />
-              <RecentEntry />
-              <HomeLists
-                overdue={filterByScope(data.tasks, 'overdue')}
-                upcoming={filterByScope(data.tasks, 'upcoming')}
-                projects={data.projects.filter((project) => !project.archived)}
-                onOpenTask={(task) => setDetailTaskId(task.id)}
-                onCreate={() => openCreate('task')}
-              />
-            </div>
+      {/* Active projects back on dashboard */}
+      {activeProjects.length > 0 && (
+        <section className="space-y-3">
+          <div className="flex items-center justify-between">
+            <h2 className="font-display text-[18px] text-ink">Active projects</h2>
+            <Link
+              to="/projects"
+              className="text-xs font-title font-medium text-ink-soft hover:text-ink hover:underline"
+            >
+              See all ({counts.projects})
+            </Link>
           </div>
-        </>
+          <div className="grid gap-3 sm:grid-cols-2 md:grid-cols-3">
+            {activeProjects.map((project) => (
+              <ProjectCard
+                key={project.id}
+                project={project}
+                tasks={data.tasks.filter((t) => t.projectId === project.id)}
+                columns={columnsForProject(data, project.id)}
+              />
+            ))}
+          </div>
+        </section>
       )}
+
+      {/* Two columns, stacked on mobile */}
+      <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_340px] items-start">
+        {/* Left column */}
+        <div className="space-y-6 min-w-0">
+          <TodayListCard />
+          <ComingUpList />
+        </div>
+
+        {/* Right column */}
+        <div className="space-y-6 min-w-0">
+          <TodayFeelingCard />
+          <TodayHabitsCard />
+        </div>
+      </div>
     </div>
   );
 }

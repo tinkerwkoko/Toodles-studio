@@ -3,7 +3,7 @@
  * local data model — see AGENTS.md §6.
  */
 
-export const SCHEMA_VERSION = 1;
+export const SCHEMA_VERSION = 2;
 
 /** Local calendar day, `YYYY-MM-DD`. */
 export type DateString = string;
@@ -15,6 +15,7 @@ export type RepeatRule = 'none' | 'daily' | 'weekdays' | 'weekly' | 'monthly';
 export type TaskStatus = 'todo' | 'done';
 export type MoodLevel = 'happy' | 'good' | 'okay' | 'low' | 'difficult';
 export type HabitFrequency = 'daily' | 'weekly';
+export type ThemeMode = 'system' | 'light' | 'dark';
 /** Palette keys shared by projects, columns, cards, subtasks and habits. */
 export type AccentColor = 'lilac' | 'peach' | 'mint' | 'butter' | 'sky' | 'rose';
 
@@ -25,12 +26,33 @@ export interface Subtask {
   color: AccentColor;
 }
 
+export interface Tag {
+  id: string;
+  name: string;
+  color: AccentColor;
+}
+
+export interface FocusSession {
+  id: string;
+  taskId: string | null;
+  projectId: string | null;
+  type: 'focus' | 'break';
+  plannedMinutes: number;
+  actualMinutes: number;
+  startedAt: Timestamp;
+  endedAt: Timestamp;
+  completed: boolean;
+}
+
 export interface Project {
   id: string;
   name: string;
   description: string;
   color: AccentColor;
   emoji: string;
+  icon?: string;
+  cover?: string;
+  coverPosition?: number;
   createdAt: Timestamp;
   archived: boolean;
 }
@@ -56,6 +78,8 @@ export interface Task {
   completedAt: Timestamp | null;
   createdAt: Timestamp;
   subtasks: Subtask[];
+  type?: 'task' | 'study';
+  targetMinutes?: number | null;
 }
 
 export interface BoardColumn {
@@ -74,6 +98,7 @@ export interface DiaryEntry {
   mood: MoodLevel | null;
   projectId: string | null;
   tags: string[];
+  photos?: string[];
   createdAt: Timestamp;
   updatedAt: Timestamp;
 }
@@ -90,7 +115,7 @@ export interface Habit {
   name: string;
   color: AccentColor;
   frequency: HabitFrequency;
-  /** 0 (Sunday) – 6 (Saturday); used when frequency is 'weekly'. */
+  /** 0 (Sunday) - 6 (Saturday); used when frequency is 'weekly'. */
   weekdays: number[];
   createdAt: Timestamp;
   archived: boolean;
@@ -101,11 +126,34 @@ export interface HabitCheck {
   date: DateString;
 }
 
+export interface PomodoroSettings {
+  focus: number;
+  shortBreak: number;
+  longBreak: number;
+  rounds: number;
+}
+
+export interface UserAccount {
+  id: string;
+  email: string;
+  name: string;
+  avatar?: string;
+  provider: 'google' | 'email';
+  syncedAt?: Timestamp | null;
+  syncAcrossDevices?: boolean;
+}
+
 export interface AppSettings {
   displayName: string;
   /** 0 = Sunday, 1 = Monday. Habit and mood grids start on this day. */
   weekStartsOn: 0 | 1;
   splashSeenAt: Timestamp | null;
+  theme: ThemeMode;
+  sidebarOpen: boolean;
+  pomodoro?: PomodoroSettings;
+  dailyFocusGoalMinutes?: number;
+  tagsSeeded?: boolean;
+  account?: UserAccount | null;
 }
 
 export interface ToodlesData {
@@ -118,6 +166,8 @@ export interface ToodlesData {
   moods: MoodLog[];
   habits: Habit[];
   habitChecks: HabitCheck[];
+  tags?: Tag[];
+  focusSessions?: FocusSession[];
 }
 
 /** Everything needed to create a task; the rest gets friendly defaults. */
@@ -143,6 +193,9 @@ export interface NewProjectInput {
   description?: string;
   color?: AccentColor;
   emoji?: string;
+  icon?: string;
+  cover?: string;
+  coverPosition?: number;
 }
 
 export interface NewDiaryEntryInput {
@@ -152,6 +205,7 @@ export interface NewDiaryEntryInput {
   mood?: MoodLevel | null;
   projectId?: string | null;
   tags?: string[];
+  photos?: string[];
 }
 
 export interface NewHabitInput {

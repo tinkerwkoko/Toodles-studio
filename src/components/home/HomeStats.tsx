@@ -20,7 +20,7 @@ export interface HomeStatsProps {
   projectCount: number;
 }
 
-/** "Today at a glance" — four soft figures. */
+/** "Today at a glance": four soft figures. */
 export function HomeStats({
   dueToday,
   completedToday,
@@ -45,7 +45,7 @@ export function HomeStats({
       />
       <StatTile
         label="Current streak"
-        value={streak === 0 ? '—' : `${streak} day${streak === 1 ? '' : 's'}`}
+        value={streak === 0 ? '0' : `${streak} day${streak === 1 ? '' : 's'}`}
         hint={streak > 0 ? 'Keep it cosy' : 'Tick one off to start'}
         icon={<Flame size={18} aria-hidden="true" />}
         className="bg-stat-3 border-stat-3"

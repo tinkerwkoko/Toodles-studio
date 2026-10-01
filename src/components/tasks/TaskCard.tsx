@@ -16,7 +16,7 @@ export interface TaskCardProps {
   className?: string;
 }
 
-/** One friendly row for a single task — used in every task list. */
+/** One friendly row for a single task: used in every task list. */
 export function TaskCard({
   task,
   onOpen,

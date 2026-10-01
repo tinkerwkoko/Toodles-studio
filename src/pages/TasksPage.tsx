@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useSearchParams } from 'react-router-dom';
 import { Plus } from 'lucide-react';
 import type { Task, TaskScope } from '../types';
 import { allTags, filterByScope, searchTasks, sortTasks } from '../lib/task';
@@ -8,7 +8,7 @@ import { Card } from '../components/ui/Card';
 import { Dialog } from '../components/ui/Dialog';
 import { EmptyState } from '../components/ui/EmptyState';
 import { PageHeader } from '../components/ui/PageHeader';
-import { SegmentedControl } from '../components/ui/SegmentedControl';
+import { Tabs } from '../components/ui/Tabs';
 import { TaskList } from '../components/tasks/TaskList';
 import { TaskDetail } from '../components/tasks/TaskDetail';
 import { DEFAULT_FILTERS, TaskFilters, type TaskFilterState } from '../components/tasks/TaskFilters';
@@ -20,24 +20,23 @@ const TITLES: Record<TaskScope, { title: string; subtitle: string }> = {
   all: { title: 'All tasks', subtitle: 'Everything you have written down, in one gentle pile.' },
   today: { title: 'Today', subtitle: 'Just the things that belong to today.' },
   upcoming: { title: 'Upcoming', subtitle: 'What is coming, grouped by day.' },
-  overdue: { title: 'Overdue', subtitle: 'Not a disaster — just things that need a nudge.' },
+  overdue: { title: 'Overdue', subtitle: 'Not a disaster: just things that need a nudge.' },
   completed: { title: 'Completed', subtitle: 'Everything you have already finished.' },
 };
 
-const ROUTES: Record<TaskScope, string> = {
-  all: '/tasks',
-  today: '/today',
-  upcoming: '/upcoming',
-  overdue: '/overdue',
-  completed: '/completed',
-};
-
-export function TasksPage({ scope }: { scope: TaskScope }) {
+export function TasksPage({ scope: initialScope = 'all' }: { scope?: TaskScope }) {
   const { data } = useToodles();
   const { searchTerm, setSearchTerm, detailTask, setDetailTaskId, openCreate } = useUi();
   const [filters, setFilters] = useState<TaskFilterState>(DEFAULT_FILTERS);
+  const [searchParams, setSearchParams] = useSearchParams();
   const isDesktop = useIsDesktop();
-  const navigate = useNavigate();
+
+  const tabParam = searchParams.get('tab') as TaskScope | null;
+  const scope: TaskScope = tabParam && TITLES[tabParam] ? tabParam : initialScope;
+
+  function handleTabChange(next: string) {
+    setSearchParams({ tab: next });
+  }
 
   const counts = useMemo(
     () => ({
@@ -91,17 +90,17 @@ export function TasksPage({ scope }: { scope: TaskScope }) {
         }
       />
 
-      <SegmentedControl
-        label="Task views"
+      <Tabs
+        ariaLabel="Task views"
         className="mb-4"
-        value={scope}
-        onChange={(next) => navigate(ROUTES[next])}
-        options={[
-          { value: 'all', label: 'All', count: counts.all },
-          { value: 'today', label: 'Today', count: counts.today },
-          { value: 'upcoming', label: 'Upcoming', count: counts.upcoming },
-          { value: 'overdue', label: 'Overdue', count: counts.overdue },
-          { value: 'completed', label: 'Completed', count: counts.completed },
+        activeId={scope}
+        onChange={handleTabChange}
+        items={[
+          { id: 'all', label: 'All', count: counts.all },
+          { id: 'today', label: 'Today', count: counts.today },
+          { id: 'upcoming', label: 'Upcoming', count: counts.upcoming },
+          { id: 'overdue', label: 'Overdue', count: counts.overdue },
+          { id: 'completed', label: 'Completed', count: counts.completed },
         ]}
       />
 

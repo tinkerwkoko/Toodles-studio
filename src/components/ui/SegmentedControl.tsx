@@ -15,7 +15,7 @@ export interface SegmentedControlProps<T extends string> {
   className?: string;
 }
 
-/** Pill tab bar — scrolls sideways on small screens instead of overflowing. */
+/** Pill tab bar: scrolls sideways on small screens instead of overflowing. */
 export function SegmentedControl<T extends string>({
   options,
   value,

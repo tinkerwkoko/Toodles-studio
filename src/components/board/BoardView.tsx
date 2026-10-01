@@ -83,7 +83,7 @@ export function BoardView({ project, tasks, columns, onOpenTask, onAddTask }: Bo
     return (
       <EmptyState
         title="This board is empty"
-        sentence="Give it some columns — a gentle To do, Doing and Done is a good place to start."
+        sentence="Give it some columns: a gentle To do, Doing and Done is a good place to start."
         actionLabel="Add a column"
         onAction={() => setAdding(true)}
       />

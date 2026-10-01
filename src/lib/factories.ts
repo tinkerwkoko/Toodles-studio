@@ -15,7 +15,7 @@ import {
 } from '../types';
 import { nowTimestamp, todayString } from './date';
 
-/** Stable ids everywhere — never array indexes. */
+/** Stable ids everywhere: never array indexes. */
 export function newId(): string {
   if (typeof crypto !== 'undefined' && typeof crypto.randomUUID === 'function') {
     return crypto.randomUUID();
@@ -26,7 +26,14 @@ export function newId(): string {
 export function createEmptyData(): ToodlesData {
   return {
     version: SCHEMA_VERSION,
-    settings: { displayName: '', weekStartsOn: 1, splashSeenAt: null },
+    settings: {
+      displayName: '',
+      weekStartsOn: 1,
+      splashSeenAt: null,
+      theme: 'system',
+      sidebarOpen: true,
+      tagsSeeded: false,
+    },
     projects: [],
     tasks: [],
     boardColumns: [],
@@ -34,6 +41,8 @@ export function createEmptyData(): ToodlesData {
     moods: [],
     habits: [],
     habitChecks: [],
+    tags: [],
+    focusSessions: [],
   };
 }
 
@@ -75,6 +84,9 @@ export function createProject(input: NewProjectInput): Project {
     description: input.description?.trim() ?? '',
     color: input.color ?? 'lilac',
     emoji: input.emoji ?? '🌱',
+    icon: input.icon,
+    cover: input.cover,
+    coverPosition: input.coverPosition ?? 50,
     createdAt: nowTimestamp(),
     archived: false,
   };
@@ -106,6 +118,7 @@ export function createDiaryEntry(input: NewDiaryEntryInput): DiaryEntry {
     mood: input.mood ?? null,
     projectId: input.projectId ?? null,
     tags: input.tags ?? [],
+    photos: input.photos ?? [],
     createdAt: timestamp,
     updatedAt: timestamp,
   };

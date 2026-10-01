@@ -1,4 +1,4 @@
-import { BookOpenText, FolderHeart, ListChecks, Smile, Sparkles } from 'lucide-react';
+import { BookOpenText, Folder, ListChecks, Repeat, Smile } from 'lucide-react';
 import { Dialog } from '../ui/Dialog';
 import { useUi } from '../../store/useUi';
 
@@ -8,9 +8,9 @@ export function QuickCreateSheet() {
 
   const options = [
     { kind: 'task' as const, label: 'Task', hint: 'Something to do', icon: ListChecks },
-    { kind: 'project' as const, label: 'Project', hint: 'Something bigger', icon: FolderHeart },
+    { kind: 'project' as const, label: 'Project', hint: 'Something bigger', icon: Folder },
     { kind: 'diary' as const, label: 'Diary entry', hint: 'A page for today', icon: BookOpenText },
-    { kind: 'habit' as const, label: 'Habit', hint: 'Something to repeat', icon: Sparkles },
+    { kind: 'habit' as const, label: 'Habit', hint: 'Something to repeat', icon: Repeat },
     { kind: 'mood' as const, label: 'Mood', hint: 'How today felt', icon: Smile },
   ];
 

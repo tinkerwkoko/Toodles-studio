@@ -14,7 +14,7 @@ import { useUi } from '../store/useUi';
 
 type ArchiveMode = 'project' | 'date';
 
-/** `/completed` — a personal archive of everything that actually got finished. */
+/** `/completed`: a personal archive of everything that actually got finished. */
 export function CompletedPage() {
   const { data } = useToodles();
   const { detailTask, setDetailTaskId, openCreate } = useUi();

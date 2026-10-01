@@ -29,14 +29,14 @@ export function CreateDialogs() {
         onClose={closeCreate}
         title="A new little thing"
         description={defaultProjectId ? 'It will land in this project.' : undefined}
-        size="lg"
+        size="md"
       >
         <TaskForm
           key={`task-${defaultProjectId ?? 'none'}-${create.kind === 'task' ? 'open' : 'closed'}`}
           initial={formValuesFromDefaults(create.defaults)}
           lockedProjectId={defaultProjectId ? defaultProjectId : undefined}
           submitLabel="Create task"
-          hint="Only a title is needed — you can always add more later."
+          hint="Only a title is needed. You can always add more later."
           onSubmit={(values) => {
             const input = formValuesToInput(values);
             // Keep the column a board card was added from.
@@ -108,6 +108,7 @@ export function CreateDialogs() {
               mood: values.mood,
               projectId: values.projectId === '' ? null : values.projectId,
               tags: values.tags,
+              photos: values.photos,
             });
             pushToast('Saved to your diary 🍵', 'success');
             closeCreate();

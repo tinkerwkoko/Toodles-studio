@@ -5,7 +5,7 @@
   "type": "module",
   "description": "Toodles — a cozy, local-first place for everything on your mind.",
   "scripts": {
-    "dev": "vite",
+    "dev": "vite --host 0.0.0.0 --port 3000",
     "build": "tsc -p tsconfig.json && vite build",
     "typecheck": "tsc -p tsconfig.json",
     "preview": "vite preview"

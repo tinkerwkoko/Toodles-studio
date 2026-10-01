@@ -173,21 +173,28 @@ Last verified: `npx tsc --noEmit` reports 0 errors and `npm run build` succeeds 
 | Phase | Scope | State |
 | --- | --- | --- |
 | 1 | Setup, Tailwind theme, cat SVG, welcome screen, app shell + responsive nav, localStorage store, create-task form, Tasks CRUD | **done** |
-| 2 | Projects, subtasks, task detail, Upcoming/Overdue, Home dashboard, empty-state CTAs | **done** (project *detail* screen belongs to phase 3) |
-| 3 | Board view with colours and drag & drop, completed archive by project and by date | **done** — board view shipped (Stage A, 2026-09-30); completed archive (Stage B) complete with by-project and by-date views |
-| 4 | Diary, Mood & Habits, Settings (export/import/erase), notification reminders | **done** — all pages implemented and routed |
-| 5 | Polish animations, accessibility pass, README, Vercel config, final build | **done** — reduced-motion guard, focus rings, `vercel.json` rewrite, README complete, green builds |
-| 6 | Visual redesign (flat palette, new fonts, cat recoloring) | **in progress** — Round 1 complete: palette tokens in `src/index.css`, fonts updated in `index.html`, AGENTS.md design tokens updated. Rounds 2-3 pending. |
+| 2 | Projects, subtasks, task detail, Upcoming/Overdue, Home dashboard, empty-state CTAs | **done** |
+| 3 | Board view with colours and drag & drop, completed archive by project and by date | **done** |
+| 4 | Diary, Mood & Habits, Settings (export/import/erase), notification reminders | **done** |
+| 5 | Polish animations, accessibility pass, README, Vercel config, final build | **done** |
+| Redesign 1 | Full-width TopBar, collapsible animated Sidebar, mobile BottomNav, Tabs component, My Nook dashboard (flat cream banner, 5 stat tiles, 2-column layout, Today's list card with reschedule menu and time commitment, Coming up list, Today's feeling card, Habits card) | **done** |
+| Redesign 2 | Tasks page redesign (tabs with sliding underline, plain row list, search bar, overdue styling, task detail) | **not started** |
+| Redesign 3 | Projects, kanban board, diary, wellbeing calendar/grids, settings, and final polish | **not started** |
 
 ### Screens that work today
 
 - Welcome / splash — `src/components/WelcomeScreen.tsx` (tap to skip, ~1.9 s)
-- Home / overview — `src/pages/HomePage.tsx` (greeting, stat tiles, quick tiles, mood + habit snapshots, brand-new empty state)
+- Home / overview — `src/pages/HomePage.tsx` (far-left greeting with cat face, Your cozy corner HeroCard, stat tiles, active projects, Today's list, coming up, feeling & habit cards)
 - Tasks — `src/pages/TasksPage.tsx` renders `/tasks`, `/today`, `/upcoming`, `/overdue`, `/completed` with search, project/priority/tag filters, sort, day grouping and per-task menu
 - Projects list — `src/pages/ProjectsPage.tsx` (route `/projects`; creating a project also creates its To do / Doing / Done columns)
-- Project detail — `src/pages/ProjectDetailPage.tsx` (route `/projects/:id`): header with progress and back link, List | Board toggle, edit + delete project dialogs
-- Kanban board — `src/components/board/BoardView.tsx` + `BoardColumnView.tsx` + `BoardCard.tsx` + `ColumnDialog.tsx`. Drag and drop with `@dnd-kit` from `md` up; on phones the columns scroll sideways with snap and every card has a "Move to…" menu, so dragging is never required
-- Task detail — two-pane on `lg`, modal below; live subtasks, per-step colour menu, edit + save, delete confirmation
+- Project detail — `src/pages/ProjectDetailPage.tsx` (route `/projects/:id`): header with customizable cover banner & icon upload, progress, List | Board toggle, edit + delete project dialogs
+- Focus corner — `src/pages/FocusPage.tsx` (route `/focus`): Pomodoro timer (25m/5m/15m) using Date.now timestamps, task linkage, concentrating/happy cat pose, focus session logging
+- Study corner — `src/pages/StudyPage.tsx` (route `/study`): study stopwatch/timer, study goals, study tasks list with quick completion
+- Analytics & calm insights — `src/pages/AnalyticsPage.tsx` (route `/analytics`): 7-day task completion bar chart, mood balance breakdown, project progress breakdown, summary stats
+- Kanban board — `src/components/board/BoardView.tsx` + `BoardColumnView.tsx` + `BoardCard.tsx` + `ColumnDialog.tsx`
+- Diary — `src/pages/DiaryPage.tsx`
+- Mood & habits — `src/pages/WellbeingPage.tsx`
+- Settings — `src/pages/SettingsPage.tsx`
 
 ### Built but not mounted in a route yet
 

@@ -3,14 +3,14 @@ import { Cat, type CatPose } from '../Cat';
 import { cx } from '../../lib/cx';
 
 export interface PageHeaderProps {
-  title: string;
+  title: ReactNode;
   subtitle?: string;
   actions?: ReactNode;
   pose?: CatPose;
   className?: string;
 }
 
-/** Every page opens with one friendly h1 — the cat tags along when it helps. */
+/** Every page opens with one friendly h1: the cat tags along when it helps. */
 export function PageHeader({ title, subtitle, actions, pose, className }: PageHeaderProps) {
   return (
     <header className={cx('mb-5 flex items-start gap-4', className)}>

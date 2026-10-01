@@ -1,7 +1,6 @@
 import { useEffect, type ReactNode } from 'react';
 import { useLocation } from 'react-router-dom';
 import { BottomNav } from './BottomNav';
-import { IconRail } from './IconRail';
 import { Sidebar } from './Sidebar';
 import { TopBar } from './TopBar';
 import { CreateDialogs } from './CreateDialogs';
@@ -9,7 +8,7 @@ import { QuickCreateSheet } from './QuickCreateSheet';
 import { Toasts } from '../ui/Toasts';
 import { useReminders } from '../../hooks/useReminders';
 
-/** Responsive frame: bottom bar on phones, icon rail on tablets, sidebar on desktop. */
+/** Full-width header above collapsible sidebar on desktop, bottom nav on mobile. */
 export function AppShell({ children }: { children: ReactNode }) {
   const location = useLocation();
   useReminders();
@@ -19,23 +18,24 @@ export function AppShell({ children }: { children: ReactNode }) {
   }, [location.pathname]);
 
   return (
-    <div className="min-h-dvh bg-lilac-50">
+    <div className="min-h-dvh flex flex-col bg-lilac-50 text-ink">
       <a
         href="#main"
-        className="sr-only focus:not-sr-only focus:absolute focus:top-2 focus:left-2 focus:z-50 focus:rounded-full focus:bg-lilac-500 focus:px-4 focus:py-2 focus:text-white"
+        className="sr-only focus:not-sr-only focus:absolute focus:top-2 focus:left-2 focus:z-50 focus:rounded-[9px] focus:bg-lilac-300 focus:px-4 focus:py-2 focus:text-ink"
       >
         Skip to content
       </a>
 
-      <Sidebar />
-      <IconRail />
+      {/* Full-width header above everything */}
+      <TopBar />
 
-      <div className="md:pl-19 lg:pl-72">
-        <TopBar />
+      {/* Main body: sidebar + content */}
+      <div className="flex-1 flex min-w-0">
+        <Sidebar />
         <main
           id="main"
           key={location.pathname}
-          className="mx-auto w-full max-w-6xl px-4 pt-4 pb-28 sm:px-6 md:pb-10 lg:px-8 motion-safe:animate-fade-in"
+          className="flex-1 min-w-0 mx-auto w-full max-w-[1100px] px-4 py-6 md:px-6 pb-24 md:pb-12 motion-safe:animate-fade-in"
         >
           {children}
         </main>

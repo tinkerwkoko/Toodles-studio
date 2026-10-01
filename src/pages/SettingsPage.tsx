@@ -1,17 +1,20 @@
 import { useRef, useState } from 'react';
-import { Bell, Download, Trash2, Upload } from 'lucide-react';
+import { Bell, Check, Cloud, Download, Monitor, Moon, Shield, Sun, Trash2, Upload, User } from 'lucide-react';
 import { Cat } from '../components/Cat';
 import { Button } from '../components/ui/Button';
 import { Card } from '../components/ui/Card';
 import { ConfirmDialog } from '../components/ui/ConfirmDialog';
+import { Input } from '../components/ui/Field';
 import { PageHeader } from '../components/ui/PageHeader';
+import { AccountDialog } from '../components/auth/AccountDialog';
 import { useNotificationPermission } from '../hooks/useNotificationPermission';
 import { useToodles } from '../store/useToodles';
 import { useUi } from '../store/useUi';
+import type { ThemeMode } from '../types';
 
 type ImportState = { tone: 'success' | 'error'; message: string } | null;
 
-/** `/settings` — local data export, import, erase, and reminder status. */
+/** `/settings`: account, profile nickname, theme, data export, import, erase, and reminder status. */
 export function SettingsPage() {
   const { data, actions, storageBlocked } = useToodles();
   const { pushToast } = useUi();
@@ -19,6 +22,32 @@ export function SettingsPage() {
   const fileInput = useRef<HTMLInputElement | null>(null);
   const [confirmErase, setConfirmErase] = useState(false);
   const [message, setMessage] = useState<ImportState>(null);
+  const [accountDialogOpen, setAccountDialogOpen] = useState(false);
+
+  const account = data.settings.account;
+  const [nicknameInput, setNicknameInput] = useState(account?.name || data.settings.displayName || '');
+  const [nicknameSaved, setNicknameSaved] = useState(false);
+
+  function handleSaveNickname() {
+    const trimmed = nicknameInput.trim();
+    actions.updateSettings({ displayName: trimmed });
+    if (account) {
+      actions.updateSettings({
+        account: {
+          ...account,
+          name: trimmed,
+        },
+      });
+    }
+    setNicknameSaved(true);
+    setTimeout(() => setNicknameSaved(false), 2000);
+    pushToast('Nickname saved ✨', 'success');
+  }
+
+  function handleThemeChange(theme: ThemeMode) {
+    actions.updateSettings({ theme });
+    pushToast(`Theme updated to ${theme}`);
+  }
 
   const counts = [
     `${data.tasks.length} task${data.tasks.length === 1 ? '' : 's'}`,
@@ -44,8 +73,6 @@ export function SettingsPage() {
   async function importFile(file: File): Promise<void> {
     try {
       const text = await file.text();
-      // parseImport throws a friendly Error for anything that is not Toodles JSON,
-      // so nothing is written unless the file really is a backup.
       const result = actions.importData(text);
       setMessage({ tone: 'success', message: `Imported ${result.tasks} tasks.` });
       pushToast('Backup restored', 'success');
@@ -58,20 +85,175 @@ export function SettingsPage() {
   }
 
   return (
-    <div className="pb-4">
+    <div className="pb-4 space-y-6">
       <PageHeader
         title="Settings"
-        subtitle="Everything lives in this browser. Nothing is uploaded, ever."
+        subtitle="Customize your workspace, account profile, appearance, reminders, and data."
         pose="curious"
       />
 
       <div className="grid gap-4 lg:grid-cols-2 lg:items-start">
+        {/* Account & Authentication Card */}
+        <Card padding="lg" className="space-y-4">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <User size={18} className="text-accent" />
+              <h2 className="text-lg">Account & Sync</h2>
+            </div>
+            {account && (
+              <span className="rounded-full bg-mint-100 px-2.5 py-0.5 text-xs font-title font-medium text-mint-700 flex items-center gap-1">
+                <Cloud size={12} />
+                <span>Synced</span>
+              </span>
+            )}
+          </div>
+
+          {account ? (
+            <div className="space-y-3">
+              <p className="text-sm text-ink-soft">
+                Signed in as <strong className="text-ink">{account.name}</strong> ({account.email}). Your workspace persists and syncs across all your devices.
+              </p>
+              <div className="flex items-center gap-2 pt-1">
+                <Button
+                  size="sm"
+                  variant="primary"
+                  onClick={() => setAccountDialogOpen(true)}
+                  icon={<Cloud size={14} />}
+                >
+                  Manage account
+                </Button>
+              </div>
+            </div>
+          ) : (
+            <div className="space-y-3">
+              <p className="text-sm text-ink-soft">
+                Sign in or create an account to persist your tasks, projects, diary, and habits across all your devices.
+              </p>
+              <div className="flex items-center gap-2 pt-1">
+                <Button
+                  size="sm"
+                  variant="primary"
+                  onClick={() => setAccountDialogOpen(true)}
+                  icon={<User size={14} />}
+                >
+                  Sign in or create account
+                </Button>
+              </div>
+            </div>
+          )}
+        </Card>
+
+        {/* Profile & Nickname */}
+        <Card padding="lg" className="space-y-4">
+          <div className="flex items-center gap-2">
+            <User size={18} className="text-accent" />
+            <h2 className="text-lg">Your nickname</h2>
+          </div>
+          <p className="text-sm text-ink-soft">
+            How Toodles greets you on your dashboard, header, and workspace.
+          </p>
+
+          <div className="flex items-center gap-2">
+            <Input
+              value={nicknameInput}
+              onChange={(e) => setNicknameInput(e.target.value)}
+              placeholder="e.g. Cozy Friend, Jamie..."
+              className="flex-1"
+              onKeyDown={(e) => {
+                if (e.key === 'Enter') {
+                  e.preventDefault();
+                  handleSaveNickname();
+                }
+              }}
+            />
+            <Button
+              onClick={handleSaveNickname}
+              variant={nicknameSaved ? 'primary' : 'soft'}
+              icon={nicknameSaved ? <Check size={16} /> : undefined}
+            >
+              {nicknameSaved ? 'Saved' : 'Save'}
+            </Button>
+          </div>
+        </Card>
+
+        {/* Theme & Appearance */}
+        <Card padding="lg" className="space-y-4">
+          <h2 className="text-lg">Appearance</h2>
+          <p className="text-sm text-ink-soft">
+            Choose your mood: candlelit dark mode, soft daytime cream, or follow your system.
+          </p>
+          <div className="grid grid-cols-3 gap-2">
+            <button
+              type="button"
+              onClick={() => handleThemeChange('system')}
+              className={`flex flex-col items-center gap-2 rounded-2xl border p-3 text-xs font-title transition cursor-pointer ${
+                data.settings.theme === 'system'
+                  ? 'border-accent bg-lilac-200 text-ink shadow-sm'
+                  : 'border-lilac-200 bg-cream text-ink-soft hover:bg-lilac-50'
+              }`}
+            >
+              <Monitor size={18} />
+              <span>System</span>
+            </button>
+            <button
+              type="button"
+              onClick={() => handleThemeChange('light')}
+              className={`flex flex-col items-center gap-2 rounded-2xl border p-3 text-xs font-title transition cursor-pointer ${
+                data.settings.theme === 'light'
+                  ? 'border-accent bg-lilac-200 text-ink shadow-sm'
+                  : 'border-lilac-200 bg-cream text-ink-soft hover:bg-lilac-50'
+              }`}
+            >
+              <Sun size={18} />
+              <span>Light</span>
+            </button>
+            <button
+              type="button"
+              onClick={() => handleThemeChange('dark')}
+              className={`flex flex-col items-center gap-2 rounded-2xl border p-3 text-xs font-title transition cursor-pointer ${
+                data.settings.theme === 'dark'
+                  ? 'border-accent bg-lilac-200 text-ink shadow-sm'
+                  : 'border-lilac-200 bg-cream text-ink-soft hover:bg-lilac-50'
+              }`}
+            >
+              <Moon size={18} />
+              <span>Dark</span>
+            </button>
+          </div>
+        </Card>
+
+        {/* Reminders */}
         <Card padding="lg" className="space-y-3">
-          <h2 className="text-lg">Your data</h2>
+          <h2 className="text-lg">Reminders</h2>
+          <p className="text-sm text-ink-soft">
+            Receive gentle notifications and reminders when tasks are scheduled.
+          </p>
+          <p className="text-sm font-bold text-ink">Status: {permissionLabel(permission)}</p>
+          {permission !== 'granted' && permission !== 'unsupported' && (
+            <Button
+              variant="soft"
+              onClick={() => {
+                void request().then((result) => {
+                  pushToast(
+                    result === 'granted' ? 'Reminders are on 🔔' : 'Reminders stay off',
+                    result === 'granted' ? 'success' : 'default',
+                  );
+                });
+              }}
+              icon={<Bell size={17} aria-hidden="true" />}
+            >
+              Allow notifications
+            </Button>
+          )}
+        </Card>
+
+        {/* Data Management */}
+        <Card padding="lg" className="space-y-3">
+          <h2 className="text-lg">Workspace data</h2>
           <p className="text-sm text-ink-soft">{counts.join(' · ')}</p>
           {storageBlocked && (
             <p className="rounded-2xl bg-rose-100 px-3 py-2 text-sm text-ink">
-              This browser is blocking local storage, so changes will not be saved.
+              Storage permissions are currently restricted.
             </p>
           )}
 
@@ -114,74 +296,51 @@ export function SettingsPage() {
           )}
 
           <p className="text-xs text-ink-soft">
-            Importing replaces the current workspace, so export a backup first if you want to keep
+            Importing updates your current workspace, so export a backup first if you want to keep
             it.
           </p>
         </Card>
 
+        {/* Privacy Card */}
         <Card padding="lg" className="space-y-3">
-          <h2 className="text-lg">Reminders</h2>
-          <p className="text-sm text-ink-soft">
-            Reminders work while Toodles is open on this device. There is no server, so nothing can
-            be delivered after you close the tab.
-          </p>
-          <p className="text-sm font-bold text-ink">Status: {permissionLabel(permission)}</p>
-          {permission !== 'granted' && permission !== 'unsupported' && (
-            <Button
-              variant="soft"
-              onClick={() => {
-                void request().then((result) => {
-                  pushToast(
-                    result === 'granted' ? 'Reminders are on 🔔' : 'Reminders stay off',
-                    result === 'granted' ? 'success' : 'default',
-                  );
-                });
-              }}
-              icon={<Bell size={17} aria-hidden="true" />}
-            >
-              Allow notifications
-            </Button>
-          )}
-        </Card>
-      </div>
-
-      <div className="mt-4 grid gap-4 lg:grid-cols-2 lg:items-start">
-        <Card padding="lg" className="space-y-3">
-          <h2 className="text-lg">Privacy</h2>
+          <div className="flex items-center gap-2">
+            <Shield size={18} className="text-accent" />
+            <h2 className="text-lg">Privacy policy</h2>
+          </div>
           <div className="flex items-start gap-4">
-            <Cat pose="curious" size={72} animated={false} className="shrink-0" />
-            <p className="text-sm text-ink-soft">
-              Toodles keeps everything in this browser&rsquo;s local storage. There is no account,
-              no cloud and no tracking. Open it in another browser or a private window and you get
-              an empty Toodles of your own.
+            <Cat pose="curious" size={64} animated={false} className="shrink-0" />
+            <p className="text-sm text-ink-soft leading-relaxed">
+              We believe your thoughts, tasks, and journals are strictly your own. We do not share users&apos; data,
+              sell your information, or track your personal activity. Your workspace belongs completely to you.
             </p>
           </div>
         </Card>
-
-        <Card padding="lg" className="space-y-3 border-rose-200">
-          <h2 className="text-lg text-ink">Erase everything</h2>
-          <p className="text-sm text-ink-soft">
-            This deletes every task, project, diary entry, mood and habit stored in this browser. It
-            cannot be undone.
-          </p>
-          <Button
-            variant="danger"
-            onClick={() => setConfirmErase(true)}
-            icon={<Trash2 size={17} aria-hidden="true" />}
-          >
-            Erase all data
-          </Button>
-        </Card>
       </div>
+
+      {/* Erase All Data */}
+      <Card padding="lg" className="space-y-3 border-rose-200">
+        <h2 className="text-lg text-ink">Reset workspace</h2>
+        <p className="text-sm text-ink-soft">
+          This permanently resets your workspace and removes all tasks, projects, diary entries, moods, and habits.
+          It cannot be undone.
+        </p>
+        <Button
+          variant="danger"
+          onClick={() => setConfirmErase(true)}
+          icon={<Trash2 size={17} aria-hidden="true" />}
+        >
+          Erase all data
+        </Button>
+      </Card>
 
       <ConfirmDialog
         open={confirmErase}
-        title="Erase all Toodles data?"
+        title="Reset all workspace data?"
         tone="danger"
         confirmLabel="Erase everything"
         body={
           <p>
-            You are about to delete {counts.join(', ')} from this browser. Export a backup first if
+            You are about to delete {counts.join(', ')}. Export a backup first if
             you might want any of it later.
           </p>
         }
@@ -190,9 +349,11 @@ export function SettingsPage() {
           actions.eraseAll();
           setConfirmErase(false);
           setMessage(null);
-          pushToast('All data erased');
+          pushToast('All workspace data erased');
         }}
       />
+
+      <AccountDialog open={accountDialogOpen} onClose={() => setAccountDialogOpen(false)} />
     </div>
   );
 }

@@ -48,7 +48,7 @@ export function habitStreak(habit: Habit, checks: HabitCheck[], today: DateStrin
       continue;
     }
     if (step === 0) {
-      // Today is not done yet — it does not break the streak.
+      // Today is not done yet: it does not break the streak.
       cursor.setDate(cursor.getDate() - 1);
       continue;
     }

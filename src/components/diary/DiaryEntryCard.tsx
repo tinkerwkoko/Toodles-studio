@@ -33,6 +33,19 @@ export function DiaryEntryCard({ entry, onEdit, onDelete }: DiaryEntryCardProps)
       <h2 className="text-lg text-ink">{entry.title || 'An untitled page'}</h2>
       {entry.body && <p className="text-[0.95rem] leading-relaxed whitespace-pre-wrap text-ink-soft">{entry.body}</p>}
 
+      {entry.photos && entry.photos.length > 0 && (
+        <div className="flex flex-wrap gap-2 pt-1.5">
+          {entry.photos.map((photo, i) => (
+            <img
+              key={i}
+              src={photo}
+              alt=""
+              className="h-28 w-28 rounded-2xl object-cover border border-lilac-200 shadow-sm"
+            />
+          ))}
+        </div>
+      )}
+
       <div className="flex items-center gap-2 pt-1">
         <Button
           size="sm"

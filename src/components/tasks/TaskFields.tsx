@@ -2,6 +2,8 @@ import type { Priority, RepeatRule } from '../../types';
 import { PRIORITY_KEYS, PRIORITY_STYLES } from '../../lib/color';
 import { REPEAT_LABELS } from '../../lib/task';
 import { Field, Input, Select } from '../ui/Field';
+import { DatePicker } from '../ui/DatePicker';
+import { TimePicker } from '../ui/TimePicker';
 import type { TaskFormValues } from './taskFormValues';
 
 export interface TaskFieldsProps {
@@ -49,30 +51,27 @@ export function TaskFields({ values, patch, projects, lockedProjectId }: TaskFie
         </Field>
       )}
 
-      <Field label="Start date" htmlFor="task-start">
-        <Input
-          id="task-start"
-          type="date"
+      <Field label="Start date">
+        <DatePicker
           value={values.startDate}
-          onChange={(event) => patch({ startDate: event.target.value })}
+          onChange={(startDate) => patch({ startDate })}
+          placeholder="Pick start date"
         />
       </Field>
 
-      <Field label="Due date" htmlFor="task-due">
-        <Input
-          id="task-due"
-          type="date"
+      <Field label="Due date">
+        <DatePicker
           value={values.dueDate}
-          onChange={(event) => patch({ dueDate: event.target.value })}
+          onChange={(dueDate) => patch({ dueDate })}
+          placeholder="Pick due date"
         />
       </Field>
 
-      <Field label="Time" htmlFor="task-time">
-        <Input
-          id="task-time"
-          type="time"
+      <Field label="Time">
+        <TimePicker
           value={values.dueTime}
-          onChange={(event) => patch({ dueTime: event.target.value })}
+          onChange={(dueTime) => patch({ dueTime })}
+          placeholder="Pick quiet time"
         />
       </Field>
 

@@ -5,17 +5,17 @@ export type ButtonVariant = 'primary' | 'soft' | 'ghost' | 'outline' | 'danger';
 export type ButtonSize = 'sm' | 'md' | 'lg';
 
 const VARIANTS: Record<ButtonVariant, string> = {
-  primary: 'bg-lilac-300 text-ink hover:bg-lilac-600',
-  soft: 'bg-cream text-ink border border-lilac-200 hover:bg-lilac-50',
+  primary: 'bg-lilac-300 text-ink hover:bg-lilac-400',
+  soft: 'bg-cream text-ink border border-lilac-200 hover:bg-lilac-100',
   ghost: 'bg-transparent text-ink hover:bg-lilac-100',
-  outline: 'bg-cream text-ink border border-lilac-200 hover:bg-lilac-50',
-  danger: 'bg-peach-300 text-peach-700 hover:bg-peach-200',
+  outline: 'bg-cream text-ink border border-lilac-200 hover:bg-lilac-100',
+  danger: 'bg-rose-100 text-ink border border-rose-200 hover:bg-rose-200',
 };
 
 const SIZES: Record<ButtonSize, string> = {
-  sm: 'min-h-9 px-3.5 text-sm',
-  md: 'min-h-11 px-5 text-[0.95rem]',
-  lg: 'min-h-13 px-6 text-base',
+  sm: 'min-h-[36px] md:min-h-[30px] md:h-[30px] px-2.5 text-xs',
+  md: 'min-h-[40px] md:min-h-[30px] md:h-[30px] px-3.5 text-sm',
+  lg: 'min-h-[44px] md:min-h-[36px] md:h-[36px] px-4 text-[0.95rem]',
 };
 
 export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
@@ -39,10 +39,9 @@ export function Button({
     <button
       type={type}
       className={cx(
-        // Pill buttons in Chewy. text-sm/body is 14–15px, tags 13px elsewhere.
-        'inline-flex items-center justify-center gap-2 rounded-full font-display transition duration-200',
+        'inline-flex items-center justify-center gap-1.5 rounded-[9px] font-display font-normal transition duration-150',
         'focus-visible:outline-2 focus-visible:outline-offset-2',
-        'active:scale-[0.97] disabled:pointer-events-none disabled:opacity-45',
+        'active:scale-[0.98] disabled:pointer-events-none disabled:opacity-45',
         VARIANTS[variant],
         SIZES[size],
         block && 'w-full',

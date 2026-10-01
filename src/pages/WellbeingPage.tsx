@@ -118,7 +118,7 @@ export function WellbeingPage() {
           small
           pose="sleepy"
           title="No habits yet"
-          sentence="Start with one small thing you would like to do most days — reading, water, a short walk."
+          sentence="Start with one small thing you would like to do most days: reading, water, a short walk."
           actionLabel="Start your first habit"
           onAction={() => setCreating(true)}
         />

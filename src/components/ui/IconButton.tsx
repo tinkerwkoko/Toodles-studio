@@ -8,7 +8,7 @@ export interface IconButtonProps extends ButtonHTMLAttributes<HTMLButtonElement>
   tone?: 'default' | 'danger';
 }
 
-/** Round, 44px-friendly icon button. */
+/** 30px desktop, 40px touch icon button with 9px radius. */
 export function IconButton({
   label,
   children,
@@ -23,11 +23,11 @@ export function IconButton({
       aria-label={label}
       title={label}
       className={cx(
-        'inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-full border transition duration-200',
+        'inline-flex h-10 w-10 md:h-[30px] md:w-[30px] shrink-0 items-center justify-center rounded-[9px] border transition duration-150',
         'active:scale-95 disabled:pointer-events-none disabled:opacity-40',
         tone === 'danger'
-          ? 'border-rose-200 bg-rose-100 text-rose-700 hover:bg-rose-200'
-          : 'border-lilac-200 bg-cream text-lilac-700 hover:bg-lilac-100',
+          ? 'border-rose-200 bg-rose-100 text-ink hover:bg-rose-200'
+          : 'border-lilac-200 bg-cream text-ink hover:bg-lilac-100',
         className,
       )}
       {...rest}

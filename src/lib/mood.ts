@@ -3,18 +3,29 @@ import type { AccentColor, MoodLevel } from '../types';
 export interface MoodMeta {
   level: MoodLevel;
   label: string;
-  /** Gentle, non-clinical description. */
   hint: string;
+  phrase: string;
   color: AccentColor;
 }
 
-/** Order matters: index 0 is the brightest mood. No health claims here. */
+export const MOOD_PHRASES: Record<MoodLevel, string> = {
+  difficult: 'A heavy one',
+  low: 'A quiet one',
+  okay: 'Somewhere in the middle',
+  good: 'A gentle good one',
+  happy: 'A bright one',
+};
+
+/**
+ * Five mood levels from difficult to happy:
+ * Difficult, Low, Okay, Good, Happy.
+ */
 export const MOODS: MoodMeta[] = [
-  { level: 'happy', label: 'Happy', hint: 'A bright one', color: 'butter' },
-  { level: 'good', label: 'Good', hint: 'Steady and calm', color: 'mint' },
-  { level: 'okay', label: 'Okay', hint: 'Just ticking along', color: 'sky' },
-  { level: 'low', label: 'Low', hint: 'A quieter day', color: 'lilac' },
-  { level: 'difficult', label: 'Difficult', hint: 'A heavy one', color: 'rose' },
+  { level: 'difficult', label: 'Difficult', hint: 'A heavy one', phrase: 'A heavy one', color: 'rose' },
+  { level: 'low', label: 'Low', hint: 'A quiet one', phrase: 'A quiet one', color: 'sky' },
+  { level: 'okay', label: 'Okay', hint: 'Somewhere in the middle', phrase: 'Somewhere in the middle', color: 'butter' },
+  { level: 'good', label: 'Good', hint: 'A gentle good one', phrase: 'A gentle good one', color: 'mint' },
+  { level: 'happy', label: 'Happy', hint: 'A bright one', phrase: 'A bright one', color: 'peach' },
 ];
 
 const MOOD_BY_LEVEL: Record<MoodLevel, MoodMeta> = MOODS.reduce(

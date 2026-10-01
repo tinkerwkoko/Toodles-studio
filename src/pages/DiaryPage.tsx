@@ -12,7 +12,7 @@ import { PageHeader } from '../components/ui/PageHeader';
 import { useToodles } from '../store/useToodles';
 import { useUi } from '../store/useUi';
 
-/** `/diary` — private pages, newest first, with search and month navigation. */
+/** `/diary`: private pages, newest first, with search and month navigation. */
 export function DiaryPage() {
   const { data, actions } = useToodles();
   const { openCreate, pushToast } = useUi();
@@ -137,6 +137,7 @@ export function DiaryPage() {
                 mood: values.mood,
                 projectId: values.projectId === '' ? null : values.projectId,
                 tags: values.tags,
+                photos: values.photos,
               });
               setEditing(null);
               pushToast('Page saved', 'success');
