@@ -3,9 +3,9 @@ import { BrowserRouter, Link, Navigate, Route, Routes } from 'react-router-dom';
 import { Cat } from './components/Cat';
 import { AppShell } from './components/layout/AppShell';
 import { WelcomeScreen } from './components/WelcomeScreen';
+import { AuthPage } from './components/auth/AuthPage';
 import { DiaryPage } from './pages/DiaryPage';
 import { CalendarPage } from './pages/CalendarPage';
-import { FocusPage } from './pages/FocusPage';
 import { HomePage } from './pages/HomePage';
 import { ProjectDetailPage } from './pages/ProjectDetailPage';
 import { ProjectsPage } from './pages/ProjectsPage';
@@ -16,10 +16,11 @@ import { WellbeingPage } from './pages/WellbeingPage';
 import { AnalyticsPage } from './pages/AnalyticsPage';
 import { ToodlesProvider } from './store/ToodlesProvider';
 import { UiProvider } from './store/UiProvider';
+import { useToodles } from './store/useToodles';
 
 /**
  * Toodles: a private, local-first planner.
- * Splash screen -> providers -> responsive shell -> routes.
+ * Flow: Welcome splash -> Sign in / Sign up page -> Full product.
  */
 export default function App() {
   const [splash, setSplash] = useState(true);
@@ -28,30 +29,51 @@ export default function App() {
     <BrowserRouter>
       <ToodlesProvider>
         <UiProvider>
-          {splash && <WelcomeScreen onDone={() => setSplash(false)} />}
-          <AppShell>
-            <Routes>
-              <Route path="/" element={<HomePage />} />
-              <Route path="/tasks" element={<TasksPage />} />
-              <Route path="/calendar" element={<CalendarPage />} />
-              <Route path="/today" element={<Navigate to="/tasks?tab=today" replace />} />
-              <Route path="/upcoming" element={<Navigate to="/tasks?tab=upcoming" replace />} />
-              <Route path="/overdue" element={<Navigate to="/tasks?tab=overdue" replace />} />
-              <Route path="/completed" element={<Navigate to="/tasks?tab=completed" replace />} />
-              <Route path="/projects" element={<ProjectsPage />} />
-              <Route path="/projects/:id" element={<ProjectDetailPage />} />
-              <Route path="/focus" element={<FocusPage />} />
-              <Route path="/study" element={<StudyPage />} />
-              <Route path="/analytics" element={<AnalyticsPage />} />
-              <Route path="/diary" element={<DiaryPage />} />
-              <Route path="/wellbeing" element={<WellbeingPage />} />
-              <Route path="/settings" element={<SettingsPage />} />
-              <Route path="*" element={<NotFound />} />
-            </Routes>
-          </AppShell>
+          <MainFlow splash={splash} onSplashDone={() => setSplash(false)} />
         </UiProvider>
       </ToodlesProvider>
     </BrowserRouter>
+  );
+}
+
+function MainFlow({ splash, onSplashDone }: { splash: boolean; onSplashDone: () => void }) {
+  const { data, actions } = useToodles();
+  const hasAuth = Boolean(data.settings.account || data.settings.guestMode);
+
+  if (splash) {
+    return <WelcomeScreen onDone={onSplashDone} />;
+  }
+
+  if (!hasAuth) {
+    return (
+      <AuthPage
+        onSuccess={() => {}}
+        onContinueAsGuest={() => actions.updateSettings({ guestMode: true })}
+      />
+    );
+  }
+
+  return (
+    <AppShell>
+      <Routes>
+        <Route path="/" element={<HomePage />} />
+        <Route path="/tasks" element={<TasksPage />} />
+        <Route path="/calendar" element={<CalendarPage />} />
+        <Route path="/today" element={<Navigate to="/tasks?tab=today" replace />} />
+        <Route path="/upcoming" element={<Navigate to="/tasks?tab=upcoming" replace />} />
+        <Route path="/overdue" element={<Navigate to="/tasks?tab=overdue" replace />} />
+        <Route path="/completed" element={<Navigate to="/tasks?tab=completed" replace />} />
+        <Route path="/projects" element={<ProjectsPage />} />
+        <Route path="/projects/:id" element={<ProjectDetailPage />} />
+        <Route path="/focus" element={<Navigate to="/study?tab=focus" replace />} />
+        <Route path="/study" element={<StudyPage />} />
+        <Route path="/analytics" element={<AnalyticsPage />} />
+        <Route path="/diary" element={<DiaryPage />} />
+        <Route path="/wellbeing" element={<WellbeingPage />} />
+        <Route path="/settings" element={<SettingsPage />} />
+        <Route path="*" element={<NotFound />} />
+      </Routes>
+    </AppShell>
   );
 }
 

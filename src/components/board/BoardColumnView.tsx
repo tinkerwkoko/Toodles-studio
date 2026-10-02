@@ -96,12 +96,34 @@ export function BoardColumnView({
         isOver && 'ring-2 ring-lilac-400',
       )}
     >
-      <header className="flex items-center gap-2">
+      <header className="flex items-center gap-1.5">
         <span className={cx('h-3 w-3 shrink-0 rounded-full', tone.mid)} aria-hidden="true" />
-        <h3 className={cx('min-w-0 flex-1 truncate text-base', tone.text)}>{column.name}</h3>
+        <h3 className={cx('min-w-0 flex-1 truncate text-base font-title font-medium', tone.text)}>{column.name}</h3>
         <span className="rounded-full bg-cream/80 px-2 py-0.5 text-xs font-bold text-ink-soft">
           {tasks.length}
         </span>
+        <div className="flex items-center gap-0.5">
+          <button
+            type="button"
+            disabled={index === 0}
+            onClick={() => actions.moveColumn(column.id, -1)}
+            aria-label={`Move ${column.name} column left`}
+            title="Move left"
+            className="grid h-7 w-7 place-items-center rounded-full text-ink-soft hover:bg-cream/60 hover:text-ink disabled:opacity-30 disabled:pointer-events-none transition cursor-pointer"
+          >
+            <ChevronLeft size={15} />
+          </button>
+          <button
+            type="button"
+            disabled={index === total - 1}
+            onClick={() => actions.moveColumn(column.id, 1)}
+            aria-label={`Move ${column.name} column right`}
+            title="Move right"
+            className="grid h-7 w-7 place-items-center rounded-full text-ink-soft hover:bg-cream/60 hover:text-ink disabled:opacity-30 disabled:pointer-events-none transition cursor-pointer"
+          >
+            <ChevronRight size={15} />
+          </button>
+        </div>
         <Menu label={`Options for ${column.name}`} header="Column" items={columnMenu}>
           <MoreVertical size={17} aria-hidden="true" />
         </Menu>

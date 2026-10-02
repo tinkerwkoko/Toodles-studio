@@ -1,7 +1,7 @@
 @import 'tailwindcss';
 
 /* ------------------------------------------------------------------
-   Toodles CSS variables - light and dark palettes.
+   Toodles CSS variables - soothing light and calm dark palettes.
    ------------------------------------------------------------------ */
 :root {
   --bg: #f8f2ef;
@@ -15,11 +15,36 @@
   --text-2: #85697a;
   --text-faint: #a58c99;
   --accent: #b592a4;
-  --peach: #f4c3a8;
-  --peach-ink: #5a4238;
-  --peach-deep: #e59f7c;
-  --cream: #fff6ef;
-  --cream-border: #ebd3c4;
+
+  --peach-100: #fff6ef;
+  --peach-200: #ebd3c4;
+  --peach-300: #f4c3a8;
+  --peach-500: #e59f7c;
+  --peach-700: #5a4238;
+
+  --mint-100: #edf4eb;
+  --mint-200: #cce0c9;
+  --mint-300: #a8cfab;
+  --mint-500: #7eb883;
+  --mint-700: #345237;
+
+  --butter-100: #fdf8e8;
+  --butter-200: #faeec1;
+  --butter-300: #f5de8e;
+  --butter-500: #e5c557;
+  --butter-700: #57461c;
+
+  --sky-100: #edf5fa;
+  --sky-200: #cde4f4;
+  --sky-300: #a7cfed;
+  --sky-500: #74aee2;
+  --sky-700: #294c6d;
+
+  --rose-100: #faf0f4;
+  --rose-200: #f3d4e3;
+  --rose-300: #e8b3cf;
+  --rose-500: #d689b4;
+  --rose-700: #5c2f49;
 
   --stat-focused: #f4c3a8;
   --stat-upcoming: #d3e2ec;
@@ -33,92 +58,144 @@
   --mood-good: #dce6d3;
   --mood-happy: #f4d5c4;
 
-  --cat-body: #fffcfa;
+  --cat-body: #fffbf7;
   --cat-outline: #b592a4;
-
-  --mint-bg: #dce6d3;
-  --butter-bg: #f6eac2;
-  --sky-bg: #d3e2ec;
-  --rose-bg: #f0d5d5;
+  --cat-whisker: #b592a4;
+  --cat-face: #4a3540;
+  --cat-blush: #f4c3a8;
+  --cat-nose: #f4c3a8;
+  --cat-stripes: #d9bfcc;
 }
 
 [data-theme='dark'] {
-  --bg: #1e1824;
-  --sidebar: #261f2d;
-  --card: #2e2636;
-  --primary: #cba8bc;
-  --primary-hover: #d8b8ca;
-  --border: #44374d;
-  --divider: #382d40;
-  --text: #ece2ea;
-  --text-2: #bfaec0;
-  --text-faint: #8e7b8f;
-  --accent: #d4a9bf;
-  --peach: #f2c2a6;
-  --peach-ink: #ece2ea;
-  --peach-deep: #e29c78;
-  --cream: #2e2636;
-  --cream-border: #44374d;
+  --bg: #18141f;
+  --sidebar: #1e1927;
+  --card: #262031;
+  --primary: #cca3ba;
+  --primary-hover: #dbaec7;
+  --border: #3b3149;
+  --divider: #31273e;
+  --text: #f5eff6;
+  --text-2: #c8bdce;
+  --text-faint: #9c8e9f;
+  --accent: #d2a4bc;
 
-  --mint-bg: #233428;
-  --butter-bg: #352e1f;
-  --sky-bg: #1f3042;
-  --rose-bg: #3c232c;
+  /* Cozy, softly luminous dark-mode pastels */
+  --peach-100: #33211f;
+  --peach-200: #543430;
+  --peach-300: #f0ac96;
+  --peach-500: #df886f;
+  --peach-700: #fde8e1;
 
-  --stat-focused: #3a2820;
-  --stat-upcoming: #1f3042;
-  --stat-overdue: #3c2027;
-  --stat-projects: #233428;
-  --stat-completed: #332437;
+  --mint-100: #1b2a20;
+  --mint-200: #294232;
+  --mint-300: #a5d2b3;
+  --mint-500: #7eb38f;
+  --mint-700: #e5f5ea;
 
-  --mood-difficult: #362539;
-  --mood-low: #1f3042;
-  --mood-okay: #362e1e;
-  --mood-good: #233428;
-  --mood-happy: #3c2921;
+  --butter-100: #302818;
+  --butter-200: #4c3f22;
+  --butter-300: #ebd688;
+  --butter-500: #d6bb58;
+  --butter-700: #fdf5d6;
 
-  --cat-body: #ebdfe7;
-  --cat-outline: #5c4454;
+  --sky-100: #192736;
+  --sky-200: #273d54;
+  --sky-300: #a0cae9;
+  --sky-500: #6aa3cf;
+  --sky-700: #e2f1fd;
+
+  --rose-100: #311d2a;
+  --rose-200: #4e2e42;
+  --rose-300: #e4aec9;
+  --rose-500: #c982a7;
+  --rose-700: #fbeef2;
+
+  --stat-focused: #33211f;
+  --stat-upcoming: #192736;
+  --stat-overdue: #311d2a;
+  --stat-projects: #1b2a20;
+  --stat-completed: #2d1e34;
+
+  --mood-difficult: #2d1e34;
+  --mood-low: #192736;
+  --mood-okay: #302818;
+  --mood-good: #1b2a20;
+  --mood-happy: #33211f;
+
+  /* Cat in dark mode: warm cream body, clear cute facial contours, visible whiskers */
+  --cat-body: #f8efe8;
+  --cat-outline: #6b5163;
+  --cat-whisker: #bfa3b8;
+  --cat-face: #361f30;
+  --cat-blush: #e59388;
+  --cat-nose: #e2887d;
+  --cat-stripes: #be8fa7;
 }
 
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme='light']) {
-    --bg: #1e1824;
-    --sidebar: #261f2d;
-    --card: #2e2636;
-    --primary: #cba8bc;
-    --primary-hover: #d8b8ca;
-    --border: #44374d;
-    --divider: #382d40;
-    --text: #ece2ea;
-    --text-2: #bfaec0;
-    --text-faint: #8e7b8f;
-    --accent: #d4a9bf;
-    --peach: #f2c2a6;
-    --peach-ink: #ece2ea;
-    --peach-deep: #e29c78;
-    --cream: #2e2636;
-    --cream-border: #44374d;
+    --bg: #18141f;
+    --sidebar: #1e1927;
+    --card: #262031;
+    --primary: #cca3ba;
+    --primary-hover: #dbaec7;
+    --border: #3b3149;
+    --divider: #31273e;
+    --text: #f5eff6;
+    --text-2: #c8bdce;
+    --text-faint: #9c8e9f;
+    --accent: #d2a4bc;
 
-    --mint-bg: #233428;
-    --butter-bg: #352e1f;
-    --sky-bg: #1f3042;
-    --rose-bg: #3c232c;
+    --peach-100: #33211f;
+    --peach-200: #543430;
+    --peach-300: #f0ac96;
+    --peach-500: #df886f;
+    --peach-700: #fde8e1;
 
-    --stat-focused: #3a2820;
-    --stat-upcoming: #1f3042;
-    --stat-overdue: #3c2027;
-    --stat-projects: #233428;
-    --stat-completed: #332437;
+    --mint-100: #1b2a20;
+    --mint-200: #294232;
+    --mint-300: #a5d2b3;
+    --mint-500: #7eb38f;
+    --mint-700: #e5f5ea;
 
-    --mood-difficult: #362539;
-    --mood-low: #1f3042;
-    --mood-okay: #362e1e;
-    --mood-good: #233428;
-    --mood-happy: #3c2921;
+    --butter-100: #302818;
+    --butter-200: #4c3f22;
+    --butter-300: #ebd688;
+    --butter-500: #d6bb58;
+    --butter-700: #fdf5d6;
 
-    --cat-body: #ebdfe7;
-    --cat-outline: #5c4454;
+    --sky-100: #192736;
+    --sky-200: #273d54;
+    --sky-300: #a0cae9;
+    --sky-500: #6aa3cf;
+    --sky-700: #e2f1fd;
+
+    --rose-100: #311d2a;
+    --rose-200: #4e2e42;
+    --rose-300: #e4aec9;
+    --rose-500: #c982a7;
+    --rose-700: #fbeef2;
+
+    --stat-focused: #33211f;
+    --stat-upcoming: #192736;
+    --stat-overdue: #311d2a;
+    --stat-projects: #1b2a20;
+    --stat-completed: #2d1e34;
+
+    --mood-difficult: #2d1e34;
+    --mood-low: #192736;
+    --mood-okay: #302818;
+    --mood-good: #1b2a20;
+    --mood-happy: #33211f;
+
+    --cat-body: #f8efe8;
+    --cat-outline: #6b5163;
+    --cat-whisker: #bfa3b8;
+    --cat-face: #361f30;
+    --cat-blush: #e59388;
+    --cat-nose: #e2887d;
+    --cat-stripes: #be8fa7;
   }
 }
 
@@ -140,35 +217,35 @@
   --color-ink-soft: var(--text-2);
   --color-cream: var(--card);
 
-  --color-peach-100: var(--cream);
-  --color-peach-200: var(--cream-border);
-  --color-peach-300: var(--peach);
-  --color-peach-500: var(--peach-deep);
-  --color-peach-700: var(--peach-ink);
+  --color-peach-100: var(--peach-100);
+  --color-peach-200: var(--peach-200);
+  --color-peach-300: var(--peach-300);
+  --color-peach-500: var(--peach-500);
+  --color-peach-700: var(--peach-700);
 
-  --color-mint-100: var(--mint-bg);
-  --color-mint-200: var(--border);
-  --color-mint-300: #b7c9ac;
-  --color-mint-500: #8fa883;
-  --color-mint-700: var(--text);
+  --color-mint-100: var(--mint-100);
+  --color-mint-200: var(--mint-200);
+  --color-mint-300: var(--mint-300);
+  --color-mint-500: var(--mint-500);
+  --color-mint-700: var(--mint-700);
 
-  --color-butter-100: var(--butter-bg);
-  --color-butter-200: var(--border);
-  --color-butter-300: #e3d39a;
-  --color-butter-500: #c9b673;
-  --color-butter-700: var(--text);
+  --color-butter-100: var(--butter-100);
+  --color-butter-200: var(--butter-200);
+  --color-butter-300: var(--butter-300);
+  --color-butter-500: var(--butter-500);
+  --color-butter-700: var(--butter-700);
 
-  --color-sky-100: var(--sky-bg);
-  --color-sky-200: var(--border);
-  --color-sky-300: #a9c4d6;
-  --color-sky-500: #7d9fb5;
-  --color-sky-700: var(--text);
+  --color-sky-100: var(--sky-100);
+  --color-sky-200: var(--sky-200);
+  --color-sky-300: var(--sky-300);
+  --color-sky-500: var(--sky-500);
+  --color-sky-700: var(--sky-700);
 
-  --color-rose-100: var(--rose-bg);
-  --color-rose-200: var(--border);
-  --color-rose-300: #d9bfcc;
-  --color-rose-500: #ba95a9;
-  --color-rose-700: var(--text);
+  --color-rose-100: var(--rose-100);
+  --color-rose-200: var(--rose-200);
+  --color-rose-300: var(--rose-300);
+  --color-rose-500: var(--rose-500);
+  --color-rose-700: var(--rose-700);
 
   --color-stat-1: var(--stat-upcoming);
   --color-stat-2: var(--stat-overdue);
@@ -186,14 +263,19 @@
   --color-mood-good: var(--mood-good);
   --color-mood-happy: var(--mood-happy);
 
-  --color-cream-banner: var(--cream);
-  --color-cream-border: var(--cream-border);
+  --color-cream-banner: var(--card);
+  --color-cream-border: var(--border);
   --color-divider: var(--divider);
   --color-text-faint: var(--text-faint);
   --color-accent: var(--accent);
 
   --color-cat-body: var(--cat-body);
   --color-cat-outline: var(--cat-outline);
+  --color-cat-whisker: var(--cat-whisker);
+  --color-cat-face: var(--cat-face);
+  --color-cat-blush: var(--cat-blush);
+  --color-cat-nose: var(--cat-nose);
+  --color-cat-stripes: var(--cat-stripes);
 
   --shadow-soft: none;
   --shadow-lift: none;
@@ -227,7 +309,7 @@
 @keyframes slide-up {
   from {
     opacity: 0;
-    transform: translateY(16px);
+    transform: translateY(12px);
   }
   to {
     opacity: 1;
@@ -237,130 +319,82 @@
 
 @keyframes pop {
   0% {
-    transform: scale(0.6);
-    opacity: 0;
+    transform: scale(0.95);
   }
-  60% {
-    transform: scale(1.08);
-    opacity: 1;
+  50% {
+    transform: scale(1.04);
   }
   100% {
     transform: scale(1);
-    opacity: 1;
   }
 }
 
 @keyframes blink {
   0%,
-  92%,
+  94%,
   100% {
     transform: scaleY(1);
   }
-  95% {
-    transform: scaleY(0.1);
+  97% {
+    transform: scaleY(0.08);
   }
 }
 
 @keyframes float {
   0%,
   100% {
-    transform: translateY(0) rotate(-1deg);
+    transform: translateY(0);
   }
   50% {
-    transform: translateY(-4px) rotate(1deg);
+    transform: translateY(-4px);
   }
 }
 
 @keyframes snooze {
   0%,
   100% {
-    transform: translateY(0) scale(1);
+    transform: scale(1);
   }
   50% {
-    transform: translateY(-2px) scale(1.02);
+    transform: scale(1.03);
   }
 }
 
-@layer base {
-  html {
-    -webkit-text-size-adjust: 100%;
-    scroll-behavior: smooth;
-  }
-
-  body {
-    margin: 0;
-    min-height: 100dvh;
-    background-color: var(--bg);
-    color: var(--text);
-    font-family: var(--font-sans);
-    font-size: 16px;
-    line-height: 1.55;
-    -webkit-font-smoothing: antialiased;
-    overflow-x: hidden;
-  }
-
-  h1,
-  h2,
-  h3,
-  h4 {
-    font-family: var(--font-display);
-    font-weight: 400;
-    letter-spacing: 0.01em;
-    color: var(--text);
-  }
-
-  h1 {
-    font-size: 30px;
-    line-height: 1.15;
-  }
-
-  h2,
-  h3,
-  h4 {
-    font-size: 18px;
-  }
-
-  * {
-    -webkit-tap-highlight-color: transparent;
-  }
-
-  :focus-visible {
-    outline: 2px solid var(--text-2);
-    outline-offset: 2px;
-    border-radius: 9px;
-  }
-
-  input,
-  textarea,
-  select,
-  button {
-    font: inherit;
-    color: inherit;
-  }
-
-  ::selection {
-    background: var(--primary);
-  }
+body {
+  margin: 0;
+  background-color: var(--bg);
+  color: var(--text);
+  font-family: var(--font-sans);
+  font-size: 15px;
+  min-height: 100dvh;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
-@utility no-scrollbar {
-  scrollbar-width: none;
-  &::-webkit-scrollbar {
-    display: none;
-  }
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: var(--font-title);
+  color: var(--text);
+  margin: 0;
+  font-weight: 500;
 }
 
-@utility pb-safe {
-  padding-bottom: env(safe-area-inset-bottom, 0px);
+/* Custom scrollbars that feel cozy and unobtrusive */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
 }
-
-@media (prefers-reduced-motion: reduce) {
-  *,
-  *::before,
-  *::after {
-    animation-duration: 0.001ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.001ms !important;
-    scroll-behavior: auto !important;
-  }
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 9999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--primary);
 }

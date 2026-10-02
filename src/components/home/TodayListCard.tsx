@@ -22,6 +22,8 @@ export function TodayListCard() {
   const [activeTab, setActiveTab] = useState<'todo' | 'done'>('todo');
   const [datePickerTask, setDatePickerTask] = useState<Task | null>(null);
   const [customDate, setCustomDate] = useState(today);
+  const [moveUnfinishedOpen, setMoveUnfinishedOpen] = useState(false);
+  const [targetMoveDate, setTargetMoveDate] = useState(addDays(today, 1));
 
   // All tasks due or starting today
   const tasksDueToday = data.tasks.filter((t) => isTaskDueToday(t, today) || isTaskCompletedToday(t, today));
@@ -44,21 +46,6 @@ export function TodayListCard() {
       (t) => typeof t.estimate === 'number' && t.estimate > 0,
     ).length;
     committedText = `${timedCount} of ${totalDue} timed`;
-  }
-
-  // Move unfinished to tomorrow with undo note
-  function handleMoveUnfinished() {
-    if (undoneCount === 0) return;
-    const taskIds = undoneDue.map((t) => t.id);
-    const tomorrow = addDays(today, 1);
-
-    taskIds.forEach((id) => {
-      actions.updateTask(id, { dueDate: tomorrow });
-    });
-
-    pushToast(
-      `Moved ${taskIds.length} task${taskIds.length === 1 ? '' : 's'} to tomorrow`,
-    );
   }
 
   function handleSaveCustomDate() {
@@ -91,8 +78,11 @@ export function TodayListCard() {
         {undoneCount > 0 && activeTab === 'todo' && (
           <button
             type="button"
-            onClick={handleMoveUnfinished}
-            className="text-xs font-sans text-ink-soft hover:text-ink underline transition"
+            onClick={() => {
+              setTargetMoveDate(addDays(today, 1));
+              setMoveUnfinishedOpen(true);
+            }}
+            className="text-xs font-sans text-ink-soft hover:text-ink underline transition cursor-pointer"
           >
             Move unfinished
           </button>
@@ -222,6 +212,73 @@ export function TodayListCard() {
             </Button>
             <Button variant="primary" size="sm" onClick={handleSaveCustomDate}>
               Save date
+            </Button>
+          </div>
+        </div>
+      </Dialog>
+      {/* Move unfinished tasks dialog */}
+      <Dialog
+        open={moveUnfinishedOpen}
+        onClose={() => setMoveUnfinishedOpen(false)}
+        title="Move unfinished tasks"
+        size="sm"
+      >
+        <div className="space-y-4">
+          <p className="text-xs sm:text-sm font-sans text-ink-soft">
+            Choose which day you would like to move your {undoneCount} unfinished task{undoneCount === 1 ? '' : 's'} to:
+          </p>
+
+          <div className="grid grid-cols-2 gap-2">
+            <button
+              type="button"
+              onClick={() => setTargetMoveDate(addDays(today, 1))}
+              className={`rounded-2xl border px-3 py-2 text-xs font-title font-medium transition cursor-pointer ${
+                targetMoveDate === addDays(today, 1)
+                  ? 'border-accent bg-lilac-200 text-ink shadow-sm'
+                  : 'border-divider bg-cream text-ink-soft hover:bg-lilac-100'
+              }`}
+            >
+              Tomorrow
+            </button>
+            <button
+              type="button"
+              onClick={() => setTargetMoveDate(addDays(today, 7))}
+              className={`rounded-2xl border px-3 py-2 text-xs font-title font-medium transition cursor-pointer ${
+                targetMoveDate === addDays(today, 7)
+                  ? 'border-accent bg-lilac-200 text-ink shadow-sm'
+                  : 'border-divider bg-cream text-ink-soft hover:bg-lilac-100'
+              }`}
+            >
+              Next week
+            </button>
+          </div>
+
+          <div className="space-y-1">
+            <span className="text-xs font-title font-medium text-ink">Or pick a specific day</span>
+            <DatePicker
+              value={targetMoveDate}
+              onChange={(d) => setTargetMoveDate(d || addDays(today, 1))}
+              placeholder="Choose date"
+            />
+          </div>
+
+          <div className="flex items-center justify-end gap-2 border-t border-divider pt-3">
+            <Button variant="ghost" size="sm" onClick={() => setMoveUnfinishedOpen(false)}>
+              Cancel
+            </Button>
+            <Button
+              variant="primary"
+              size="sm"
+              onClick={() => {
+                const taskIds = undoneDue.map((t) => t.id);
+                taskIds.forEach((id) => {
+                  actions.updateTask(id, { dueDate: targetMoveDate });
+                });
+                setMoveUnfinishedOpen(false);
+                pushToast(`Moved ${taskIds.length} task${taskIds.length === 1 ? '' : 's'} to ${targetMoveDate}`, 'success');
+              }}
+            >
+              Move tasks
             </Button>
           </div>
         </div>

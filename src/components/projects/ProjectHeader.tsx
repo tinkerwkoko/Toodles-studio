@@ -244,24 +244,28 @@ export function ProjectHeader({ project, doneCount, totalCount, children }: Proj
         )}
       </div>
 
-      {/* Notion Page Icon: overlaps bottom edge of cover banner */}
-      <div className="relative px-6 sm:px-10 -mt-12 sm:-mt-16 flex items-center justify-between pointer-events-none z-10">
+      {/* Page Icon: sits nicely overlapping bottom edge with soft rounded corners and no harsh border */}
+      <div className="relative px-6 sm:px-8 -mt-6 sm:-mt-7 flex items-center justify-between pointer-events-none z-10">
         <div className="relative group shrink-0 pointer-events-auto">
           <button
             type="button"
             onClick={() => setIconDialogOpen(true)}
             aria-label="Change project icon"
-            className="grid h-24 w-24 sm:h-28 sm:w-28 place-items-center rounded-3xl border-4 border-card bg-card shadow-soft overflow-hidden transition group-hover:scale-102 p-2.5 cursor-pointer"
+            className={`grid h-12 w-12 sm:h-14 sm:w-14 place-items-center rounded-2xl border border-lilac-200 bg-card shadow-soft overflow-hidden transition group-hover:scale-102 cursor-pointer ${
+              project.icon && (project.icon.startsWith('data:image') || project.icon.startsWith('http') || project.icon.startsWith('/'))
+                ? 'p-0'
+                : 'p-2'
+            }`}
           >
-            <ProjectIconDisplay icon={project.icon} emoji={project.emoji} size={46} />
+            <ProjectIconDisplay icon={project.icon} emoji={project.emoji} size={24} />
           </button>
           <button
             type="button"
             onClick={() => setIconDialogOpen(true)}
             aria-label="Change icon"
-            className="absolute -bottom-1 -right-1 grid h-8 w-8 place-items-center rounded-full bg-card border border-divider text-ink shadow-sm hover:scale-105 transition cursor-pointer"
+            className="absolute -bottom-1 -right-1 grid h-5 w-5 place-items-center rounded-full bg-card border border-lilac-200 text-ink shadow-sm hover:scale-105 transition cursor-pointer"
           >
-            <Camera size={14} aria-hidden="true" />
+            <Camera size={11} aria-hidden="true" />
           </button>
         </div>
       </div>
@@ -301,7 +305,7 @@ export function ProjectHeader({ project, doneCount, totalCount, children }: Proj
       >
         <div className="space-y-4">
           <p className="text-xs sm:text-sm font-sans text-ink-soft">
-            Choose a preset pastel atmosphere or upload your own 1500×600 header image (Notion standard).
+            Choose a preset pastel atmosphere or upload your own header image.
           </p>
 
           <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
@@ -334,7 +338,7 @@ export function ProjectHeader({ project, doneCount, totalCount, children }: Proj
               icon={<ImageIcon size={14} />}
               onClick={() => coverInputRef.current?.click()}
             >
-              Upload 1500×600 image
+              Upload image
             </Button>
             {hasCustomCover && (
               <Button variant="danger" size="sm" onClick={handleRemoveCover}>
@@ -406,11 +410,11 @@ export function ProjectHeader({ project, doneCount, totalCount, children }: Proj
             </div>
           )}
 
-          {/* Upload Tab: 280x280 square crop with breathing room */}
+          {/* Upload Tab */}
           {iconTab === 'upload' && (
             <div className="space-y-3 py-2">
               <p className="text-xs sm:text-sm font-sans text-ink-soft">
-                Upload a 280×280 custom square icon. Recommended: square transparent PNG or JPG with breathing room.
+                Upload a custom photo or graphic for your project icon.
               </p>
               <div className="flex items-center gap-2">
                 <input
@@ -426,7 +430,7 @@ export function ProjectHeader({ project, doneCount, totalCount, children }: Proj
                   icon={<Camera size={14} />}
                   onClick={() => iconInputRef.current?.click()}
                 >
-                  Choose 280×280 photo
+                  Choose photo
                 </Button>
                 {project.icon && (
                   <Button variant="danger" size="sm" onClick={handleRemoveIcon}>

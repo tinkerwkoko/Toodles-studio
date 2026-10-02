@@ -1,0 +1,24 @@
+{
+  "name": "Toodles",
+  "short_name": "Toodles",
+  "description": "Small tasks, big calm. A private, cozy personal productivity sanctuary.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#F8F2EF",
+  "theme_color": "#D9BFCC",
+  "orientation": "any",
+  "icons": [
+    {
+      "src": "/cat.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    },
+    {
+      "src": "/cat.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "maskable"
+    }
+  ]
+}

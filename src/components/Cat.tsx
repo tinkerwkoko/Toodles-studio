@@ -9,16 +9,17 @@ export interface CatProps {
   title?: string;
 }
 
-const FUR = 'var(--color-cat-body, #FFFCFA)';
-const LINE = 'var(--color-cat-outline, #B592A4)';
-const BLUSH = 'var(--color-peach-300, #F4C3A8)';
-const NOSE = 'var(--color-peach-300, #F4C3A8)';
-const FACE = 'var(--color-ink, #4A3540)';
-const ACCENT = 'var(--color-lilac-300, #D9BFCC)';
+const FUR = 'var(--cat-body, #FFFBF7)';
+const LINE = 'var(--cat-outline, #B592A4)';
+const WHISKER = 'var(--cat-whisker, var(--cat-outline, #B592A4))';
+const BLUSH = 'var(--cat-blush, #F4C3A8)';
+const NOSE = 'var(--cat-nose, #F4C3A8)';
+const FACE = 'var(--cat-face, #4A3540)';
+const STRIPES = 'var(--cat-stripes, #D9BFCC)';
 
 /**
  * Toodles: an original round, sleepy cat drawn in plain SVG.
- * Not based on any existing character or artwork.
+ * Designed to look soothing, distinct, and visible in both light & dark mode.
  */
 export function Cat({
   pose = 'sleepy',
@@ -44,7 +45,7 @@ export function Cat({
         <path
           d="M124 116c18 2 24 16 13 24-9 7-24 2-26-9"
           fill="none"
-          stroke={LINE}
+          stroke={WHISKER}
           strokeWidth={9}
           strokeLinecap="round"
         />
@@ -87,7 +88,7 @@ export function Cat({
         <path
           d="M62 34q6 9 0 16M80 28q6 10 0 18M98 34q-6 9 0 16"
           fill="none"
-          stroke="#D9BFCC"
+          stroke={STRIPES}
           strokeWidth={4}
           strokeLinecap="round"
         />
@@ -155,7 +156,7 @@ export function Cat({
         {/* whiskers */}
         <path
           d="M28 62h-14M28 72l-14 4M132 62h14M132 72l14 4"
-          stroke={LINE}
+          stroke={WHISKER}
           strokeWidth={3}
           strokeLinecap="round"
         />
@@ -167,7 +168,7 @@ export function Cat({
 
       {/* pose extras */}
       {pose === 'sleepy' && (
-        <g className={animated ? 'animate-snooze' : undefined} fill={ACCENT} opacity="0.9">
+        <g className={animated ? 'animate-snooze' : undefined} fill={STRIPES} opacity="0.9">
           <text x="126" y="46" fontSize="20" fontFamily="Chewy, cursive">
             z
           </text>
@@ -178,23 +179,9 @@ export function Cat({
       )}
 
       {pose === 'wave' && (
-        <ellipse
-          cx="128"
-          cy="86"
-          rx="12"
-          ry="9"
-          fill={FUR}
-          stroke={LINE}
-          strokeWidth={4}
-          transform="rotate(-18 128 86)"
-          className={animated ? 'animate-float' : undefined}
-        />
-      )}
-
-      {pose === 'happy' && (
-        <g stroke={ACCENT} strokeWidth={4} strokeLinecap="round">
-          <path d="M22 22v12M16 28h12" />
-          <path d="M140 96v10M135 101h10" />
+        <g className="animate-pop" style={{ transformBox: 'fill-box', transformOrigin: 'bottom center' }}>
+          <ellipse cx="116" cy="98" rx="10" ry="16" fill={FUR} stroke={LINE} strokeWidth={4} />
+          <path d="M124 90q4-8 10-6" fill="none" stroke={LINE} strokeWidth={3} strokeLinecap="round" />
         </g>
       )}
     </svg>

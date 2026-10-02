@@ -200,20 +200,29 @@ export function ProjectForm({
 
       {/* Project Icon Preview and Mode Selector */}
       <div className="flex items-center gap-4">
-        <div className="grid h-20 w-20 place-items-center rounded-3xl border border-divider bg-card shadow-sm overflow-hidden shrink-0 p-2">
-          <ProjectIconDisplay icon={values.icon} emoji={values.emoji} size={36} />
+        <div
+          className={`grid h-12 w-12 sm:h-14 sm:w-14 place-items-center rounded-2xl border border-lilac-200 bg-card shadow-soft overflow-hidden shrink-0 ${
+            values.icon &&
+            (values.icon.startsWith('data:image') ||
+              values.icon.startsWith('http') ||
+              values.icon.startsWith('/'))
+              ? 'p-0'
+              : 'p-2'
+          }`}
+        >
+          <ProjectIconDisplay icon={values.icon} emoji={values.emoji} size={24} />
         </div>
 
         <div className="flex flex-col gap-1.5 flex-1 min-w-0">
           <span className="text-sm font-title font-medium text-ink">Project icon</span>
           <p className="text-xs font-sans text-ink-soft">
-            Choose a React icon from the collection below or upload a custom 280×280 photo.
+            Choose an icon from the collection below or upload a custom photo.
           </p>
           <div className="flex items-center gap-2 pt-1">
             <button
               type="button"
               onClick={() => setIconMode('icons')}
-              className={`inline-flex items-center gap-1.5 rounded-full px-3.5 py-1.5 text-xs font-title transition ${
+              className={`inline-flex items-center gap-1.5 rounded-full px-3.5 py-1.5 text-xs font-title transition cursor-pointer ${
                 iconMode === 'icons'
                   ? 'bg-lilac-200 text-ink font-semibold shadow-sm'
                   : 'text-ink-soft hover:text-ink hover:bg-lilac-100'
@@ -225,7 +234,7 @@ export function ProjectForm({
             <button
               type="button"
               onClick={() => setIconMode('upload')}
-              className={`inline-flex items-center gap-1.5 rounded-full px-3.5 py-1.5 text-xs font-title transition ${
+              className={`inline-flex items-center gap-1.5 rounded-full px-3.5 py-1.5 text-xs font-title transition cursor-pointer ${
                 iconMode === 'upload'
                   ? 'bg-lilac-200 text-ink font-semibold shadow-sm'
                   : 'text-ink-soft hover:text-ink hover:bg-lilac-100'
@@ -269,7 +278,7 @@ export function ProjectForm({
           <div className="space-y-0.5">
             <span className="text-sm font-title font-medium text-ink">Upload custom icon</span>
             <p className="text-xs font-sans text-ink-soft">
-              Recommended: square 280×280 transparent PNG or JPG with breathing room.
+              Choose a square photo or graphic with gentle padding.
             </p>
           </div>
           <div className="flex items-center gap-2">
@@ -362,7 +371,7 @@ export function ProjectForm({
           <div>
             <span className="text-xs font-title font-medium text-ink">Header cover (optional)</span>
             <p className="text-[11px] font-sans text-ink-soft">
-              Notion optimal banner: 1500×600 px JPG or PNG
+              Choose a pastel atmosphere or upload a custom image.
             </p>
           </div>
           <button
@@ -409,7 +418,7 @@ export function ProjectForm({
                 icon={<ImageIcon size={14} />}
                 onClick={() => coverInputRef.current?.click()}
               >
-                Upload 1500×600 cover
+                Upload cover image
               </Button>
             </div>
           </div>

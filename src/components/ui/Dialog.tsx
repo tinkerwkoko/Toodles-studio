@@ -11,7 +11,7 @@ export interface DialogProps {
   children: ReactNode;
   /** Sticky action row at the bottom of the panel. */
   footer?: ReactNode;
-  size?: 'md' | 'lg';
+  size?: 'sm' | 'md' | 'lg';
   /** Element to focus when the dialog opens. */
   autoFocus?: boolean;
 }
@@ -98,7 +98,7 @@ export function Dialog({
         className={cx(
           'relative flex max-h-[92dvh] w-full flex-col overflow-hidden border border-lilac-200 bg-lilac-50 shadow-lift',
           'rounded-t-4xl md:rounded-4xl motion-safe:animate-slide-up',
-          size === 'lg' ? 'md:max-w-3xl' : 'md:max-w-xl',
+          size === 'sm' ? 'md:max-w-md' : size === 'lg' ? 'md:max-w-3xl' : 'md:max-w-xl',
         )}
       >
         <header className="flex items-start gap-3 border-b border-lilac-200/70 bg-cream/70 px-5 py-4">

@@ -1,5 +1,5 @@
 import { useRef, useState } from 'react';
-import { Bell, Check, Cloud, Download, Monitor, Moon, Shield, Sun, Trash2, Upload, User } from 'lucide-react';
+import { Bell, Check, Download, Monitor, Moon, Shield, Sun, Trash2, Upload, User } from 'lucide-react';
 import { Cat } from '../components/Cat';
 import { Button } from '../components/ui/Button';
 import { Card } from '../components/ui/Card';
@@ -93,17 +93,16 @@ export function SettingsPage() {
       />
 
       <div className="grid gap-4 lg:grid-cols-2 lg:items-start">
-        {/* Account & Authentication Card */}
+        {/* Account & Profile Card */}
         <Card padding="lg" className="space-y-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
               <User size={18} className="text-accent" />
-              <h2 className="text-lg">Account & Sync</h2>
+              <h2 className="text-lg">Account Profile</h2>
             </div>
             {account && (
               <span className="rounded-full bg-mint-100 px-2.5 py-0.5 text-xs font-title font-medium text-mint-700 flex items-center gap-1">
-                <Cloud size={12} />
-                <span>Synced</span>
+                <span>Active</span>
               </span>
             )}
           </div>
@@ -111,14 +110,14 @@ export function SettingsPage() {
           {account ? (
             <div className="space-y-3">
               <p className="text-sm text-ink-soft">
-                Signed in as <strong className="text-ink">{account.name}</strong> ({account.email}). Your workspace persists and syncs across all your devices.
+                Signed in as <strong className="text-ink">{account.name}</strong> ({account.email}). Your personal workspace is active and securely saved.
               </p>
               <div className="flex items-center gap-2 pt-1">
                 <Button
                   size="sm"
                   variant="primary"
                   onClick={() => setAccountDialogOpen(true)}
-                  icon={<Cloud size={14} />}
+                  icon={<User size={14} />}
                 >
                   Manage account
                 </Button>
@@ -127,7 +126,7 @@ export function SettingsPage() {
           ) : (
             <div className="space-y-3">
               <p className="text-sm text-ink-soft">
-                Sign in or create an account to persist your tasks, projects, diary, and habits across all your devices.
+                Sign in or create an account for a personalized experience, or continue using Toodles locally as a guest.
               </p>
               <div className="flex items-center gap-2 pt-1">
                 <Button

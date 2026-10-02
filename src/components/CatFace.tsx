@@ -9,14 +9,15 @@ export interface CatFaceProps {
   animated?: boolean;
 }
 
-const FUR = 'var(--color-cat-body, #FFFCFA)';
-const LINE = 'var(--color-cat-outline, #B592A4)';
-const FACE = 'var(--color-ink, #4A3540)';
-const NOSE = 'var(--color-peach-300, #F4C3A8)';
-const BLUSH = 'var(--color-peach-300, #F4C3A8)';
-const ACCENT = 'var(--color-lilac-300, #D9BFCC)';
+const FUR = 'var(--cat-body, #FFFBF7)';
+const LINE = 'var(--cat-outline, #B592A4)';
+const WHISKER = 'var(--cat-whisker, var(--cat-outline, #B592A4))';
+const FACE = 'var(--cat-face, #4A3540)';
+const NOSE = 'var(--cat-nose, #F4C3A8)';
+const BLUSH = 'var(--cat-blush, #F4C3A8)';
+const ACCENT = 'var(--cat-stripes, #D9BFCC)';
 
-/** Cat expressions used by the mood tracker and page headings. */
+/** Cat expressions used by the mood tracker, widgets, and calm page headings. */
 export function CatFace({
   mood = 'doe',
   size = 40,
@@ -82,7 +83,7 @@ export function CatFace({
           {/* relaxed whiskers */}
           <path
             d="M12 37H5M12 41l-6 1M52 37h7M52 41l6 1"
-            stroke={LINE}
+            stroke={WHISKER}
             strokeWidth={1.8}
             strokeLinecap="round"
           />
@@ -133,7 +134,7 @@ export function CatFace({
           {/* whiskers */}
           <path
             d="M12 36H5M12 40l-6 2M52 36h7M52 40l6 2"
-            stroke={LINE}
+            stroke={WHISKER}
             strokeWidth={1.8}
             strokeLinecap="round"
           />
@@ -146,6 +147,7 @@ export function CatFace({
           <path d="M35 34q5-6 10 0" fill="none" stroke={FACE} strokeWidth={2.8} strokeLinecap="round" />
           <path d="M32 41q-6 6-10 1" fill="none" stroke={FACE} strokeWidth={2.4} strokeLinecap="round" />
           <path d="M32 41q6 6 10 1" fill="none" stroke={FACE} strokeWidth={2.4} strokeLinecap="round" />
+          <path d="M12 36H5M12 40l-6 2M52 36h7M52 40l6 2" stroke={WHISKER} strokeWidth={1.8} strokeLinecap="round" />
         </>
       )}
 
@@ -155,6 +157,7 @@ export function CatFace({
           <circle cx="40" cy="34" r="2.4" fill={FACE} />
           <path d="M31 41q-5 5-8 1" fill="none" stroke={FACE} strokeWidth={2.4} strokeLinecap="round" />
           <path d="M33 41q5 5 8 1" fill="none" stroke={FACE} strokeWidth={2.4} strokeLinecap="round" />
+          <path d="M12 36H5M12 40l-6 2M52 36h7M52 40l6 2" stroke={WHISKER} strokeWidth={1.8} strokeLinecap="round" />
         </>
       )}
 
@@ -163,6 +166,7 @@ export function CatFace({
           <path d="M20 34h8" stroke={FACE} strokeWidth={2.6} strokeLinecap="round" />
           <path d="M36 34h8" stroke={FACE} strokeWidth={2.6} strokeLinecap="round" />
           <path d="M28 43h8" stroke={FACE} strokeWidth={2.4} strokeLinecap="round" />
+          <path d="M12 36H5M12 40l-6 2M52 36h7M52 40l6 2" stroke={WHISKER} strokeWidth={1.8} strokeLinecap="round" />
         </>
       )}
 
@@ -171,6 +175,7 @@ export function CatFace({
           <path d="M20 36q4-3 8 1" fill="none" stroke={FACE} strokeWidth={2.6} strokeLinecap="round" />
           <path d="M36 37q4-4 8-1" fill="none" stroke={FACE} strokeWidth={2.6} strokeLinecap="round" />
           <path d="M28 46q4-4 8 0" fill="none" stroke={FACE} strokeWidth={2.4} strokeLinecap="round" />
+          <path d="M12 36H5M12 40l-6 2M52 36h7M52 40l6 2" stroke={WHISKER} strokeWidth={1.8} strokeLinecap="round" />
         </>
       )}
 
@@ -185,6 +190,7 @@ export function CatFace({
             strokeWidth={2.4}
             strokeLinecap="round"
           />
+          <path d="M12 36H5M12 40l-6 2M52 36h7M52 40l6 2" stroke={WHISKER} strokeWidth={1.8} strokeLinecap="round" />
         </>
       )}
 

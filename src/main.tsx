@@ -13,3 +13,13 @@ createRoot(container).render(
     <App />
   </StrictMode>,
 );
+
+// Register service worker for Progressive Web App (PWA) offline support
+if ('serviceWorker' in navigator && import.meta.env.PROD) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('/sw.js').catch(() => {
+      // Offline cache optional in development/restricted environments
+    });
+  });
+}
+

@@ -50,16 +50,21 @@ export function BoardCard({ task, columns, onOpen, dragEnabled }: BoardCardProps
     <span className={cx('h-2.5 w-2.5 rounded-full', accent(key).mid)} aria-hidden="true" />
   );
 
+  const currentColumnId =
+    task.boardColumnId ||
+    (task.status === 'done' ? columns[columns.length - 1]?.id : columns[0]?.id);
+
   const menuItems: MenuItem[] = [
-    ...columns.map((column) => ({
-      label: column.name,
-      icon: dot(column.color),
-      onSelect: () => {
-        if (column.id === task.boardColumnId) return;
-        actions.placeTaskOnBoard(task.id, column.id, null);
-        pushToast(`Moved to ${column.name}`);
-      },
-    })),
+    ...columns
+      .filter((column) => column.id !== currentColumnId)
+      .map((column) => ({
+        label: `Move to ${column.name}`,
+        icon: dot(column.color),
+        onSelect: () => {
+          actions.placeTaskOnBoard(task.id, column.id, null);
+          pushToast(`Moved to ${column.name}`);
+        },
+      })),
     ...ACCENT_KEYS.map((key: AccentColor) => ({
       label: ACCENT_LABELS[key],
       icon: dot(key),

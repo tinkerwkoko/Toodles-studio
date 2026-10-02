@@ -14,6 +14,7 @@ import type {
   Subtask,
   Task,
   FocusSession,
+  UserAccount,
   ToodlesData,
 } from '../types';
 import { createEmptyData, newId } from '../lib/factories';
@@ -85,6 +86,22 @@ const MOODS: readonly MoodLevel[] = ['happy', 'good', 'okay', 'low', 'difficult'
 
 const THEMES = ['system', 'light', 'dark'] as const;
 
+function normaliseAccount(raw: unknown): UserAccount | null {
+  if (!isRecord(raw)) return null;
+  const email = str(raw.email).trim();
+  const name = str(raw.name).trim();
+  if (email.length === 0 && name.length === 0) return null;
+  return {
+    id: idOf(raw.id),
+    email,
+    name: name || (email.includes('@') ? email.split('@')[0] : 'Friend'),
+    avatar: nullableStr(raw.avatar) ?? undefined,
+    provider: raw.provider === 'google' ? 'google' : 'email',
+    syncedAt: nullableStr(raw.syncedAt),
+    syncAcrossDevices: bool(raw.syncAcrossDevices, true),
+  };
+}
+
 function normaliseSettings(raw: unknown): AppSettings {
   const record = isRecord(raw) ? raw : {};
   return {
@@ -94,6 +111,8 @@ function normaliseSettings(raw: unknown): AppSettings {
     theme: oneOf(record.theme, THEMES, 'system'),
     sidebarOpen: bool(record.sidebarOpen, true),
     tagsSeeded: bool(record.tagsSeeded, false),
+    account: normaliseAccount(record.account),
+    guestMode: bool(record.guestMode, false),
   };
 }
 
@@ -117,7 +136,7 @@ function normaliseTask(raw: unknown): Task | null {
     priority: oneOf(raw.priority, PRIORITIES, 'none'),
     startDate: dateStr(raw.startDate),
     dueDate: dateStr(raw.dueDate),
-    dueTime: /^\d{2}:\d{2}$/.test(str(raw.dueTime)) ? str(raw.dueTime) : null,
+    dueTime: nullableStr(raw.dueTime),
     estimate: optionalNumber(raw.estimate),
     repeat: oneOf(raw.repeat, REPEATS, 'none'),
     reminder: bool(raw.reminder, false),
@@ -128,6 +147,8 @@ function normaliseTask(raw: unknown): Task | null {
     completedAt: status === 'done' ? nullableStr(raw.completedAt) ?? nowTimestamp() : null,
     createdAt: isoOf(raw.createdAt),
     subtasks: normaliseList(raw.subtasks, normaliseSubtask),
+    type: raw.type === 'study' ? 'study' : 'task',
+    studyMinutes: optionalNumber(raw.studyMinutes) ?? 0,
   };
 }
 
@@ -141,6 +162,9 @@ function normaliseProject(raw: unknown): Project | null {
     description: str(raw.description),
     color: accentOf(raw.color),
     emoji: str(raw.emoji, '🌱').slice(0, 4) || '🌱',
+    icon: nullableStr(raw.icon) ?? undefined,
+    cover: nullableStr(raw.cover) ?? undefined,
+    coverPosition: optionalNumber(raw.coverPosition) ?? 50,
     createdAt: isoOf(raw.createdAt),
     archived: bool(raw.archived, false),
   };

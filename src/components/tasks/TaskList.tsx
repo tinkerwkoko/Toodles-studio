@@ -33,7 +33,7 @@ export function TaskList({
     return (
       <ul className="space-y-2.5">
         {tasks.map((task) => (
-          <li key={task.id}>
+          <li key={task.id} className="relative">
             <TaskCard
               task={task}
               onOpen={onOpen}
@@ -60,7 +60,7 @@ export function TaskList({
         >
           <ul className="space-y-2.5">
             {group.items.map((task) => (
-              <li key={task.id}>
+              <li key={task.id} className="relative">
                 <TaskCard
                   task={task}
                   onOpen={onOpen}

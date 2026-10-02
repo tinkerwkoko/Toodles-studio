@@ -80,6 +80,7 @@ export interface Task {
   subtasks: Subtask[];
   type?: 'task' | 'study';
   targetMinutes?: number | null;
+  studyMinutes?: number;
 }
 
 export interface BoardColumn {
@@ -154,6 +155,7 @@ export interface AppSettings {
   dailyFocusGoalMinutes?: number;
   tagsSeeded?: boolean;
   account?: UserAccount | null;
+  guestMode?: boolean;
 }
 
 export interface ToodlesData {
