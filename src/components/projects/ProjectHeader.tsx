@@ -244,37 +244,44 @@ export function ProjectHeader({ project, doneCount, totalCount, children }: Proj
         )}
       </div>
 
-      {/* Page Icon: sits nicely overlapping bottom edge with soft rounded corners and no harsh border */}
-      <div className="relative px-6 sm:px-8 -mt-6 sm:-mt-7 flex items-center justify-between pointer-events-none z-10">
-        <div className="relative group shrink-0 pointer-events-auto">
-          <button
-            type="button"
-            onClick={() => setIconDialogOpen(true)}
-            aria-label="Change project icon"
-            className={`grid h-12 w-12 sm:h-14 sm:w-14 place-items-center rounded-2xl border border-lilac-200 bg-card shadow-soft overflow-hidden transition group-hover:scale-102 cursor-pointer ${
-              project.icon && (project.icon.startsWith('data:image') || project.icon.startsWith('http') || project.icon.startsWith('/'))
-                ? 'p-0'
-                : 'p-2'
-            }`}
-          >
-            <ProjectIconDisplay icon={project.icon} emoji={project.emoji} size={24} />
-          </button>
-          <button
-            type="button"
-            onClick={() => setIconDialogOpen(true)}
-            aria-label="Change icon"
-            className="absolute -bottom-1 -right-1 grid h-5 w-5 place-items-center rounded-full bg-card border border-lilac-200 text-ink shadow-sm hover:scale-105 transition cursor-pointer"
-          >
-            <Camera size={11} aria-hidden="true" />
-          </button>
-        </div>
-      </div>
+      {/* Project Info Section: Icon sits directly beside project title, not attached to header */}
+      <div className="px-3 sm:px-6 mt-5 sm:mt-6 space-y-3.5">
+        <div className="flex items-center gap-3.5 sm:gap-4">
+          <div className="relative group shrink-0">
+            <button
+              type="button"
+              onClick={() => setIconDialogOpen(true)}
+              aria-label="Change project icon"
+              title="Change project icon"
+              className={`grid h-12 w-12 sm:h-14 sm:w-14 place-items-center rounded-2xl border border-lilac-200 bg-card shadow-soft overflow-hidden transition group-hover:scale-105 cursor-pointer ${
+                project.icon &&
+                (project.icon.startsWith('data:image') ||
+                  project.icon.startsWith('http') ||
+                  project.icon.startsWith('/'))
+                  ? 'p-0'
+                  : 'p-2'
+              }`}
+            >
+              <ProjectIconDisplay icon={project.icon} emoji={project.emoji} size={24} />
+            </button>
+            <button
+              type="button"
+              onClick={() => setIconDialogOpen(true)}
+              aria-label="Change icon"
+              title="Change icon"
+              className="absolute -bottom-1 -right-1 grid h-5 w-5 place-items-center rounded-full bg-card border border-lilac-200 text-ink shadow-sm hover:scale-105 transition cursor-pointer"
+            >
+              <Camera size={11} aria-hidden="true" />
+            </button>
+          </div>
 
-      {/* Project Title and Details: cleanly positioned below icon with safe clearance (no overlap!) */}
-      <div className="px-4 sm:px-8 mt-5 sm:mt-6 space-y-3">
-        <h1 className="wrap-break-word font-display text-3xl sm:text-4xl text-ink leading-tight">
-          {project.name}
-        </h1>
+          <div className="min-w-0 flex-1">
+            <h1 className="wrap-break-word font-display text-3xl sm:text-4xl text-ink leading-tight">
+              {project.name}
+            </h1>
+          </div>
+        </div>
+
         {project.description && (
           <p className="text-sm sm:text-base font-sans text-ink-soft max-w-2xl">{project.description}</p>
         )}
@@ -369,7 +376,7 @@ export function ProjectHeader({ project, doneCount, totalCount, children }: Proj
               }`}
             >
               <Sparkles size={14} />
-              <span>React icons</span>
+              <span>Icons</span>
             </button>
             <button
               type="button"

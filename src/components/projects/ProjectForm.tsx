@@ -229,7 +229,7 @@ export function ProjectForm({
               }`}
             >
               <Sparkles size={14} />
-              <span>React icons</span>
+              <span>Icons</span>
             </button>
             <button
               type="button"

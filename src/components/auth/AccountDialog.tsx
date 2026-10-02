@@ -24,7 +24,7 @@ export function AccountDialog({ open, onClose }: AccountDialogProps) {
 
   // Form states
   const existingName = data.settings.displayName.trim();
-  const [name, setName] = useState(existingName || '');
+  const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
@@ -214,7 +214,7 @@ export function AccountDialog({ open, onClose }: AccountDialogProps) {
                     type="text"
                     value={name}
                     onChange={(e) => setName(e.target.value)}
-                    placeholder={existingName || 'e.g. Jamie'}
+                    placeholder="e.g. Cozy Friend"
                   />
                 </Field>
 

@@ -20,7 +20,7 @@ export function AuthPage({ onSuccess, onContinueAsGuest }: AuthPageProps) {
 
   const [mode, setMode] = useState<'signin' | 'signup'>('signin');
   const existingName = data.settings.displayName.trim();
-  const [name, setName] = useState(existingName || '');
+  const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
@@ -167,7 +167,7 @@ export function AuthPage({ onSuccess, onContinueAsGuest }: AuthPageProps) {
                   type="text"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
-                  placeholder={existingName || 'e.g. Jamie'}
+                  placeholder="e.g. Cozy Friend"
                   className="text-sm"
                 />
               </Field>

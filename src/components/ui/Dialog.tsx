@@ -16,6 +16,32 @@ export interface DialogProps {
   autoFocus?: boolean;
 }
 
+let activeDialogCount = 0;
+
+export function forceUnlockScroll(): void {
+  activeDialogCount = 0;
+  if (typeof document !== 'undefined') {
+    document.body.style.overflow = '';
+    document.documentElement.style.overflow = '';
+  }
+}
+
+function lockScroll(): void {
+  activeDialogCount++;
+  if (activeDialogCount === 1 && typeof document !== 'undefined') {
+    document.body.style.overflow = 'hidden';
+    document.documentElement.style.overflow = 'hidden';
+  }
+}
+
+function unlockScroll(): void {
+  activeDialogCount = Math.max(0, activeDialogCount - 1);
+  if (activeDialogCount === 0 && typeof document !== 'undefined') {
+    document.body.style.overflow = '';
+    document.documentElement.style.overflow = '';
+  }
+}
+
 /**
  * One component for every overlay: a bottom sheet on phones, a centred modal
  * from md upwards. Escape and backdrop click both close it.
@@ -32,14 +58,15 @@ export function Dialog({
 }: DialogProps) {
   const panelRef = useRef<HTMLDivElement | null>(null);
   const restoreFocusRef = useRef<HTMLElement | null>(null);
+  const onCloseRef = useRef(onClose);
+  onCloseRef.current = onClose;
   const titleId = useId();
   const descriptionId = useId();
 
   useEffect(() => {
     if (!open) return;
     restoreFocusRef.current = document.activeElement as HTMLElement | null;
-    const previousOverflow = document.body.style.overflow;
-    document.body.style.overflow = 'hidden';
+    lockScroll();
 
     if (autoFocus) {
       const target = panelRef.current?.querySelector<HTMLElement>(
@@ -51,7 +78,7 @@ export function Dialog({
     function handleKeyDown(event: KeyboardEvent): void {
       if (event.key === 'Escape') {
         event.stopPropagation();
-        onClose();
+        onCloseRef.current();
         return;
       }
       if (event.key !== 'Tab' || !panelRef.current) return;
@@ -74,10 +101,10 @@ export function Dialog({
     document.addEventListener('keydown', handleKeyDown);
     return () => {
       document.removeEventListener('keydown', handleKeyDown);
-      document.body.style.overflow = previousOverflow;
+      unlockScroll();
       restoreFocusRef.current?.focus?.();
     };
-  }, [open, onClose, autoFocus]);
+  }, [open, autoFocus]);
 
   if (!open) return null;
 
