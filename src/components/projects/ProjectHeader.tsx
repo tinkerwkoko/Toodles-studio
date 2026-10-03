@@ -143,8 +143,8 @@ export function ProjectHeader({ project, doneCount, totalCount, children }: Proj
 
   return (
     <header className="mb-6 space-y-0">
-      {/* Top back navigation pill */}
-      <div className="mb-3 flex items-center justify-between">
+      {/* Top back navigation pill + Add header button */}
+      <div className="mb-4 flex items-center justify-between">
         <Link
           to="/projects"
           className="inline-flex min-h-9 items-center gap-1.5 rounded-full border border-lilac-200 bg-cream px-3.5 py-1 text-xs sm:text-sm font-title font-medium text-ink hover:bg-lilac-100 transition shadow-none"
@@ -152,100 +152,111 @@ export function ProjectHeader({ project, doneCount, totalCount, children }: Proj
           <ArrowLeft size={16} aria-hidden="true" />
           <span>All projects</span>
         </Link>
-      </div>
 
-      {/* Notion-size Cover Banner: brought up, 1500x600 ratio with adjust controls */}
-      <div className="relative overflow-hidden rounded-3xl border border-divider bg-card shadow-sm">
-        <div
-          className="h-48 sm:h-64 md:h-72 w-full transition-all duration-200"
-          style={{
-            background: hasCustomCover
-              ? isGradient
-                ? project.cover
-                : `url(${project.cover}) center ${verticalPos}% / cover no-repeat`
-              : 'linear-gradient(135deg, var(--sidebar) 0%, var(--card) 100%)',
-          }}
-        />
-
-        {/* Action Controls on Banner */}
-        <div className="absolute right-3.5 top-3.5 flex items-center gap-2 z-10">
-          {hasCustomCover && !isGradient && (
-            <button
-              type="button"
-              onClick={() => setRepositioning(!repositioning)}
-              className="inline-flex items-center gap-1.5 rounded-full bg-card/90 px-3 py-1.5 text-xs font-title font-medium text-ink backdrop-blur hover:bg-card transition border border-divider shadow-sm cursor-pointer"
-              title="Adjust cover vertical positioning"
-            >
-              <MoveVertical size={13} aria-hidden="true" />
-              <span>{repositioning ? 'Done' : 'Reposition'}</span>
-            </button>
-          )}
-
+        {!hasCustomCover && (
           <button
             type="button"
             onClick={() => setCoverDialogOpen(true)}
-            className="inline-flex items-center gap-1.5 rounded-full bg-card/90 px-3 py-1.5 text-xs font-title font-medium text-ink backdrop-blur hover:bg-card transition border border-divider shadow-sm cursor-pointer"
+            className="inline-flex items-center gap-1.5 rounded-full border border-lilac-200 bg-cream px-3 py-1.5 text-xs font-title font-medium text-ink hover:bg-lilac-100 transition shadow-none cursor-pointer"
           >
             <Camera size={13} aria-hidden="true" />
-            <span>{hasCustomCover ? 'Change header' : 'Add header'}</span>
+            <span>Add header</span>
           </button>
-        </div>
-
-        {/* Reposition Control Overlay */}
-        {repositioning && (
-          <div className="absolute inset-x-4 bottom-3 mx-auto max-w-sm rounded-2xl bg-card/95 border border-divider p-3 shadow-lg backdrop-blur flex flex-col gap-2 animate-pop z-20">
-            <div className="flex items-center justify-between text-xs font-title">
-              <span className="text-ink font-semibold">Adjust header position</span>
-              <span className="text-ink-soft">{verticalPos}%</span>
-            </div>
-            <input
-              type="range"
-              min="0"
-              max="100"
-              value={verticalPos}
-              onChange={(e) =>
-                actions.updateProject(project.id, { coverPosition: Number(e.target.value) })
-              }
-              className="w-full accent-accent cursor-pointer"
-            />
-            <div className="flex justify-between items-center pt-1 text-[11px] font-sans">
-              <div className="flex gap-1.5">
-                <button
-                  type="button"
-                  onClick={() => actions.updateProject(project.id, { coverPosition: 0 })}
-                  className="px-2 py-0.5 rounded-md bg-lilac-100 hover:bg-lilac-200 text-ink"
-                >
-                  Top
-                </button>
-                <button
-                  type="button"
-                  onClick={() => actions.updateProject(project.id, { coverPosition: 50 })}
-                  className="px-2 py-0.5 rounded-md bg-lilac-100 hover:bg-lilac-200 text-ink"
-                >
-                  Center
-                </button>
-                <button
-                  type="button"
-                  onClick={() => actions.updateProject(project.id, { coverPosition: 100 })}
-                  className="px-2 py-0.5 rounded-md bg-lilac-100 hover:bg-lilac-200 text-ink"
-                >
-                  Bottom
-                </button>
-              </div>
-              <button
-                type="button"
-                onClick={() => setRepositioning(false)}
-                className="font-title text-ink font-semibold hover:underline"
-              >
-                Save
-              </button>
-            </div>
-          </div>
         )}
       </div>
 
-      {/* Project Info Section: Icon sits directly beside project title, not attached to header */}
-      <div className="px-3 sm:px-6 mt-5 sm:mt-6 space-y-3.5">
+      {/* Notion-size Cover Banner: only shown when project has a custom header */}
+      {hasCustomCover && (
+        <div className="relative mb-5 overflow-hidden rounded-3xl border border-divider bg-card shadow-sm">
+          <div
+            className="h-44 sm:h-56 md:h-64 w-full transition-all duration-200"
+            style={{
+              background: isGradient
+                ? project.cover
+                : `url(${project.cover}) center ${verticalPos}% / cover no-repeat`,
+            }}
+          />
+
+          {/* Action Controls on Banner */}
+          <div className="absolute right-3.5 top-3.5 flex items-center gap-2 z-10">
+            {!isGradient && (
+              <button
+                type="button"
+                onClick={() => setRepositioning(!repositioning)}
+                className="inline-flex items-center gap-1.5 rounded-full bg-card/90 px-3 py-1.5 text-xs font-title font-medium text-ink backdrop-blur hover:bg-card transition border border-divider shadow-sm cursor-pointer"
+                title="Adjust cover vertical positioning"
+              >
+                <MoveVertical size={13} aria-hidden="true" />
+                <span>{repositioning ? 'Done' : 'Reposition'}</span>
+              </button>
+            )}
+
+            <button
+              type="button"
+              onClick={() => setCoverDialogOpen(true)}
+              className="inline-flex items-center gap-1.5 rounded-full bg-card/90 px-3 py-1.5 text-xs font-title font-medium text-ink backdrop-blur hover:bg-card transition border border-divider shadow-sm cursor-pointer"
+            >
+              <Camera size={13} aria-hidden="true" />
+              <span>Change header</span>
+            </button>
+          </div>
+
+          {/* Reposition Control Overlay */}
+          {repositioning && (
+            <div className="absolute inset-x-4 bottom-3 mx-auto max-w-sm rounded-2xl bg-card/95 border border-divider p-3 shadow-lg backdrop-blur flex flex-col gap-2 animate-pop z-20">
+              <div className="flex items-center justify-between text-xs font-title">
+                <span className="text-ink font-semibold">Adjust header position</span>
+                <span className="text-ink-soft">{verticalPos}%</span>
+              </div>
+              <input
+                type="range"
+                min="0"
+                max="100"
+                value={verticalPos}
+                onChange={(e) =>
+                  actions.updateProject(project.id, { coverPosition: Number(e.target.value) })
+                }
+                className="w-full accent-accent cursor-pointer"
+              />
+              <div className="flex justify-between items-center pt-1 text-[11px] font-sans">
+                <div className="flex gap-1.5">
+                  <button
+                    type="button"
+                    onClick={() => actions.updateProject(project.id, { coverPosition: 0 })}
+                    className="px-2 py-0.5 rounded-md bg-lilac-100 hover:bg-lilac-200 text-ink"
+                  >
+                    Top
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => actions.updateProject(project.id, { coverPosition: 50 })}
+                    className="px-2 py-0.5 rounded-md bg-lilac-100 hover:bg-lilac-200 text-ink"
+                  >
+                    Center
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => actions.updateProject(project.id, { coverPosition: 100 })}
+                    className="px-2 py-0.5 rounded-md bg-lilac-100 hover:bg-lilac-200 text-ink"
+                  >
+                    Bottom
+                  </button>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setRepositioning(false)}
+                  className="font-title text-ink font-semibold hover:underline"
+                >
+                  Save
+                </button>
+              </div>
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* Project Info Section: Icon sits directly beside project title, like in edit mode */}
+      <div className="px-1 sm:px-2 space-y-3.5">
         <div className="flex items-center gap-3.5 sm:gap-4">
           <div className="relative group shrink-0">
             <button
@@ -262,7 +273,7 @@ export function ProjectHeader({ project, doneCount, totalCount, children }: Proj
                   : 'p-2'
               }`}
             >
-              <ProjectIconDisplay icon={project.icon} emoji={project.emoji} size={24} />
+              <ProjectIconDisplay icon={project.icon} emoji={project.emoji} size={26} />
             </button>
             <button
               type="button"
@@ -356,7 +367,7 @@ export function ProjectHeader({ project, doneCount, totalCount, children }: Proj
         </div>
       </Dialog>
 
-      {/* Icon Dialog: React Icons & Photo only, no emoji */}
+      {/* Icon Dialog: Icons & Photo */}
       <Dialog
         open={iconDialogOpen}
         onClose={() => setIconDialogOpen(false)}
@@ -364,7 +375,7 @@ export function ProjectHeader({ project, doneCount, totalCount, children }: Proj
         size="md"
       >
         <div className="space-y-3">
-          {/* Tabs: React Icons and Photo */}
+          {/* Tabs: Icons and Photo */}
           <div className="flex items-center gap-1 border-b border-divider pb-2">
             <button
               type="button"

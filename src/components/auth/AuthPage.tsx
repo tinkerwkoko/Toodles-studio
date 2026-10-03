@@ -167,7 +167,7 @@ export function AuthPage({ onSuccess, onContinueAsGuest }: AuthPageProps) {
                   type="text"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
-                  placeholder="e.g. Cozy Friend"
+                  placeholder="Your nickname"
                   className="text-sm"
                 />
               </Field>
@@ -222,9 +222,12 @@ export function AuthPage({ onSuccess, onContinueAsGuest }: AuthPageProps) {
         </Card>
 
         {/* Privacy Note */}
-        <div className="flex items-center justify-center gap-2 text-xs font-sans text-ink-soft text-center px-4">
-          <Shield size={14} className="text-accent shrink-0" />
-          <span>We respect your privacy and never share users&apos; data.</span>
+        <div className="flex flex-col items-center justify-center gap-1 text-xs font-sans text-ink-soft text-center px-4">
+          <div className="flex items-center gap-1.5">
+            <Shield size={14} className="text-accent shrink-0" />
+            <span>Private & local to this device. No trackers, cloud databases, or third-party servers.</span>
+          </div>
+          <span className="text-[11px] text-text-faint">Use Export & Backup in Settings to transfer data between devices anytime.</span>
         </div>
       </div>
     </div>

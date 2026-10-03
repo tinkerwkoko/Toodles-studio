@@ -124,8 +124,14 @@ export function AccountDialog({ open, onClose }: AccountDialogProps) {
             <div className="space-y-2 text-xs font-sans text-ink-soft">
               <p>
                 Your personal workspace is active. All your tasks, projects, notes, and habits are
-                safely stored in your private sanctuary.
+                safely stored in this browser on this device.
               </p>
+              <div className="rounded-xl border border-divider bg-lilac-100/50 p-2.5 space-y-1 text-[11px]">
+                <p className="font-semibold text-ink">Device sync & privacy</p>
+                <p className="text-ink-soft">
+                  Toodles is local-first with zero tracking, so your tasks and projects do not sync across devices automatically. To move or backup your data, use <strong>Export & Backup</strong> in Settings.
+                </p>
+              </div>
             </div>
 
             <div className="flex items-center justify-between border-t border-divider pt-3">
@@ -214,7 +220,7 @@ export function AccountDialog({ open, onClose }: AccountDialogProps) {
                     type="text"
                     value={name}
                     onChange={(e) => setName(e.target.value)}
-                    placeholder="e.g. Cozy Friend"
+                    placeholder="Your nickname"
                   />
                 </Field>
 

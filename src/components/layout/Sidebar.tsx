@@ -17,7 +17,7 @@ export function Sidebar() {
     <aside
       aria-label="Sidebar navigation"
       className={cx(
-        'hidden md:flex flex-col justify-between border-r border-divider bg-sidebar transition-all duration-250 ease-in-out overflow-hidden',
+        'hidden md:flex flex-col justify-between border-r border-divider bg-sidebar transition-all duration-250 ease-in-out overflow-hidden sticky top-[56px] h-[calc(100dvh-56px)] self-start shrink-0',
         isOpen ? 'w-56 opacity-100 py-4 px-3' : 'w-0 opacity-0 p-0 border-r-0 pointer-events-none',
       )}
     >

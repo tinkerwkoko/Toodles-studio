@@ -66,7 +66,7 @@ export function ProjectIconDisplay({ icon, emoji = '🌱', size = 24, className 
     return <img src={icon} alt="" className={`h-full w-full object-cover block rounded-inherit ${className ?? ''}`} />;
   }
 
-  // If icon is a Lucide React icon key (e.g. "lucide:folder" or just "folder")
+  // If icon is a project icon key (e.g. "lucide:folder" or just "folder")
   const iconKey = icon?.startsWith('lucide:') ? icon.replace('lucide:', '') : icon;
   if (iconKey && PROJECT_LUCIDE_ICONS[iconKey]) {
     const IconComponent = PROJECT_LUCIDE_ICONS[iconKey].icon;

@@ -112,6 +112,12 @@ export function SettingsPage() {
               <p className="text-sm text-ink-soft">
                 Signed in as <strong className="text-ink">{account.name}</strong> ({account.email}). Your personal workspace is active and securely saved.
               </p>
+              <div className="rounded-xl border border-divider bg-lilac-100/50 p-2.5 text-xs text-ink-soft space-y-1">
+                <p className="font-semibold text-ink">Device sync & privacy</p>
+                <p>
+                  Toodles stores all your tasks and projects in this browser on this device. Because there is no tracking or cloud database, data does not sync across devices automatically. To move or backup your data, use <strong>Export JSON</strong> below.
+                </p>
+              </div>
               <div className="flex items-center gap-2 pt-1">
                 <Button
                   size="sm"
@@ -156,7 +162,7 @@ export function SettingsPage() {
             <Input
               value={nicknameInput}
               onChange={(e) => setNicknameInput(e.target.value)}
-              placeholder="e.g. Cozy Friend, Jamie..."
+              placeholder="e.g. Cozy Cat"
               className="flex-1"
               onKeyDown={(e) => {
                 if (e.key === 'Enter') {
