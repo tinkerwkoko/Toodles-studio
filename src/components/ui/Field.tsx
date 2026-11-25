@@ -15,10 +15,10 @@ import {
 import { Check, ChevronDown } from 'lucide-react';
 import { cx } from '../../lib/cx';
 
-/* Shared input look: clean 1px border, soft whimsical radius, 32px desktop height, 40px touch. */
+/* Shared stationery input: warm paper fill, crisp 4px corners, fine archival border. */
 const CONTROL =
-  'w-full rounded-2xl border border-lilac-200 bg-cream px-3.5 py-2 text-ink text-sm placeholder:text-ink-soft/70 ' +
-  'transition focus:border-accent focus:outline-none disabled:opacity-60';
+  'w-full rounded-[4px] border border-lilac-200 bg-cream px-3 py-2 text-ink font-sans text-sm placeholder:text-text-faint ' +
+  'transition duration-150 focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/15 disabled:opacity-55';
 
 export interface FieldProps {
   label: string;
@@ -33,12 +33,12 @@ export function Field({ label, htmlFor, hint, children, className }: FieldProps)
     <div className={cx('flex flex-col gap-1.5', className)}>
       <label
         htmlFor={htmlFor}
-        className="text-sm font-title font-medium text-ink"
+        className="text-[13px] font-sans font-medium text-ink tracking-[0.01em]"
       >
         {label}
       </label>
       {children}
-      {hint && <p className="text-xs text-ink-soft font-sans">{hint}</p>}
+      {hint && <p className="text-xs text-ink-soft font-sans italic">{hint}</p>}
     </div>
   );
 }
@@ -50,7 +50,7 @@ export interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
 export function Input({ className, compact = false, ...rest }: InputProps) {
   return (
     <input
-      className={cx(CONTROL, compact && 'px-3 py-1.5 text-sm', className)}
+      className={cx(CONTROL, compact && 'px-2.5 py-1.5 text-sm', className)}
       {...rest}
     />
   );
@@ -77,7 +77,6 @@ export const Select = forwardRef<HTMLSelectElement, SelectProps>(function Select
   const [open, setOpen] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
 
-  // Parse option elements from children
   const options: ParsedOption[] = [];
   Children.forEach(children, (child) => {
     if (isValidElement(child)) {
@@ -126,7 +125,6 @@ export const Select = forwardRef<HTMLSelectElement, SelectProps>(function Select
 
   return (
     <div ref={containerRef} className="relative w-full">
-      {/* Hidden native select for form support & ref */}
       <select
         ref={ref}
         id={id}
@@ -142,7 +140,6 @@ export const Select = forwardRef<HTMLSelectElement, SelectProps>(function Select
         {children}
       </select>
 
-      {/* Whimsical custom trigger */}
       <button
         type="button"
         disabled={disabled}
@@ -152,24 +149,23 @@ export const Select = forwardRef<HTMLSelectElement, SelectProps>(function Select
         className={cx(
           CONTROL,
           'flex items-center justify-between gap-2 text-left cursor-pointer',
-          compact && 'px-3 py-1.5 text-sm',
-          open && 'border-accent ring-2 ring-accent/20',
+          compact && 'px-2.5 py-1.5 text-sm',
+          open && 'border-accent ring-2 ring-accent/15',
           className,
         )}
       >
         <span className="truncate">{selectedOpt?.label ?? 'Select...'}</span>
         <ChevronDown
-          size={16}
+          size={15}
           aria-hidden="true"
-          className={cx('shrink-0 text-ink-soft transition-transform duration-200', open && 'rotate-180')}
+          className={cx('shrink-0 text-ink-soft transition-transform duration-150', open && 'rotate-180')}
         />
       </button>
 
-      {/* Whimsical dropdown popover */}
       {open && (
         <div
           role="listbox"
-          className="absolute left-0 right-0 top-full mt-1.5 z-50 max-h-56 overflow-y-auto rounded-2xl border border-lilac-200 bg-cream p-1.5 shadow-md motion-safe:animate-fade-in"
+          className="absolute left-0 right-0 top-full mt-1 z-50 max-h-56 overflow-y-auto rounded-[4px] border border-lilac-200 bg-cream p-1 shadow-lift motion-safe:animate-fade-in"
         >
           {options.map((opt) => {
             const isSelected = String(opt.value) === String(value);
@@ -182,10 +178,10 @@ export const Select = forwardRef<HTMLSelectElement, SelectProps>(function Select
                 disabled={opt.disabled}
                 onClick={() => handleSelect(opt)}
                 className={cx(
-                  'flex w-full items-center justify-between rounded-xl px-3 py-2 text-sm text-left transition',
+                  'flex w-full items-center justify-between rounded-[3px] px-2.5 py-1.5 text-sm font-sans text-left transition cursor-pointer',
                   isSelected
-                    ? 'bg-lilac-100 text-ink font-medium'
-                    : 'text-ink-soft hover:bg-lilac-50 hover:text-ink',
+                    ? 'bg-paper-2 text-ink font-medium'
+                    : 'text-ink-soft hover:bg-paper-2/50 hover:text-ink',
                   opt.disabled && 'opacity-40 cursor-not-allowed',
                 )}
               >

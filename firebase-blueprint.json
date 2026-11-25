@@ -1,0 +1,619 @@
+{
+  "entities": {
+    "UserProfile": {
+      "title": "UserProfile",
+      "description": "Private user profile and workspace settings for a signed-in Toodles user.",
+      "type": "object",
+      "properties": {
+        "uid": {
+          "type": "string",
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$",
+          "description": "Firebase Auth UID matching the document ID."
+        },
+        "displayName": {
+          "type": "string",
+          "maxLength": 100,
+          "description": "User's preferred nickname or display name."
+        },
+        "email": {
+          "type": "string",
+          "format": "email",
+          "maxLength": 254,
+          "description": "Private email address (PII, owner-only read)."
+        },
+        "photoURL": {
+          "type": "string",
+          "maxLength": 1000,
+          "description": "Optional Google avatar URL."
+        },
+        "weekStartsOn": {
+          "type": "number",
+          "enum": [0, 1],
+          "description": "0 for Sunday, 1 for Monday."
+        },
+        "theme": {
+          "type": "string",
+          "enum": ["system", "light", "dark"],
+          "description": "Preferred UI color theme."
+        },
+        "sidebarOpen": {
+          "type": "boolean",
+          "description": "Whether the desktop sidebar is expanded."
+        },
+        "dailyFocusGoalMinutes": {
+          "type": "number",
+          "description": "Daily focus goal in minutes (0 to 1440)."
+        },
+        "pomodoro": {
+          "type": "object",
+          "description": "Pomodoro timer intervals configuration."
+        },
+        "tagsSeeded": {
+          "type": "boolean",
+          "description": "Whether initial tags state has been initialized."
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Server timestamp when the profile was created."
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Server timestamp when the profile was last updated."
+        }
+      },
+      "required": [
+        "uid",
+        "displayName",
+        "email",
+        "weekStartsOn",
+        "theme",
+        "sidebarOpen",
+        "createdAt",
+        "updatedAt"
+      ]
+    },
+    "Project": {
+      "title": "Project",
+      "description": "A user-owned project organizing tasks and kanban board columns.",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "ownerId": {
+          "type": "string",
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "name": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 120
+        },
+        "description": {
+          "type": "string",
+          "maxLength": 1000
+        },
+        "color": {
+          "type": "string",
+          "enum": ["lilac", "peach", "mint", "butter", "sky", "rose"]
+        },
+        "emoji": {
+          "type": "string",
+          "maxLength": 16
+        },
+        "icon": {
+          "type": "string",
+          "maxLength": 120000
+        },
+        "cover": {
+          "type": "string",
+          "maxLength": 250000
+        },
+        "coverPosition": {
+          "type": "number"
+        },
+        "archived": {
+          "type": "boolean"
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "id",
+        "ownerId",
+        "name",
+        "description",
+        "color",
+        "emoji",
+        "archived",
+        "createdAt",
+        "updatedAt"
+      ]
+    },
+    "BoardColumn": {
+      "title": "BoardColumn",
+      "description": "A kanban column belonging to a project.",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "ownerId": {
+          "type": "string",
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "projectId": {
+          "type": "string",
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "name": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 80
+        },
+        "color": {
+          "type": "string",
+          "enum": ["lilac", "peach", "mint", "butter", "sky", "rose"]
+        },
+        "order": {
+          "type": "number"
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "id",
+        "ownerId",
+        "projectId",
+        "name",
+        "color",
+        "order",
+        "createdAt",
+        "updatedAt"
+      ]
+    },
+    "Task": {
+      "title": "Task",
+      "description": "A user task or study item with optional project linkage, schedule, tags, and subtasks.",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "ownerId": {
+          "type": "string",
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "title": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 300
+        },
+        "description": {
+          "type": "string",
+          "maxLength": 5000
+        },
+        "projectId": {
+          "type": "string",
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "priority": {
+          "type": "string",
+          "enum": ["none", "low", "medium", "high"]
+        },
+        "startDate": {
+          "type": "string",
+          "maxLength": 10,
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+        },
+        "dueDate": {
+          "type": "string",
+          "maxLength": 10,
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+        },
+        "dueTime": {
+          "type": "string",
+          "maxLength": 40
+        },
+        "estimate": {
+          "type": "number"
+        },
+        "repeat": {
+          "type": "string",
+          "enum": ["none", "daily", "weekdays", "weekly", "monthly"]
+        },
+        "reminder": {
+          "type": "boolean"
+        },
+        "tags": {
+          "type": "array",
+          "description": "Bounded list of up to 20 tag labels."
+        },
+        "status": {
+          "type": "string",
+          "enum": ["todo", "done"]
+        },
+        "boardColumnId": {
+          "type": "string",
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "color": {
+          "type": "string",
+          "enum": ["lilac", "peach", "mint", "butter", "sky", "rose"]
+        },
+        "completedAt": {
+          "type": "string",
+          "maxLength": 64
+        },
+        "subtasks": {
+          "type": "array",
+          "description": "Bounded list of up to 50 subtasks."
+        },
+        "type": {
+          "type": "string",
+          "enum": ["task", "study"]
+        },
+        "targetMinutes": {
+          "type": "number"
+        },
+        "studyMinutes": {
+          "type": "number"
+        },
+        "sortOrder": {
+          "type": "number"
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "id",
+        "ownerId",
+        "title",
+        "description",
+        "priority",
+        "repeat",
+        "reminder",
+        "tags",
+        "status",
+        "color",
+        "subtasks",
+        "createdAt",
+        "updatedAt"
+      ]
+    },
+    "DiaryEntry": {
+      "title": "DiaryEntry",
+      "description": "A private personal journal page with optional mood, tags, and photos.",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "ownerId": {
+          "type": "string",
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "date": {
+          "type": "string",
+          "maxLength": 10,
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+        },
+        "title": {
+          "type": "string",
+          "maxLength": 200
+        },
+        "body": {
+          "type": "string",
+          "maxLength": 20000
+        },
+        "mood": {
+          "type": "string",
+          "enum": ["happy", "good", "okay", "low", "difficult"]
+        },
+        "projectId": {
+          "type": "string",
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "tags": {
+          "type": "array",
+          "description": "Bounded list of up to 20 tags."
+        },
+        "photos": {
+          "type": "array",
+          "description": "Bounded list of up to 4 compressed photo data URLs."
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "id",
+        "ownerId",
+        "date",
+        "title",
+        "body",
+        "tags",
+        "createdAt",
+        "updatedAt"
+      ]
+    },
+    "MoodLog": {
+      "title": "MoodLog",
+      "description": "A daily mood check-in keyed by local YYYY-MM-DD date.",
+      "type": "object",
+      "properties": {
+        "date": {
+          "type": "string",
+          "maxLength": 10,
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+        },
+        "ownerId": {
+          "type": "string",
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "mood": {
+          "type": "string",
+          "enum": ["happy", "good", "okay", "low", "difficult"]
+        },
+        "note": {
+          "type": "string",
+          "maxLength": 1000
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "date",
+        "ownerId",
+        "mood",
+        "note",
+        "createdAt",
+        "updatedAt"
+      ]
+    },
+    "Habit": {
+      "title": "Habit",
+      "description": "A recurring daily or weekly habit tracked by the user.",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "ownerId": {
+          "type": "string",
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "name": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 120
+        },
+        "color": {
+          "type": "string",
+          "enum": ["lilac", "peach", "mint", "butter", "sky", "rose"]
+        },
+        "frequency": {
+          "type": "string",
+          "enum": ["daily", "weekly"]
+        },
+        "weekdays": {
+          "type": "array",
+          "description": "Bounded list of up to 7 weekday indices (0-6)."
+        },
+        "archived": {
+          "type": "boolean"
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "id",
+        "ownerId",
+        "name",
+        "color",
+        "frequency",
+        "weekdays",
+        "archived",
+        "createdAt",
+        "updatedAt"
+      ]
+    },
+    "HabitCheck": {
+      "title": "HabitCheck",
+      "description": "A completion mark for a habit on a given calendar day.",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "ownerId": {
+          "type": "string",
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "habitId": {
+          "type": "string",
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "date": {
+          "type": "string",
+          "maxLength": 10,
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "id",
+        "ownerId",
+        "habitId",
+        "date",
+        "createdAt"
+      ]
+    },
+    "FocusSession": {
+      "title": "FocusSession",
+      "description": "An immutable focus or study timer session log.",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "ownerId": {
+          "type": "string",
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "taskId": {
+          "type": "string",
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "projectId": {
+          "type": "string",
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "type": {
+          "type": "string",
+          "enum": ["focus", "break"]
+        },
+        "plannedMinutes": {
+          "type": "number"
+        },
+        "actualMinutes": {
+          "type": "number"
+        },
+        "startedAt": {
+          "type": "string",
+          "maxLength": 64
+        },
+        "endedAt": {
+          "type": "string",
+          "maxLength": 64
+        },
+        "completed": {
+          "type": "boolean"
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "id",
+        "ownerId",
+        "type",
+        "plannedMinutes",
+        "actualMinutes",
+        "startedAt",
+        "endedAt",
+        "completed",
+        "createdAt"
+      ]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": { "$ref": "#/entities/UserProfile" },
+      "description": "Owner-only private user profile and workspace preferences."
+    },
+    "/users/{userId}/projects/{projectId}": {
+      "schema": { "$ref": "#/entities/Project" },
+      "description": "User's personal projects."
+    },
+    "/users/{userId}/boardColumns/{columnId}": {
+      "schema": { "$ref": "#/entities/BoardColumn" },
+      "description": "Kanban board columns belonging to user's projects."
+    },
+    "/users/{userId}/tasks/{taskId}": {
+      "schema": { "$ref": "#/entities/Task" },
+      "description": "User's tasks and study items."
+    },
+    "/users/{userId}/diaryEntries/{entryId}": {
+      "schema": { "$ref": "#/entities/DiaryEntry" },
+      "description": "User's private diary entries."
+    },
+    "/users/{userId}/moods/{moodDate}": {
+      "schema": { "$ref": "#/entities/MoodLog" },
+      "description": "User's daily mood logs keyed by YYYY-MM-DD."
+    },
+    "/users/{userId}/habits/{habitId}": {
+      "schema": { "$ref": "#/entities/Habit" },
+      "description": "User's recurring habits."
+    },
+    "/users/{userId}/habitChecks/{checkId}": {
+      "schema": { "$ref": "#/entities/HabitCheck" },
+      "description": "Completion checks for user's habits."
+    },
+    "/users/{userId}/focusSessions/{sessionId}": {
+      "schema": { "$ref": "#/entities/FocusSession" },
+      "description": "Immutable focus and study timer logs."
+    }
+  }
+}

@@ -9,13 +9,13 @@ export interface CatProps {
   title?: string;
 }
 
-const FUR = 'var(--cat-body, #FFFBF7)';
-const LINE = 'var(--cat-outline, #B592A4)';
-const WHISKER = 'var(--cat-whisker, var(--cat-outline, #B592A4))';
-const BLUSH = 'var(--cat-blush, #F4C3A8)';
-const NOSE = 'var(--cat-nose, #F4C3A8)';
-const FACE = 'var(--cat-face, #4A3540)';
-const STRIPES = 'var(--cat-stripes, #D9BFCC)';
+const FUR = 'var(--cat-body, #FBF7EF)';
+const LINE = 'var(--cat-outline, #6C5447)';
+const WHISKER = 'var(--cat-whisker, var(--cat-outline, #8B7365))';
+const BLUSH = 'var(--cat-blush, #D4A69D)';
+const NOSE = 'var(--cat-nose, #B88F89)';
+const FACE = 'var(--cat-face, #45382F)';
+const STRIPES = 'var(--cat-stripes, #A58A7A)';
 
 /**
  * Toodles: an original round, sleepy cat drawn in plain SVG.
@@ -169,10 +169,10 @@ export function Cat({
       {/* pose extras */}
       {pose === 'sleepy' && (
         <g className={animated ? 'animate-snooze' : undefined} fill={STRIPES} opacity="0.9">
-          <text x="126" y="46" fontSize="20" fontFamily="Chewy, cursive">
+          <text x="126" y="46" fontSize="20" fontFamily="Caveat, cursive">
             z
           </text>
-          <text x="140" y="30" fontSize="14" fontFamily="Chewy, cursive">
+          <text x="140" y="30" fontSize="14" fontFamily="Caveat, cursive">
             z
           </text>
         </g>

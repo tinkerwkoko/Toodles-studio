@@ -1,9 +1,9 @@
 import { useMemo } from 'react';
-import { BarChart3, CheckCircle2, Flame, Folder, Smile, Target } from 'lucide-react';
 import { Card } from '../components/ui/Card';
 import { CatFace } from '../components/CatFace';
 import { MOODS } from '../lib/mood';
 import { addDays, todayString } from '../lib/date';
+import { cx } from '../lib/cx';
 import { useToodles } from '../store/useToodles';
 import type { MoodLevel } from '../types';
 
@@ -26,7 +26,7 @@ export function AnalyticsPage() {
   const studyRemainingMins = totalFocusMinutes % 60;
   const studyHoursText =
     studyHours > 0
-      ? `${studyHours}h ${studyRemainingMins > 0 ? `${studyRemainingMins}m` : ''}`
+      ? `${studyHours}h${studyRemainingMins > 0 ? ` ${studyRemainingMins}m` : ''}`
       : `${totalFocusMinutes}m`;
 
   // Last 7 days task completion distribution
@@ -71,7 +71,7 @@ export function AnalyticsPage() {
       .slice(0, 5);
   }, [data.projects, data.tasks]);
 
-  // Mood breakdown over past 30 days
+  // Mood breakdown
   const moodCounts = useMemo(() => {
     const counts: Record<MoodLevel, number> = {
       happy: 0,
@@ -90,95 +90,74 @@ export function AnalyticsPage() {
 
   const totalMoodLogs = Object.values(moodCounts).reduce((a, b) => a + b, 0);
 
+  const summaryItems = [
+    { label: 'Completed', value: String(completedTasks.length) },
+    { label: 'Hours studied', value: studyHoursText },
+    { label: 'Focus sessions', value: String(data.focusSessions?.length || 0) },
+    { label: 'Habit checks', value: String(data.habitChecks.length) },
+    { label: 'Moods logged', value: String(totalMoodLogs) },
+  ];
+
   return (
-    <div className="mx-auto max-w-4xl space-y-6">
-      <div className="flex flex-col gap-1 text-center sm:text-left">
-        <div className="flex items-center justify-center sm:justify-start gap-2.5">
-          <BarChart3 size={26} className="text-accent" aria-hidden="true" />
-          <h1 className="font-display text-3xl text-ink">Analytics and Calm Insights</h1>
-        </div>
-        <p className="font-sans text-sm text-ink-soft">
+    <div className="mx-auto max-w-4xl space-y-7 pb-6">
+      <header className="space-y-1 border-b border-divider pb-5">
+        <p className="font-hand text-[1.1rem] leading-none text-ink-soft">Archival ledger</p>
+        <h1 className="font-display text-3xl font-semibold tracking-tight text-ink sm:text-[2.15rem]">
+          Analytics &amp; Calm Insights
+        </h1>
+        <p className="text-sm text-ink-soft">
           A gentle look at your completed tasks, focused rhythms, and wellbeing.
         </p>
+      </header>
+
+      {/* Hairline-Divided 5-Column Summary Ledger */}
+      <div className="paper-sheet grid grid-cols-2 divide-y divide-divider/70 rounded-[5px] sm:grid-cols-5 sm:divide-x sm:divide-y-0">
+        {summaryItems.map((item) => (
+          <div key={item.label} className="px-4 py-4">
+            <div className="text-[11px] uppercase tracking-wider text-ink-soft">{item.label}</div>
+            <div className="mt-1 font-display text-3xl font-semibold tabular-nums text-ink">
+              {item.value}
+            </div>
+          </div>
+        ))}
       </div>
 
-      {/* Top 5 Stat Cards */}
-      <div className="grid grid-cols-2 gap-3 sm:grid-cols-5">
-        <Card padding="md" className="flex flex-col justify-between border-lilac-200">
-          <div className="flex items-center justify-between text-ink-soft">
-            <span className="font-sans text-xs">Total completed</span>
-            <CheckCircle2 size={16} className="text-accent" />
-          </div>
-          <div className="mt-2 font-title font-medium text-2xl text-ink">
-            {completedTasks.length}
-          </div>
-        </Card>
-
-        <Card padding="md" className="flex flex-col justify-between border-lilac-200">
-          <div className="flex items-center justify-between text-ink-soft">
-            <span className="font-sans text-xs">Hours studied</span>
-            <Target size={16} className="text-peach-700" />
-          </div>
-          <div className="mt-2 font-title font-medium text-2xl text-ink">
-            {studyHoursText}
-          </div>
-        </Card>
-
-        <Card padding="md" className="flex flex-col justify-between border-lilac-200">
-          <div className="flex items-center justify-between text-ink-soft">
-            <span className="font-sans text-xs">Sessions</span>
-            <Target size={16} className="text-accent" />
-          </div>
-          <div className="mt-2 font-title font-medium text-2xl text-ink">
-            {data.focusSessions?.length || 0}
-          </div>
-        </Card>
-
-        <Card padding="md" className="flex flex-col justify-between border-lilac-200">
-          <div className="flex items-center justify-between text-ink-soft">
-            <span className="font-sans text-xs">Habit checks</span>
-            <Flame size={16} className="text-peach-500" />
-          </div>
-          <div className="mt-2 font-title font-medium text-2xl text-ink">
-            {data.habitChecks.length}
-          </div>
-        </Card>
-
-        <Card padding="md" className="flex flex-col justify-between border-lilac-200">
-          <div className="flex items-center justify-between text-ink-soft">
-            <span className="font-sans text-xs">Moods logged</span>
-            <Smile size={16} className="text-mint-700" />
-          </div>
-          <div className="mt-2 font-title font-medium text-2xl text-ink">
-            {totalMoodLogs}
-          </div>
-        </Card>
-      </div>
-
-      {/* Two Columns: Daily Task Chart & Mood Distribution */}
+      {/* Two Columns: Daily Task Activity & Mood Balance */}
       <div className="grid gap-6 md:grid-cols-2">
         {/* Last 7 Days Task Activity Chart */}
-        <Card padding="md" className="space-y-4 border-lilac-200">
-          <h2 className="font-display text-lg text-ink">Tasks finished (last 7 days)</h2>
+        <Card padding="lg" className="space-y-4">
+          <div className="border-b border-divider pb-2.5">
+            <p className="font-hand text-base leading-none text-ink-soft">Past week</p>
+            <h2 className="mt-0.5 font-display text-xl font-semibold text-ink">
+              Tasks finished (last 7 days)
+            </h2>
+          </div>
 
-          <div className="flex h-44 items-end justify-between gap-2 pt-4 border-b border-divider pb-2 px-2">
+          <div className="flex h-44 items-end justify-between gap-2.5 border-b border-divider px-2 pt-4 pb-2">
             {last7DaysData.map((d) => {
-              const heightPercent = Math.max(8, (d.count / maxDailyCount) * 100);
+              const heightPercent = Math.max(6, (d.count / maxDailyCount) * 100);
               const isToday = d.date === today;
               return (
-                <div key={d.date} className="flex flex-1 flex-col items-center gap-1.5 h-full justify-end">
-                  <span className="text-[11px] font-sans text-ink-soft">{d.count > 0 ? d.count : ''}</span>
+                <div
+                  key={d.date}
+                  className="flex h-full flex-1 flex-col items-center justify-end gap-1.5"
+                >
+                  <span className="text-[11px] tabular-nums text-ink-soft">
+                    {d.count > 0 ? d.count : ''}
+                  </span>
                   <div
-                    className={`w-full max-w-[28px] rounded-t-xl transition-all duration-300 ${
-                      isToday ? 'bg-accent' : 'bg-lilac-200 hover:bg-lilac-300'
-                    }`}
+                    className={cx(
+                      'w-full max-w-[26px] rounded-t-[3px] transition-all duration-300',
+                      isToday ? 'bg-lilac-300' : 'bg-dusty-rose/65 hover:bg-dusty-rose',
+                    )}
                     style={{ height: `${heightPercent}%` }}
                     title={`${d.count} tasks on ${d.date}`}
                   />
                   <span
-                    className={`text-[11px] font-title ${
-                      isToday ? 'font-medium text-ink' : 'text-ink-soft'
-                    }`}
+                    className={cx(
+                      'text-[11px]',
+                      isToday ? 'font-semibold text-ink' : 'text-ink-soft',
+                    )}
                   >
                     {d.label}
                   </span>
@@ -189,29 +168,34 @@ export function AnalyticsPage() {
         </Card>
 
         {/* Mood Distribution */}
-        <Card padding="md" className="space-y-4 border-lilac-200">
-          <h2 className="font-display text-lg text-ink">Mood balance</h2>
+        <Card variant="aged" padding="lg" className="space-y-4">
+          <div className="border-b border-divider pb-2.5">
+            <p className="font-hand text-base leading-none text-ink-soft">Reflections</p>
+            <h2 className="mt-0.5 font-display text-xl font-semibold text-ink">Mood balance</h2>
+          </div>
 
           {totalMoodLogs === 0 ? (
-            <div className="py-8 text-center text-xs font-sans text-ink-soft">
-              No moods logged yet. Check in on the overview page!
-            </div>
+            <p className="py-10 text-center text-xs italic text-ink-soft">
+              No moods logged yet. Check in on the overview page.
+            </p>
           ) : (
-            <div className="space-y-3">
+            <div className="space-y-3.5">
               {MOODS.map((mood) => {
                 const count = moodCounts[mood.level] || 0;
                 const percent = Math.round((count / totalMoodLogs) * 100);
                 return (
                   <div key={mood.level} className="flex items-center gap-3">
-                    <CatFace mood={mood.level} size={24} decorative />
-                    <div className="flex-1 min-w-0">
-                      <div className="flex justify-between text-xs font-title font-medium text-ink mb-1">
-                        <span>{mood.label}</span>
-                        <span className="text-ink-soft">{count} ({percent}%)</span>
+                    <CatFace mood={mood.level} size={22} decorative />
+                    <div className="min-w-0 flex-1">
+                      <div className="mb-1 flex justify-between text-xs text-ink">
+                        <span className="font-medium">{mood.label}</span>
+                        <span className="tabular-nums text-ink-soft">
+                          {count} ({percent}%)
+                        </span>
                       </div>
-                      <div className="h-2 w-full rounded-full bg-lilac-100 overflow-hidden">
+                      <div className="h-1.5 w-full overflow-hidden rounded-[2px] bg-cream">
                         <div
-                          className="h-full rounded-full transition-all duration-300"
+                          className="h-full rounded-[2px] transition-all duration-300"
                           style={{
                             width: `${percent}%`,
                             backgroundColor: `var(--mood-${mood.level})`,
@@ -229,27 +213,29 @@ export function AnalyticsPage() {
 
       {/* Projects Progress */}
       {projectStats.length > 0 && (
-        <Card padding="md" className="space-y-3 border-lilac-200">
-          <div className="flex items-center justify-between">
-            <h2 className="font-display text-lg text-ink">Projects completion</h2>
-            <Folder size={18} className="text-ink-soft" />
+        <Card padding="lg" className="space-y-3">
+          <div className="border-b border-divider pb-2.5">
+            <p className="font-hand text-base leading-none text-ink-soft">Folios</p>
+            <h2 className="mt-0.5 font-display text-xl font-semibold text-ink">
+              Projects completion
+            </h2>
           </div>
 
-          <div className="divide-y divide-divider">
+          <div className="divide-y divide-divider/70">
             {projectStats.map((p) => (
-              <div key={p.id} className="py-2.5 space-y-1.5">
-                <div className="flex items-center justify-between text-xs font-title">
-                  <span className="font-medium text-ink flex items-center gap-1.5">
+              <div key={p.id} className="space-y-1.5 py-3 first:pt-1 last:pb-0">
+                <div className="flex items-center justify-between text-xs">
+                  <span className="flex items-center gap-1.5 font-medium text-ink">
                     <span>{p.emoji}</span>
                     <span>{p.name}</span>
                   </span>
-                  <span className="text-ink-soft font-sans">
+                  <span className="tabular-nums text-ink-soft">
                     {p.done} / {p.total} done ({p.percent}%)
                   </span>
                 </div>
-                <div className="h-2 w-full rounded-full bg-lilac-100 overflow-hidden">
+                <div className="h-1.5 w-full overflow-hidden rounded-[2px] bg-paper-2">
                   <div
-                    className="h-full bg-mint-500 rounded-full transition-all duration-300"
+                    className="h-full rounded-[2px] bg-forest transition-all duration-300"
                     style={{ width: `${p.percent}%` }}
                   />
                 </div>

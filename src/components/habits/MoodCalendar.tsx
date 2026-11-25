@@ -35,29 +35,31 @@ export function MoodCalendar({
           type="button"
           onClick={() => onStep(-1)}
           aria-label="Previous month"
-          className="grid h-11 w-11 place-items-center rounded-full border border-lilac-200 bg-cream text-lilac-700 hover:bg-lilac-100"
+          className="grid h-9 w-9 place-items-center rounded-[4px] border border-lilac-200 bg-cream text-ink-soft transition hover:bg-lilac-100 hover:text-ink"
         >
-          <ChevronLeft size={18} aria-hidden="true" />
+          <ChevronLeft size={16} aria-hidden="true" />
         </button>
-        <p className="font-display text-lg text-lilac-700">{formatMonthYear(year, month)}</p>
+        <p className="font-display text-xl font-semibold text-ink">
+          {formatMonthYear(year, month)}
+        </p>
         <button
           type="button"
           onClick={() => onStep(1)}
           aria-label="Next month"
-          className="grid h-11 w-11 place-items-center rounded-full border border-lilac-200 bg-cream text-lilac-700 hover:bg-lilac-100"
+          className="grid h-9 w-9 place-items-center rounded-[4px] border border-lilac-200 bg-cream text-ink-soft transition hover:bg-lilac-100 hover:text-ink"
         >
-          <ChevronRight size={18} aria-hidden="true" />
+          <ChevronRight size={16} aria-hidden="true" />
         </button>
       </div>
 
       <div className="grid grid-cols-7 gap-1" role="grid" aria-label="Mood calendar">
-        {['S', 'M', 'T', 'W', 'T', 'F', 'S'].map((day, index) => (
+        {[1, 2, 3, 4, 5, 6, 0].map((weekdayIndex) => (
           <span
-            key={`${day}-${index}`}
+            key={weekdayIndex}
             aria-hidden="true"
-            className="pb-1 text-center text-xs font-bold text-ink-soft"
+            className="pb-1 text-center text-[11px] uppercase tracking-wider text-ink-soft"
           >
-            {WEEKDAY_MIN[index]}
+            {WEEKDAY_MIN[weekdayIndex]}
           </span>
         ))}
 
@@ -74,30 +76,34 @@ export function MoodCalendar({
               aria-label={`${cell.date}${mood ? `: ${meta?.label}` : ': no mood logged'}`}
               aria-pressed={isSelected}
               className={cx(
-                'relative flex aspect-square flex-col items-center justify-center rounded-2xl border text-xs font-bold transition p-1',
-                !cell.inMonth && 'opacity-25',
+                'relative flex aspect-square flex-col items-center justify-center rounded-[4px] border p-1 text-xs transition',
+                !cell.inMonth && 'opacity-30',
                 isSelected
-                  ? 'border-accent ring-2 ring-accent/40 shadow-sm'
-                  : 'border-lilac-200 hover:border-accent/40',
+                  ? 'border-lilac-300 ring-2 ring-lilac-300/45'
+                  : 'border-lilac-200/80 hover:border-lilac-300',
                 mood
-                  ? meta ? accent(meta.color).soft : 'bg-lilac-50'
+                  ? meta
+                    ? accent(meta.color).soft
+                    : 'bg-paper-2'
                   : 'bg-cream text-ink-soft hover:bg-lilac-50',
-                cell.date === today && !isSelected && 'ring-2 ring-accent/30',
+                cell.date === today && !isSelected && 'border-lilac-300/70',
               )}
             >
-              <span className="text-[11px] leading-none mb-0.5 text-ink font-title">{cell.day}</span>
+              <span className="mb-0.5 text-[10px] leading-none tabular-nums text-ink-soft">
+                {cell.day}
+              </span>
               {mood ? (
-                <CatFace mood={mood} size={26} decorative />
+                <CatFace mood={mood} size={24} decorative />
               ) : (
-                <span className="h-2.5 w-2.5 rounded-full bg-lilac-200/50" />
+                <span className="h-1.5 w-1.5 rounded-full bg-divider" aria-hidden="true" />
               )}
             </button>
           );
         })}
       </div>
 
-      <p className="text-xs text-ink-soft">
-        The cat faces show how you felt each day. Pick any day to log or update.
+      <p className="text-xs italic text-ink-soft">
+        The sketches show how each day felt. Pick any date to log or update.
       </p>
     </div>
   );

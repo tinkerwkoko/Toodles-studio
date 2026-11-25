@@ -26,7 +26,7 @@ export function ProjectsPage() {
           <Button
             className="hidden sm:inline-flex"
             onClick={() => openCreate('project')}
-            icon={<Plus size={18} aria-hidden="true" />}
+            icon={<Plus size={16} aria-hidden="true" />}
           >
             New project
           </Button>
@@ -41,7 +41,7 @@ export function ProjectsPage() {
           onAction={() => openCreate('project')}
         />
       ) : (
-        <ul className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
+        <ul className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
           {projects.map((project) => (
             <li key={project.id}>
               <ProjectCard

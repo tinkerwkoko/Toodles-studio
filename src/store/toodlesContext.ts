@@ -17,11 +17,12 @@ import type {
   Task,
   TaskStatus,
   ToodlesData,
+  UserAccount,
 } from '../types';
 
 /**
  * The single mutation surface of the app. Components never touch localStorage
- * and never patch state directly — they call these actions.
+ * or Firestore directly — they call these actions.
  */
 export interface ToodlesActions {
   addTask: (input: NewTaskInput) => Task;
@@ -67,13 +68,22 @@ export interface ToodlesActions {
   exportData: () => string;
   importData: (text: string) => { tasks: number; projects: number; entries: number };
   eraseAll: () => void;
+
+  /** Google OAuth sign-in via Firebase Auth with automatic cross-device cloud sync. */
+  signInWithGoogle: () => Promise<UserAccount>;
+  /** Sign out of Firebase Auth and detach cloud listeners. */
+  signOutUser: () => Promise<void>;
 }
 
 export interface ToodlesContextValue {
   data: ToodlesData;
   actions: ToodlesActions;
-  /** False until the first localStorage read has finished. */
+  /** False until initial local read and Firebase Auth check have completed. */
   isReady: boolean;
+  /** True while initializing or syncing the cloud workspace after sign-in. */
+  cloudSyncing: boolean;
+  /** True when signed in with Google OAuth and connected to Firestore. */
+  isCloudConnected: boolean;
   /** True when localStorage is blocked (private mode with storage disabled). */
   storageBlocked: boolean;
 }

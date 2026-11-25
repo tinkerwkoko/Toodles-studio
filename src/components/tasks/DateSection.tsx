@@ -12,7 +12,7 @@ export interface DateSectionProps {
   children: ReactNode;
 }
 
-/** Friendly day heading: "Today", "Friday", "Next week", "Later". */
+/** Editorial day heading: "Today", "Friday", "Next week", "Later". */
 export function DateSection({
   date,
   count,
@@ -31,26 +31,28 @@ export function DateSection({
 
   return (
     <section className="space-y-2.5">
-      <div className="flex flex-wrap items-center gap-2">
+      <div className="flex flex-wrap items-baseline gap-2.5 pb-1">
         <h2
           className={cx(
-            'text-lg',
-            tone === 'overdue' ? 'text-rose-700' : 'text-lilac-700',
+            'font-display text-2xl font-semibold leading-none',
+            tone === 'overdue' ? 'text-rose-700' : 'text-ink',
           )}
         >
           {label}
         </h2>
         {date !== 'none' && label !== formatDay(date, { withWeekday: false }) && (
-          <span className="text-sm font-semibold text-ink-soft">· {formatDay(date)}</span>
+          <span className="font-hand text-lg text-ink-soft leading-none">
+            {formatDay(date)}
+          </span>
         )}
         {typeof count === 'number' && (
           <span
             className={cx(
-              'rounded-full px-2 py-0.5 text-xs font-bold',
-              tone === 'overdue' ? 'bg-rose-100 text-rose-700' : 'bg-lilac-100 text-lilac-700',
+              'text-xs font-sans tabular-nums',
+              tone === 'overdue' ? 'text-rose-700 font-medium' : 'text-text-faint',
             )}
           >
-            {count}
+            · {count}
           </span>
         )}
         {action && <div className="ml-auto">{action}</div>}

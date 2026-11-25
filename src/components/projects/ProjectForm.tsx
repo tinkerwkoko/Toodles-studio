@@ -28,34 +28,29 @@ export const EMPTY_PROJECT_FORM: ProjectFormValues = {
 };
 
 const PRESET_COVERS = [
-  { name: 'Peach Warmth', value: 'linear-gradient(135deg, #f4c3a8 0%, #ffd9c0 100%)' },
-  { name: 'Mint Meadow', value: 'linear-gradient(135deg, #dce6d3 0%, #b7c9ac 100%)' },
-  { name: 'Butter Sun', value: 'linear-gradient(135deg, #f6eac2 0%, #e3d39a 100%)' },
-  { name: 'Sky Breeze', value: 'linear-gradient(135deg, #d3e2ec 0%, #a9c4d6 100%)' },
-  { name: 'Lilac Dream', value: 'linear-gradient(135deg, #eadfea 0%, #d9bfcc 100%)' },
-  { name: 'Night Calm', value: 'linear-gradient(135deg, #382c3c 0%, #231b26 100%)' },
+  { name: 'Aged Parchment', value: 'linear-gradient(135deg, #efe4d2 0%, #dcc8ad 100%)' },
+  { name: 'Pressed Olive', value: 'linear-gradient(135deg, #d7e0d4 0%, #a5b5a2 100%)' },
+  { name: 'Dusty Rose', value: 'linear-gradient(135deg, #ebd9d6 0%, #c8a29c 100%)' },
+  { name: 'Terracotta Clay', value: 'linear-gradient(135deg, #ecd8c9 0%, #c9997f 100%)' },
+  { name: 'Archival Slate', value: 'linear-gradient(135deg, #d7e0e6 0%, #9eb1bf 100%)' },
+  { name: 'Library Night', value: 'linear-gradient(135deg, #3c2b26 0%, #241916 100%)' },
 ];
 
-/**
- * Standard Notion Image Sizes:
- * - Cover: 1500px by 600px
- * - Icon: 280px by 280px
- */
 function cropAndCompressSquare(file: File, callback: (dataUrl: string) => void) {
   const reader = new FileReader();
   reader.onload = () => {
     const img = new Image();
     img.onload = () => {
       const canvas = document.createElement('canvas');
-      canvas.width = 280;
-      canvas.height = 280;
+      canvas.width = 240;
+      canvas.height = 240;
       const ctx = canvas.getContext('2d');
       if (!ctx) return;
       const minDim = Math.min(img.width, img.height);
       const sx = (img.width - minDim) / 2;
       const sy = (img.height - minDim) / 2;
-      ctx.drawImage(img, sx, sy, minDim, minDim, 0, 0, 280, 280);
-      callback(canvas.toDataURL('image/jpeg', 0.88));
+      ctx.drawImage(img, sx, sy, minDim, minDim, 0, 0, 240, 240);
+      callback(canvas.toDataURL('image/jpeg', 0.8));
     };
     img.src = reader.result as string;
   };
@@ -68,11 +63,11 @@ function cropAndCompressCover(file: File, callback: (dataUrl: string) => void) {
     const img = new Image();
     img.onload = () => {
       const canvas = document.createElement('canvas');
-      canvas.width = 1500;
-      canvas.height = 600;
+      canvas.width = 1200;
+      canvas.height = 480;
       const ctx = canvas.getContext('2d');
       if (!ctx) return;
-      const targetRatio = 1500 / 600;
+      const targetRatio = 1200 / 480;
       const imgRatio = img.width / img.height;
       let sx = 0,
         sy = 0,
@@ -85,8 +80,8 @@ function cropAndCompressCover(file: File, callback: (dataUrl: string) => void) {
         sHeight = img.width / targetRatio;
         sy = (img.height - sHeight) / 2;
       }
-      ctx.drawImage(img, sx, sy, sWidth, sHeight, 0, 0, 1500, 600);
-      callback(canvas.toDataURL('image/jpeg', 0.85));
+      ctx.drawImage(img, sx, sy, sWidth, sHeight, 0, 0, 1200, 480);
+      callback(canvas.toDataURL('image/jpeg', 0.72));
     };
     img.src = reader.result as string;
   };
@@ -149,9 +144,8 @@ export function ProjectForm({
 
   return (
     <form onSubmit={handleSubmit} className="space-y-5">
-      {/* Cover Preview (if any) */}
       {values.cover && (
-        <div className="relative h-40 w-full overflow-hidden rounded-3xl border border-divider shadow-sm">
+        <div className="relative h-36 w-full overflow-hidden rounded-[5px] border border-lilac-200 shadow-soft">
           <div
             className="h-full w-full transition-all"
             style={{
@@ -160,13 +154,13 @@ export function ProjectForm({
                 : `url(${values.cover}) center ${verticalPos}% / cover no-repeat`,
             }}
           />
-          <div className="absolute right-3 top-3 flex items-center gap-2">
+          <div className="absolute right-2.5 top-2.5 flex items-center gap-1.5">
             {!isGradient && (
               <button
                 type="button"
                 onClick={() => setShowReposition(!showReposition)}
                 aria-label="Adjust header position"
-                className="inline-flex items-center gap-1.5 rounded-full bg-card/90 px-2.5 py-1 text-xs font-title font-medium text-ink backdrop-blur border border-divider hover:bg-card transition"
+                className="inline-flex items-center gap-1.5 rounded-[4px] bg-card/92 px-2.5 py-1 text-xs font-sans font-medium text-ink backdrop-blur-sm border border-lilac-200 hover:bg-card transition cursor-pointer"
               >
                 <MoveVertical size={13} />
                 <span>{showReposition ? 'Done' : 'Reposition'}</span>
@@ -176,15 +170,17 @@ export function ProjectForm({
               type="button"
               onClick={() => patch({ cover: undefined })}
               aria-label="Remove cover"
-              className="grid h-7 w-7 place-items-center rounded-full bg-black/60 text-white hover:bg-black/80 transition"
+              className="grid h-7 w-7 place-items-center rounded-[4px] bg-[#1b1511]/70 text-[#fbf7ef] hover:bg-[#1b1511] transition cursor-pointer"
             >
               <X size={14} />
             </button>
           </div>
 
           {showReposition && !isGradient && (
-            <div className="absolute inset-x-3 bottom-3 rounded-2xl bg-card/95 border border-divider p-2.5 backdrop-blur shadow flex items-center gap-3">
-              <span className="text-xs font-title font-medium text-ink shrink-0">Vertical: {verticalPos}%</span>
+            <div className="absolute inset-x-3 bottom-3 rounded-[4px] bg-card/95 border border-lilac-200 p-2.5 backdrop-blur-sm shadow flex items-center gap-3">
+              <span className="text-xs font-sans font-medium text-ink shrink-0 tabular-nums">
+                Vertical: {verticalPos}%
+              </span>
               <input
                 type="range"
                 min="0"
@@ -201,7 +197,7 @@ export function ProjectForm({
       {/* Project Icon Preview and Mode Selector */}
       <div className="flex items-center gap-4">
         <div
-          className={`grid h-12 w-12 sm:h-14 sm:w-14 place-items-center rounded-2xl border border-lilac-200 bg-card shadow-soft overflow-hidden shrink-0 ${
+          className={`grid h-12 w-12 sm:h-14 sm:w-14 place-items-center rounded-[5px] border border-lilac-200 bg-card shadow-soft overflow-hidden shrink-0 ${
             values.icon &&
             (values.icon.startsWith('data:image') ||
               values.icon.startsWith('http') ||
@@ -213,43 +209,42 @@ export function ProjectForm({
           <ProjectIconDisplay icon={values.icon} emoji={values.emoji} size={24} />
         </div>
 
-        <div className="flex flex-col gap-1.5 flex-1 min-w-0">
-          <span className="text-sm font-title font-medium text-ink">Project icon</span>
-          <p className="text-xs font-sans text-ink-soft">
+        <div className="flex flex-col gap-1 flex-1 min-w-0">
+          <span className="text-sm font-sans font-medium text-ink">Project icon</span>
+          <p className="text-xs font-sans italic text-ink-soft">
             Choose an icon from the collection below or upload a custom photo.
           </p>
-          <div className="flex items-center gap-2 pt-1">
+          <div className="flex items-center gap-3 pt-1">
             <button
               type="button"
               onClick={() => setIconMode('icons')}
-              className={`inline-flex items-center gap-1.5 rounded-full px-3.5 py-1.5 text-xs font-title transition cursor-pointer ${
+              className={`inline-flex items-center gap-1.5 pb-1 text-xs font-sans border-b-2 transition cursor-pointer ${
                 iconMode === 'icons'
-                  ? 'bg-lilac-200 text-ink font-semibold shadow-sm'
-                  : 'text-ink-soft hover:text-ink hover:bg-lilac-100'
+                  ? 'border-accent text-ink font-semibold'
+                  : 'border-transparent text-ink-soft hover:text-ink'
               }`}
             >
-              <Sparkles size={14} />
+              <Sparkles size={13} />
               <span>Icons</span>
             </button>
             <button
               type="button"
               onClick={() => setIconMode('upload')}
-              className={`inline-flex items-center gap-1.5 rounded-full px-3.5 py-1.5 text-xs font-title transition cursor-pointer ${
+              className={`inline-flex items-center gap-1.5 pb-1 text-xs font-sans border-b-2 transition cursor-pointer ${
                 iconMode === 'upload'
-                  ? 'bg-lilac-200 text-ink font-semibold shadow-sm'
-                  : 'text-ink-soft hover:text-ink hover:bg-lilac-100'
+                  ? 'border-accent text-ink font-semibold'
+                  : 'border-transparent text-ink-soft hover:text-ink'
               }`}
             >
-              <Camera size={14} />
+              <Camera size={13} />
               <span>Photo</span>
             </button>
           </div>
         </div>
       </div>
 
-      {/* Icon Pickers: Large, comfortable, tap-friendly with clear labels */}
       {iconMode === 'icons' && (
-        <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-2.5 max-h-56 overflow-y-auto p-2 border border-divider rounded-2xl bg-card">
+        <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-2 max-h-52 overflow-y-auto p-2 border border-divider rounded-[4px] bg-card">
           {Object.entries(PROJECT_LUCIDE_ICONS).map(([key, item]) => {
             const IconComponent = item.icon;
             const isSelected = values.icon === `lucide:${key}`;
@@ -258,15 +253,15 @@ export function ProjectForm({
                 key={key}
                 type="button"
                 onClick={() => patch({ icon: `lucide:${key}` })}
-                className={`flex flex-col items-center justify-center gap-1.5 h-18 rounded-2xl border transition ${
+                className={`flex flex-col items-center justify-center gap-1.5 h-16 rounded-[4px] border transition cursor-pointer ${
                   isSelected
-                    ? 'border-accent bg-lilac-200 text-ink ring-2 ring-accent/30 shadow-sm'
-                    : 'border-transparent hover:bg-lilac-100 text-ink-soft hover:text-ink'
+                    ? 'border-accent bg-paper-2 text-accent font-medium'
+                    : 'border-transparent hover:bg-paper-2/60 text-ink-soft hover:text-ink'
                 }`}
                 title={item.label}
               >
-                <IconComponent size={28} />
-                <span className="text-xs font-title font-medium truncate max-w-[90%]">{item.label}</span>
+                <IconComponent size={22} strokeWidth={1.7} />
+                <span className="text-[11px] font-sans truncate max-w-[90%]">{item.label}</span>
               </button>
             );
           })}
@@ -274,11 +269,11 @@ export function ProjectForm({
       )}
 
       {iconMode === 'upload' && (
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-4 rounded-2xl border border-divider bg-card">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-4 rounded-[4px] border border-divider bg-card">
           <div className="space-y-0.5">
-            <span className="text-sm font-title font-medium text-ink">Upload custom icon</span>
-            <p className="text-xs font-sans text-ink-soft">
-              Choose a square photo or graphic with gentle padding.
+            <span className="text-sm font-sans font-medium text-ink">Upload custom icon</span>
+            <p className="text-xs font-sans italic text-ink-soft">
+              Choose a square photo or graphic.
             </p>
           </div>
           <div className="flex items-center gap-2">
@@ -293,7 +288,7 @@ export function ProjectForm({
               type="button"
               size="sm"
               variant="primary"
-              icon={<Camera size={15} />}
+              icon={<Camera size={14} />}
               onClick={() => iconInputRef.current?.click()}
             >
               Choose photo
@@ -312,19 +307,17 @@ export function ProjectForm({
         </div>
       )}
 
-      {/* Project name */}
       <Field label="Project name" htmlFor="project-name">
         <Input
           id="project-name"
           data-autofocus
           value={values.name}
           onChange={(event) => patch({ name: event.target.value })}
-          placeholder="e.g. Final Year Project, Cozy Studio..."
+          placeholder="e.g. Autumn Reading List, Thesis Draft..."
           className="text-base"
         />
       </Field>
 
-      {/* Project description */}
       <Field label="What is it about?" htmlFor="project-description">
         <Textarea
           id="project-description"
@@ -336,9 +329,8 @@ export function ProjectForm({
         />
       </Field>
 
-      {/* Colour selection */}
       <fieldset className="space-y-2">
-        <legend className="text-xs font-title font-medium text-ink">Colour palette</legend>
+        <legend className="text-[13px] font-sans font-medium text-ink">Ink colour</legend>
         <div className="flex flex-wrap gap-2">
           {ACCENT_KEYS.map((key) => {
             const tone = accent(key);
@@ -351,10 +343,10 @@ export function ProjectForm({
                 aria-pressed={isSelected}
                 onClick={() => patch({ color: key })}
                 className={cx(
-                  'flex items-center gap-1.5 rounded-full border px-3 py-1 text-xs font-title font-medium transition cursor-pointer',
+                  'flex items-center gap-1.5 rounded-[4px] border px-2.5 py-1 text-xs font-sans transition cursor-pointer',
                   isSelected
-                    ? 'border-accent bg-lilac-200 text-ink shadow-sm'
-                    : 'border-divider bg-card text-ink-soft hover:bg-lilac-50',
+                    ? 'border-accent bg-paper-2 text-ink font-semibold'
+                    : 'border-divider bg-card text-ink-soft hover:bg-paper-2/50',
                 )}
               >
                 <span className={cx('h-2.5 w-2.5 rounded-full', tone.mid)} aria-hidden="true" />
@@ -365,19 +357,18 @@ export function ProjectForm({
         </div>
       </fieldset>
 
-      {/* Optional Header Cover */}
-      <div className="space-y-2.5 pt-2 border-t border-divider">
+      <div className="space-y-2.5 pt-3 border-t border-divider">
         <div className="flex items-center justify-between">
           <div>
-            <span className="text-xs font-title font-medium text-ink">Header cover (optional)</span>
-            <p className="text-[11px] font-sans text-ink-soft">
-              Choose a pastel atmosphere or upload a custom image.
+            <span className="text-[13px] font-sans font-medium text-ink">Header cover (optional)</span>
+            <p className="text-xs font-sans italic text-ink-soft">
+              Choose an archival tone or upload a custom image.
             </p>
           </div>
           <button
             type="button"
             onClick={() => setShowCoverPicker(!showCoverPicker)}
-            className="text-xs font-title text-accent hover:underline font-semibold"
+            className="text-xs font-sans text-accent hover:underline underline-offset-4 font-medium cursor-pointer"
           >
             {showCoverPicker ? 'Hide' : 'Add header cover'}
           </button>
@@ -391,12 +382,12 @@ export function ProjectForm({
                   key={preset.name}
                   type="button"
                   onClick={() => patch({ cover: preset.value, coverPosition: 50 })}
-                  className={`h-12 rounded-2xl border p-1 text-left transition hover:scale-101 flex flex-col justify-end ${
-                    values.cover === preset.value ? 'border-accent ring-2 ring-accent/40' : 'border-divider'
+                  className={`h-13 rounded-[4px] border p-1.5 text-left transition flex flex-col justify-end cursor-pointer ${
+                    values.cover === preset.value ? 'border-accent ring-2 ring-accent/30' : 'border-lilac-200'
                   }`}
                   style={{ background: preset.value }}
                 >
-                  <span className="text-[10px] font-title font-medium text-ink bg-card/85 px-1.5 py-0.5 rounded backdrop-blur truncate">
+                  <span className="text-[10px] font-sans font-medium text-ink bg-card/90 px-1.5 py-0.5 rounded-[2px] backdrop-blur-sm truncate self-start">
                     {preset.name}
                   </span>
                 </button>
@@ -414,7 +405,7 @@ export function ProjectForm({
               <Button
                 type="button"
                 size="sm"
-                variant="primary"
+                variant="outline"
                 icon={<ImageIcon size={14} />}
                 onClick={() => coverInputRef.current?.click()}
               >
@@ -425,7 +416,7 @@ export function ProjectForm({
         )}
       </div>
 
-      <div className="flex items-center justify-end gap-2 border-t border-divider pt-3">
+      <div className="flex items-center justify-end gap-2 border-t border-divider pt-4">
         {onDelete && (
           <Button type="button" variant="danger" size="sm" onClick={onDelete}>
             Delete project

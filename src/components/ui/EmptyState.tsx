@@ -1,5 +1,6 @@
 import type { ReactNode } from 'react';
 import { Cat, type CatPose } from '../Cat';
+import { Button } from './Button';
 import { cx } from '../../lib/cx';
 
 export interface EmptyStateProps {
@@ -14,7 +15,7 @@ export interface EmptyStateProps {
   className?: string;
 }
 
-/** Every empty state gets the cat, one kind sentence and a clear button. */
+/** Understated vintage bookplate empty state — quiet paper spacing, no clunky dashed pill boxes. */
 export function EmptyState({
   sentence,
   title,
@@ -28,24 +29,36 @@ export function EmptyState({
   return (
     <div
       className={cx(
-        'flex flex-col items-center rounded-2xl border border-dashed border-lilac-300 bg-lilac-50/80 px-6 text-center',
-        small ? 'gap-2 py-6' : 'gap-3 py-10',
+        'flex flex-col items-center px-6 text-center',
+        small
+          ? 'gap-2 py-7'
+          : 'gap-3 py-12 rounded-[5px] border border-divider/80 bg-cream/65',
         className,
       )}
     >
-      <Cat pose={pose} size={small ? 72 : 116} title="Toodles the cat" />
-      {title && <h3 className={cx(small ? 'text-base' : 'text-xl')}>{title}</h3>}
-      <p className={cx('max-w-md text-ink-soft', small ? 'text-sm' : 'text-[0.95rem]')}>
+      <Cat pose={pose} size={small ? 68 : 108} title="Toodles the cat" />
+      {title && (
+        <h3
+          className={cx(
+            'font-display font-semibold text-ink',
+            small ? 'text-lg' : 'text-2xl',
+          )}
+        >
+          {title}
+        </h3>
+      )}
+      <p
+        className={cx(
+          'max-w-md font-sans italic text-ink-soft leading-relaxed',
+          small ? 'text-sm' : 'text-[0.95rem]',
+        )}
+      >
         {sentence}
       </p>
       {actionLabel && onAction && (
-        <button
-          type="button"
-          onClick={onAction}
-          className="mt-1 inline-flex min-h-11 items-center justify-center rounded-full bg-lilac-300 px-5 font-display text-ink transition hover:bg-lilac-600 active:scale-[0.97]"
-        >
+        <Button variant="primary" size={small ? 'sm' : 'md'} onClick={onAction} className="mt-1">
           {actionLabel}
-        </button>
+        </Button>
       )}
       {secondaryAction && <div className="mt-1">{secondaryAction}</div>}
     </div>

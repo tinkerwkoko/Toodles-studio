@@ -43,8 +43,8 @@ function unlockScroll(): void {
 }
 
 /**
- * One component for every overlay: a bottom sheet on phones, a centred modal
- * from md upwards. Escape and backdrop click both close it.
+ * Stationery folio overlay: a warm sheet on mobile, a centred archival modal on desktop.
+ * Escape and backdrop click both close it.
  */
 export function Dialog({
   open,
@@ -109,12 +109,12 @@ export function Dialog({
   if (!open) return null;
 
   return createPortal(
-    <div className="fixed inset-0 z-50 flex items-end justify-center md:items-center">
+    <div className="fixed inset-0 z-50 flex items-end justify-center md:items-center md:p-4">
       <button
         type="button"
         aria-label="Close dialog"
         onClick={onClose}
-        className="absolute inset-0 h-full w-full cursor-default bg-lilac-700/25 backdrop-blur-[2px] motion-safe:animate-fade-in"
+        className="absolute inset-0 h-full w-full cursor-default bg-[#1a120d]/45 backdrop-blur-[1.5px] motion-safe:animate-fade-in"
       />
       <div
         ref={panelRef}
@@ -124,17 +124,17 @@ export function Dialog({
         aria-describedby={description ? descriptionId : undefined}
         className={cx(
           'relative flex max-h-[92dvh] w-full flex-col overflow-hidden border border-lilac-200 bg-lilac-50 shadow-lift',
-          'rounded-t-4xl md:rounded-4xl motion-safe:animate-slide-up',
+          'rounded-t-[10px] md:rounded-[6px] motion-safe:animate-slide-up',
           size === 'sm' ? 'md:max-w-md' : size === 'lg' ? 'md:max-w-3xl' : 'md:max-w-xl',
         )}
       >
-        <header className="flex items-start gap-3 border-b border-lilac-200/70 bg-cream/70 px-5 py-4">
+        <header className="flex items-start gap-3 border-b border-divider bg-cream px-5 py-4 sm:px-6">
           <div className="min-w-0 flex-1">
-            <h2 id={titleId} className="truncate text-xl">
+            <h2 id={titleId} className="truncate font-display text-2xl font-semibold text-ink leading-tight">
               {title}
             </h2>
             {description && (
-              <p id={descriptionId} className="mt-0.5 text-sm text-ink-soft">
+              <p id={descriptionId} className="mt-0.5 text-sm font-sans text-ink-soft italic">
                 {description}
               </p>
             )}
@@ -143,16 +143,16 @@ export function Dialog({
             type="button"
             onClick={onClose}
             aria-label="Close"
-            className="grid h-11 w-11 shrink-0 place-items-center rounded-full text-lilac-700 transition hover:bg-lilac-100"
+            className="grid h-9 w-9 shrink-0 place-items-center rounded-[4px] text-ink-soft transition hover:bg-paper-2 hover:text-ink cursor-pointer"
           >
-            <X size={20} aria-hidden="true" />
+            <X size={18} aria-hidden="true" />
           </button>
         </header>
 
-        <div className="min-h-0 flex-1 overflow-y-auto px-5 py-4">{children}</div>
+        <div className="min-h-0 flex-1 overflow-y-auto px-5 py-4 sm:px-6 sm:py-5">{children}</div>
 
         {footer && (
-          <footer className="border-t border-lilac-200/70 bg-cream/70 px-5 py-3 pb-safe">
+          <footer className="border-t border-divider bg-cream/90 px-5 py-3.5 sm:px-6 pb-safe">
             {footer}
           </footer>
         )}

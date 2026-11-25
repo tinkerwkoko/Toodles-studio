@@ -17,32 +17,27 @@ export interface HomeListsProps {
 export function HomeLists({ overdue, upcoming, projects, onOpenTask, onCreate }: HomeListsProps) {
   return (
     <div className="space-y-4">
-      <Card padding="lg" className="space-y-2">
-        <div className="flex items-center justify-between gap-2">
-          <h2 className="text-lg">Needs a nudge</h2>
-          <Link to="/overdue" className="text-xs font-bold text-lilac-700 hover:underline">
+      <Card padding="lg" className="space-y-2.5">
+        <div className="flex items-center justify-between gap-2 border-b border-divider pb-2">
+          <h2 className="font-display text-xl font-semibold text-ink">Needs a nudge</h2>
+          <Link to="/overdue" className="text-xs font-medium text-lilac-700 hover:underline">
             See all
           </Link>
         </div>
         {overdue.length === 0 ? (
-          <p className="text-sm text-ink-soft">Nothing has slipped through. Lovely.</p>
+          <p className="text-sm italic text-ink-soft">Nothing has slipped through. Lovely.</p>
         ) : (
-          <ul className="space-y-1.5">
+          <ul className="divide-y divide-divider/65">
             {overdue.slice(0, 3).map((task) => (
               <li key={task.id}>
                 <button
                   type="button"
                   onClick={() => onOpenTask(task)}
-                  className="flex w-full items-center gap-2 rounded-2xl bg-rose-100 px-3 py-2 text-left text-sm transition hover:bg-rose-200"
+                  className="flex w-full items-center gap-2 py-2 text-left text-sm transition hover:bg-rose-100/50"
                 >
-                  <span className="text-rose-700" aria-hidden="true">
-                    ⏰
-                  </span>
-                  <span className="min-w-0 flex-1 truncate text-ink">
-                    {task.title}
-                  </span>
+                  <span className="min-w-0 flex-1 truncate text-ink">{task.title}</span>
                   {task.dueDate && (
-                    <span className="shrink-0 text-xs font-bold text-rose-700">
+                    <span className="shrink-0 text-xs font-medium tabular-nums text-rose-700">
                       {formatDay(task.dueDate, { withWeekday: false })}
                     </span>
                   )}
@@ -53,27 +48,29 @@ export function HomeLists({ overdue, upcoming, projects, onOpenTask, onCreate }:
         )}
       </Card>
 
-      <Card padding="lg" className="space-y-2">
-        <div className="flex items-center justify-between gap-2">
-          <h2 className="text-lg">Coming up</h2>
-          <Link to="/upcoming" className="text-xs font-bold text-lilac-700 hover:underline">
+      <Card padding="lg" className="space-y-2.5">
+        <div className="flex items-center justify-between gap-2 border-b border-divider pb-2">
+          <h2 className="font-display text-xl font-semibold text-ink">Coming up</h2>
+          <Link to="/upcoming" className="text-xs font-medium text-lilac-700 hover:underline">
             See all
           </Link>
         </div>
         {upcoming.length === 0 ? (
-          <p className="text-sm text-ink-soft">Nothing planned yet. A good time to look ahead.</p>
+          <p className="text-sm italic text-ink-soft">
+            Nothing planned yet. A good time to look ahead.
+          </p>
         ) : (
-          <ul className="space-y-1.5">
+          <ul className="divide-y divide-divider/65">
             {upcoming.slice(0, 3).map((task) => (
               <li key={task.id}>
                 <button
                   type="button"
                   onClick={() => onOpenTask(task)}
-                  className="flex w-full items-center gap-2 rounded-2xl bg-lilac-100 px-3 py-2 text-left text-sm transition hover:bg-lilac-200"
+                  className="flex w-full items-center gap-2 py-2 text-left text-sm transition hover:bg-lilac-100/50"
                 >
                   <span className="min-w-0 flex-1 truncate text-ink">{task.title}</span>
                   {task.dueDate && (
-                    <span className="shrink-0 text-xs font-bold text-lilac-700">
+                    <span className="shrink-0 font-hand text-sm text-ink-soft">
                       {formatDay(task.dueDate, { withWeekday: false })}
                     </span>
                   )}
@@ -84,25 +81,25 @@ export function HomeLists({ overdue, upcoming, projects, onOpenTask, onCreate }:
         )}
       </Card>
 
-      <Card padding="lg" className="space-y-2">
-        <div className="flex items-center justify-between gap-2">
-          <h2 className="text-lg">Active projects</h2>
-          <Link to="/projects" className="text-xs font-bold text-lilac-700 hover:underline">
+      <Card padding="lg" className="space-y-2.5">
+        <div className="flex items-center justify-between gap-2 border-b border-divider pb-2">
+          <h2 className="font-display text-xl font-semibold text-ink">Active projects</h2>
+          <Link to="/projects" className="text-xs font-medium text-lilac-700 hover:underline">
             See all
           </Link>
         </div>
         {projects.length === 0 ? (
           <div className="space-y-2">
-            <p className="text-sm text-ink-soft">No projects yet.</p>
+            <p className="text-sm italic text-ink-soft">No projects yet.</p>
             <Link
               to="/projects"
-              className="inline-flex min-h-11 items-center rounded-full bg-lilac-100 px-4 text-sm font-bold text-lilac-700"
+              className="inline-flex min-h-10 items-center rounded-[4px] border border-lilac-200 bg-paper-2 px-4 text-sm font-medium text-ink hover:bg-lilac-100"
             >
               Start a project
             </Link>
           </div>
         ) : (
-          <ul className="space-y-2">
+          <ul className="divide-y divide-divider/65">
             {projects.slice(0, 3).map((project) => (
               <ProjectRow key={project.id} project={project} />
             ))}
@@ -111,7 +108,7 @@ export function HomeLists({ overdue, upcoming, projects, onOpenTask, onCreate }:
         <button
           type="button"
           onClick={onCreate}
-          className="mt-1 min-h-11 w-full rounded-full border border-lilac-200 bg-cream text-sm font-bold text-lilac-700 hover:bg-lilac-50"
+          className="mt-1 min-h-10 w-full rounded-[4px] border border-lilac-200 bg-cream text-sm font-medium text-ink transition hover:bg-lilac-100"
         >
           Add a task
         </button>
@@ -126,12 +123,14 @@ function ProjectRow({ project }: { project: Project }) {
     <li>
       <Link
         to={`/projects/${project.id}`}
-        className={cx('flex items-center gap-2 rounded-2xl px-3 py-2 transition', tone.soft, 'hover:opacity-90')}
+        className="flex items-center gap-2.5 py-2 transition hover:text-lilac-700"
       >
+        <span className={cx('h-2 w-2 shrink-0 rounded-[2px]', tone.mid)} aria-hidden="true" />
         <span aria-hidden="true">{project.emoji}</span>
-        <span className="min-w-0 flex-1 truncate text-sm font-bold text-ink">{project.name}</span>
+        <span className="min-w-0 flex-1 truncate text-sm font-medium text-ink">
+          {project.name}
+        </span>
       </Link>
     </li>
   );
 }
-

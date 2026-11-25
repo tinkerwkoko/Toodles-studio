@@ -1,98 +1,86 @@
 import { useState } from 'react';
-import { LogIn, LogOut, Shield, UserPlus } from 'lucide-react';
+import { Cloud, LogOut, Shield } from 'lucide-react';
 import { Cat } from '../Cat';
 import { Button } from '../ui/Button';
 import { Dialog } from '../ui/Dialog';
-import { Field, Input } from '../ui/Field';
 import { useToodles } from '../../store/useToodles';
 import { useUi } from '../../store/useUi';
-import { nowTimestamp } from '../../lib/date';
-import type { UserAccount } from '../../types';
 
 export interface AccountDialogProps {
   open: boolean;
   onClose: () => void;
 }
 
+function GoogleMark() {
+  return (
+    <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true" className="shrink-0">
+      <path
+        fill="#4285F4"
+        d="M23.49 12.27c0-.79-.07-1.54-.2-2.27H12v4.3h6.44a5.5 5.5 0 0 1-2.39 3.61v3h3.87c2.26-2.08 3.57-5.15 3.57-8.64Z"
+      />
+      <path
+        fill="#34A853"
+        d="M12 24c3.24 0 5.95-1.07 7.93-2.91l-3.87-3c-1.07.72-2.45 1.14-4.06 1.14-3.12 0-5.77-2.11-6.72-4.95H1.28v3.1A12 12 0 0 0 12 24Z"
+      />
+      <path
+        fill="#FBBC05"
+        d="M5.28 14.28A7.2 7.2 0 0 1 4.9 12c0-.79.14-1.56.38-2.28v-3.1H1.28A12 12 0 0 0 0 12c0 1.94.46 3.77 1.28 5.38l4-3.1Z"
+      />
+      <path
+        fill="#EA4335"
+        d="M12 4.77c1.76 0 3.34.61 4.58 1.8l3.44-3.44C17.95 1.19 15.24 0 12 0A12 12 0 0 0 1.28 6.62l4 3.1C6.23 6.88 8.88 4.77 12 4.77Z"
+      />
+    </svg>
+  );
+}
+
 export function AccountDialog({ open, onClose }: AccountDialogProps) {
-  const { data, actions } = useToodles();
+  const { data, actions, isCloudConnected, cloudSyncing } = useToodles();
   const { pushToast } = useUi();
 
-  const account = data.settings.account;
-  const [tab, setTab] = useState<'signin' | 'signup'>('signin');
+  const [signingIn, setSigningIn] = useState(false);
+  const [signingOut, setSigningOut] = useState(false);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [confirmSignOutOpen, setConfirmSignOutOpen] = useState(false);
 
-  // Form states
-  const existingName = data.settings.displayName.trim();
-  const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const account = isCloudConnected ? data.settings.account : null;
 
-  function handleSignIn(e?: React.FormEvent) {
-    if (e) e.preventDefault();
-    if (!email.trim()) {
-      pushToast('Please enter your email');
-      return;
+  async function handleGoogleSignIn(): Promise<void> {
+    setSigningIn(true);
+    setErrorMessage(null);
+    try {
+      const signedIn = await actions.signInWithGoogle();
+      pushToast(`Signed in as ${signedIn.name} — cloud sync is active ✨`, 'success');
+      onClose();
+    } catch (error) {
+      const code =
+        error && typeof error === 'object' && 'code' in error
+          ? String((error as { code: unknown }).code)
+          : '';
+      if (code === 'auth/popup-closed-by-user' || code === 'auth/cancelled-popup-request') {
+        setErrorMessage('Sign-in popup was closed. Try again whenever you are ready.');
+      } else if (code === 'auth/popup-blocked') {
+        setErrorMessage('Your browser blocked the sign-in popup. Allow popups and try again.');
+      } else {
+        setErrorMessage('Could not sign in with Google right now. Please try again.');
+      }
+    } finally {
+      setSigningIn(false);
     }
-
-    // Preserve existing display name if already set
-    const resolvedName =
-      existingName.length > 0
-        ? existingName
-        : email.includes('@')
-          ? email.split('@')[0].charAt(0).toUpperCase() + email.split('@')[0].slice(1)
-          : 'Friend';
-
-    const user: UserAccount = {
-      id: crypto.randomUUID(),
-      email: email.trim(),
-      name: resolvedName,
-      provider: 'email',
-      syncAcrossDevices: false,
-      syncedAt: nowTimestamp(),
-    };
-
-    actions.updateSettings({
-      account: user,
-      displayName: resolvedName,
-      guestMode: false,
-    });
-    pushToast(`Welcome back, ${resolvedName}! ✨`, 'success');
-    onClose();
   }
 
-  function handleSignUp(e?: React.FormEvent) {
-    if (e) e.preventDefault();
-    if (!email.trim()) {
-      pushToast('Please enter your email');
-      return;
+  async function handleConfirmSignOut(): Promise<void> {
+    setSigningOut(true);
+    try {
+      await actions.signOutUser();
+      setConfirmSignOutOpen(false);
+      pushToast('Signed out safely.');
+      onClose();
+    } catch {
+      pushToast('Could not sign out right now. Please try again.');
+    } finally {
+      setSigningOut(false);
     }
-
-    const resolvedName = name.trim().length > 0 ? name.trim() : existingName || 'Friend';
-
-    const user: UserAccount = {
-      id: crypto.randomUUID(),
-      email: email.trim(),
-      name: resolvedName,
-      provider: 'email',
-      syncAcrossDevices: false,
-      syncedAt: nowTimestamp(),
-    };
-
-    actions.updateSettings({
-      account: user,
-      displayName: resolvedName,
-      guestMode: false,
-    });
-    pushToast(`Account created! Welcome, ${resolvedName} 🎉`, 'success');
-    onClose();
-  }
-
-  function handleConfirmSignOut() {
-    actions.updateSettings({ account: null, guestMode: false });
-    setConfirmSignOutOpen(false);
-    pushToast('Signed out safely.');
-    onClose();
   }
 
   return (
@@ -100,41 +88,51 @@ export function AccountDialog({ open, onClose }: AccountDialogProps) {
       <Dialog
         open={open}
         onClose={onClose}
-        title={account ? 'Your account' : 'Sign in to Toodles'}
+        title={account ? 'Your account' : 'Sync across devices'}
         size="md"
       >
         {account ? (
-          /* Signed In View */
           <div className="space-y-5">
-            <div className="flex items-center gap-3.5 p-3 rounded-2xl border border-divider bg-card">
-              <div className="grid h-12 w-12 place-items-center rounded-2xl bg-lilac-100 overflow-hidden border border-divider shrink-0">
-                <Cat pose="happy" size={36} animated={false} />
+            <div className="flex items-center gap-3.5 pb-4 border-b border-divider">
+              <div className="grid h-12 w-12 place-items-center rounded-[4px] bg-paper-2 overflow-hidden border border-lilac-200 shrink-0">
+                {account.avatar ? (
+                  <img
+                    src={account.avatar}
+                    alt={account.name}
+                    referrerPolicy="no-referrer"
+                    className="h-full w-full object-cover"
+                  />
+                ) : (
+                  <Cat pose="happy" size={34} animated={false} />
+                )}
               </div>
               <div className="flex-1 min-w-0">
-                <div className="flex items-center gap-2">
-                  <h3 className="font-display text-xl text-ink truncate">{account.name}</h3>
-                  <span className="rounded-full bg-lilac-200/80 px-2 py-0.5 text-[11px] font-title font-medium text-ink">
-                    Active
+                <div className="flex items-center gap-2.5 flex-wrap">
+                  <h3 className="font-display text-2xl font-semibold text-ink truncate leading-tight">
+                    {account.name}
+                  </h3>
+                  <span className="inline-flex items-center gap-1 text-xs font-sans font-medium text-mint-700">
+                    <Cloud size={12} aria-hidden="true" />
+                    {cloudSyncing ? 'Syncing…' : 'Synced'}
                   </span>
                 </div>
                 <p className="font-sans text-xs text-ink-soft truncate">{account.email}</p>
               </div>
             </div>
 
-            <div className="space-y-2 text-xs font-sans text-ink-soft">
+            <div className="space-y-3 text-xs font-sans text-ink-soft leading-relaxed">
               <p>
-                Your personal workspace is active. All your tasks, projects, notes, and habits are
-                safely stored in this browser on this device.
+                Signed in with Google. Every task, project, board column, diary entry, mood, habit,
+                and focus session persists automatically to your private cloud workspace and stays
+                in sync across all your devices.
               </p>
-              <div className="rounded-xl border border-divider bg-lilac-100/50 p-2.5 space-y-1 text-[11px]">
-                <p className="font-semibold text-ink">Device sync & privacy</p>
-                <p className="text-ink-soft">
-                  Toodles is local-first with zero tracking, so your tasks and projects do not sync across devices automatically. To move or backup your data, use <strong>Export & Backup</strong> in Settings.
-                </p>
+              <div className="flex items-center gap-2 rounded-[4px] border border-divider bg-paper-2/55 p-3 text-xs">
+                <Shield size={14} className="text-accent shrink-0" aria-hidden="true" />
+                <span>Protected by verified Google OAuth and strict per-user database rules.</span>
               </div>
             </div>
 
-            <div className="flex items-center justify-between border-t border-divider pt-3">
+            <div className="flex items-center justify-between border-t border-divider pt-3.5">
               <Button
                 variant="danger"
                 size="sm"
@@ -149,123 +147,47 @@ export function AccountDialog({ open, onClose }: AccountDialogProps) {
             </div>
           </div>
         ) : (
-          /* Sign In / Sign Up Forms */
           <div className="space-y-4">
-            {/* Tab switch */}
-            <div className="flex rounded-full border border-divider bg-lilac-100/60 p-1">
-              <button
-                type="button"
-                onClick={() => setTab('signin')}
-                className={`flex-1 flex items-center justify-center gap-1.5 py-1.5 rounded-full text-xs font-title font-medium transition cursor-pointer ${
-                  tab === 'signin'
-                    ? 'bg-lilac-200 text-ink font-semibold shadow-sm'
-                    : 'text-ink-soft hover:text-ink'
-                }`}
-              >
-                <LogIn size={13} />
-                <span>Sign in</span>
-              </button>
-              <button
-                type="button"
-                onClick={() => setTab('signup')}
-                className={`flex-1 flex items-center justify-center gap-1.5 py-1.5 rounded-full text-xs font-title font-medium transition cursor-pointer ${
-                  tab === 'signup'
-                    ? 'bg-lilac-200 text-ink font-semibold shadow-sm'
-                    : 'text-ink-soft hover:text-ink'
-                }`}
-              >
-                <UserPlus size={13} />
-                <span>Create account</span>
-              </button>
+            <div className="flex items-center gap-3.5 pb-4 border-b border-divider">
+              <Cat pose="wave" size={44} animated={false} />
+              <div className="space-y-1 text-xs font-sans text-ink-soft leading-relaxed">
+                <p className="font-display text-lg font-semibold text-ink">
+                  Keep Toodles with you everywhere
+                </p>
+                <p>
+                  Sign in with Google to back up your workspace to the cloud and sync seamlessly
+                  across phone, tablet, and desktop. Existing guest items will upload automatically.
+                </p>
+              </div>
             </div>
 
-            {tab === 'signin' ? (
-              <form onSubmit={handleSignIn} className="space-y-3.5">
-                <Field label="Email" htmlFor="dialog-signin-email">
-                  <Input
-                    id="dialog-signin-email"
-                    type="email"
-                    required
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    placeholder="your.email@domain.com"
-                  />
-                </Field>
-
-                <Field label="Password" htmlFor="dialog-signin-pass">
-                  <Input
-                    id="dialog-signin-pass"
-                    type="password"
-                    required
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    placeholder="••••••••"
-                  />
-                </Field>
-
-                <div className="flex items-center justify-end gap-2 pt-2 border-t border-divider">
-                  <Button variant="ghost" size="sm" onClick={onClose}>
-                    Cancel
-                  </Button>
-                  <Button variant="primary" size="sm" type="submit" icon={<LogIn size={14} />}>
-                    Sign in
-                  </Button>
-                </div>
-              </form>
-            ) : (
-              <form onSubmit={handleSignUp} className="space-y-3.5">
-                <Field label="Your name / nickname" htmlFor="dialog-signup-name">
-                  <Input
-                    id="dialog-signup-name"
-                    type="text"
-                    value={name}
-                    onChange={(e) => setName(e.target.value)}
-                    placeholder="Your nickname"
-                  />
-                </Field>
-
-                <Field label="Email" htmlFor="dialog-signup-email">
-                  <Input
-                    id="dialog-signup-email"
-                    type="email"
-                    required
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    placeholder="your.email@domain.com"
-                  />
-                </Field>
-
-                <Field label="Password" htmlFor="dialog-signup-pass">
-                  <Input
-                    id="dialog-signup-pass"
-                    type="password"
-                    required
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    placeholder="••••••••"
-                  />
-                </Field>
-
-                <div className="flex items-center justify-end gap-2 pt-2 border-t border-divider">
-                  <Button variant="ghost" size="sm" onClick={onClose}>
-                    Cancel
-                  </Button>
-                  <Button variant="primary" size="sm" type="submit" icon={<UserPlus size={14} />}>
-                    Create account
-                  </Button>
-                </div>
-              </form>
+            {errorMessage && (
+              <div
+                role="alert"
+                className="rounded-[4px] border border-rose-200 bg-rose-100 px-3.5 py-2.5 text-xs font-sans text-rose-700"
+              >
+                {errorMessage}
+              </div>
             )}
 
+            <button
+              type="button"
+              disabled={signingIn}
+              onClick={() => void handleGoogleSignIn()}
+              className="flex min-h-11 w-full items-center justify-center gap-3 rounded-[4px] border border-lilac-200 bg-cream px-5 py-2.5 font-sans text-sm font-medium text-ink transition hover:border-accent hover:bg-paper-2/80 active:translate-y-[0.5px] disabled:opacity-60 cursor-pointer"
+            >
+              <GoogleMark />
+              <span>{signingIn ? 'Signing in with Google…' : 'Continue with Google'}</span>
+            </button>
+
             <div className="flex items-center justify-center gap-1.5 text-xs font-sans text-ink-soft pt-1">
-              <Shield size={13} className="text-accent" />
-              <span>We respect your privacy and never share users&apos; data.</span>
+              <Shield size={13} className="text-accent shrink-0" aria-hidden="true" />
+              <span>Only you can read or modify your personal Toodles data.</span>
             </div>
           </div>
         )}
       </Dialog>
 
-      {/* Sign out confirmation dialog */}
       <Dialog
         open={confirmSignOutOpen}
         onClose={() => setConfirmSignOutOpen(false)}
@@ -273,16 +195,26 @@ export function AccountDialog({ open, onClose }: AccountDialogProps) {
         size="sm"
       >
         <div className="space-y-4">
-          <p className="text-xs sm:text-sm font-sans text-ink-soft">
-            Are you sure you want to sign out? Your tasks, projects, and notes are securely preserved
-            on this device. You can sign back in anytime.
+          <p className="text-sm font-sans text-ink-soft leading-relaxed">
+            Your cloud workspace stays safely saved under your Google account. Signing back in on
+            any device will restore everything right away.
           </p>
-          <div className="flex items-center justify-end gap-2 border-t border-divider pt-3">
-            <Button variant="ghost" size="sm" onClick={() => setConfirmSignOutOpen(false)}>
+          <div className="flex justify-end gap-2 pt-2">
+            <Button
+              variant="ghost"
+              size="sm"
+              disabled={signingOut}
+              onClick={() => setConfirmSignOutOpen(false)}
+            >
               Cancel
             </Button>
-            <Button variant="danger" size="sm" onClick={handleConfirmSignOut}>
-              Sign out
+            <Button
+              variant="danger"
+              size="sm"
+              disabled={signingOut}
+              onClick={() => void handleConfirmSignOut()}
+            >
+              {signingOut ? 'Signing out…' : 'Yes, sign out'}
             </Button>
           </div>
         </div>

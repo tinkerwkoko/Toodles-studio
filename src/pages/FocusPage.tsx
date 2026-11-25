@@ -1,9 +1,10 @@
 import { useEffect, useRef, useState } from 'react';
-import { Coffee, Pause, Play, RotateCcw, Sparkles, Target } from 'lucide-react';
+import { Pause, Play, RotateCcw } from 'lucide-react';
 import { Cat } from '../components/Cat';
 import { Button } from '../components/ui/Button';
 import { Card } from '../components/ui/Card';
 import { Select } from '../components/ui/Field';
+import { cx } from '../lib/cx';
 import { nowTimestamp, todayString } from '../lib/date';
 import { useToodles } from '../store/useToodles';
 import { useUi } from '../store/useUi';
@@ -42,7 +43,7 @@ export function FocusPage() {
     setSecondsRemaining(secs);
   }
 
-  // Timer loop via requestAnimationFrame / interval checking Date.now()
+  // Timer loop checking Date.now()
   useEffect(() => {
     if (!running) return;
 
@@ -115,78 +116,65 @@ export function FocusPage() {
   const formattedTime = `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
   const progressPercent = totalSeconds > 0 ? ((totalSeconds - secondsRemaining) / totalSeconds) * 100 : 0;
 
-  // Active uncompleted tasks
   const openTasks = data.tasks.filter((t) => t.status === 'todo');
 
-  // Today's focus sessions
   const todaySessions = (data.focusSessions ?? []).filter(
     (s) => s.startedAt.slice(0, 10) === today && s.type === 'focus',
   );
   const todayFocusMinutes = todaySessions.reduce((acc, s) => acc + s.actualMinutes, 0);
 
   return (
-    <div className="mx-auto max-w-2xl space-y-6">
-      <div className="flex flex-col gap-1 text-center sm:text-left">
-        <div className="flex items-center justify-center sm:justify-start gap-2.5">
-          <Target size={26} className="text-accent" aria-hidden="true" />
-          <h1 className="font-display text-3xl text-ink">Focus Corner</h1>
-        </div>
-        <p className="font-sans text-sm text-ink-soft">
+    <div className="mx-auto max-w-2xl space-y-6 pb-6">
+      <header className="space-y-1 border-b border-divider pb-5">
+        <p className="font-hand text-[1.1rem] leading-none text-ink-soft">Quiet clock</p>
+        <h1 className="font-display text-3xl font-semibold tracking-tight text-ink sm:text-[2.15rem]">
+          Focus Corner
+        </h1>
+        <p className="text-sm text-ink-soft">
           Pick one thing, start the quiet clock, and work with a peaceful mind.
         </p>
-      </div>
+      </header>
 
-      {/* Main Timer Card */}
-      <Card padding="lg" className="flex flex-col items-center gap-6 text-center border-lilac-200">
-        {/* Mode Selector Tabs */}
-        <div className="flex flex-wrap items-center justify-center gap-2 rounded-full border border-lilac-200 bg-lilac-50 p-1">
-          <button
-            type="button"
-            onClick={() => switchMode('focus')}
-            className={`rounded-full px-4 py-1.5 text-xs font-title font-medium transition ${
-              mode === 'focus' ? 'bg-cream text-ink shadow-sm' : 'text-ink-soft hover:text-ink'
-            }`}
-          >
-            Focus (25m)
-          </button>
-          <button
-            type="button"
-            onClick={() => switchMode('shortBreak')}
-            className={`rounded-full px-4 py-1.5 text-xs font-title font-medium transition ${
-              mode === 'shortBreak' ? 'bg-cream text-ink shadow-sm' : 'text-ink-soft hover:text-ink'
-            }`}
-          >
-            Short break (5m)
-          </button>
-          <button
-            type="button"
-            onClick={() => switchMode('longBreak')}
-            className={`rounded-full px-4 py-1.5 text-xs font-title font-medium transition ${
-              mode === 'longBreak' ? 'bg-cream text-ink shadow-sm' : 'text-ink-soft hover:text-ink'
-            }`}
-          >
-            Long break (15m)
-          </button>
+      {/* Main Timer Folio */}
+      <Card variant="stack" padding="lg" className="flex flex-col items-center gap-6 text-center">
+        {/* Mode Selector */}
+        <div className="inline-flex flex-wrap items-center justify-center rounded-[4px] border border-lilac-200 bg-paper-2 p-0.5">
+          {(
+            [
+              ['focus', 'Focus (25m)'],
+              ['shortBreak', 'Short break (5m)'],
+              ['longBreak', 'Long break (15m)'],
+            ] as const
+          ).map(([value, label]) => (
+            <button
+              key={value}
+              type="button"
+              onClick={() => switchMode(value)}
+              className={cx(
+                'rounded-[3px] px-3.5 py-1.5 text-xs font-medium transition',
+                mode === value ? 'bg-cream text-ink shadow-soft' : 'text-ink-soft hover:text-ink',
+              )}
+            >
+              {label}
+            </button>
+          ))}
         </div>
 
         {/* Mascot */}
-        <div className="relative">
-          <Cat
-            pose={mode === 'focus' ? (running ? 'happy' : 'curious') : 'sleepy'}
-            size={120}
-            animated
-          />
-        </div>
+        <Cat
+          pose={mode === 'focus' ? (running ? 'happy' : 'curious') : 'sleepy'}
+          size={110}
+          animated
+        />
 
         {/* Clock display */}
-        <div className="space-y-2">
-          <div className="font-display text-6xl tracking-wider text-ink sm:text-7xl">
+        <div className="space-y-3">
+          <div className="font-display text-6xl font-semibold tracking-wider tabular-nums text-ink sm:text-7xl">
             {formattedTime}
           </div>
-          {/* Progress bar */}
-          <div className="mx-auto h-2 w-56 sm:w-72 overflow-hidden rounded-full bg-lilac-100">
+          <div className="mx-auto h-1.5 w-56 overflow-hidden rounded-[2px] bg-paper-2 sm:w-72">
             <div
-              className="h-full bg-accent transition-all duration-300"
+              className="h-full rounded-[2px] bg-lilac-300 transition-all duration-300"
               style={{ width: `${progressPercent}%` }}
             />
           </div>
@@ -195,7 +183,7 @@ export function FocusPage() {
         {/* Task linking */}
         {mode === 'focus' && openTasks.length > 0 && (
           <div className="w-full max-w-sm text-left">
-            <label className="block text-xs font-title font-medium text-ink-soft mb-1">
+            <label className="mb-1 block text-xs uppercase tracking-wider text-ink-soft">
               Focus on a task (optional)
             </label>
             <Select
@@ -214,23 +202,13 @@ export function FocusPage() {
         )}
 
         {/* Controls */}
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2.5">
           {running ? (
-            <Button
-              variant="soft"
-              size="lg"
-              icon={<Pause size={18} />}
-              onClick={handlePause}
-            >
+            <Button variant="soft" size="lg" icon={<Pause size={16} />} onClick={handlePause}>
               Pause
             </Button>
           ) : (
-            <Button
-              variant="primary"
-              size="lg"
-              icon={<Play size={18} />}
-              onClick={handleStart}
-            >
+            <Button variant="primary" size="lg" icon={<Play size={16} />} onClick={handleStart}>
               {secondsRemaining < totalSeconds ? 'Resume' : 'Start'}
             </Button>
           )}
@@ -238,7 +216,7 @@ export function FocusPage() {
           <Button
             variant="ghost"
             size="lg"
-            icon={<RotateCcw size={18} />}
+            icon={<RotateCcw size={16} />}
             onClick={handleReset}
             aria-label="Reset timer"
           >
@@ -247,27 +225,22 @@ export function FocusPage() {
         </div>
       </Card>
 
-      {/* Focus stats & history */}
-      <div className="grid grid-cols-2 gap-4">
-        <Card padding="md" className="flex items-center gap-3.5">
-          <div className="grid h-10 w-10 shrink-0 place-items-center rounded-2xl bg-peach-100 text-peach-700">
-            <Sparkles size={20} />
+      {/* Hairline-Divided Daily Focus Ledger */}
+      <div className="paper-sheet grid grid-cols-2 divide-x divide-divider/70 rounded-[5px]">
+        <div className="px-5 py-4">
+          <div className="text-[11px] uppercase tracking-wider text-ink-soft">Focused today</div>
+          <div className="mt-1 font-display text-3xl font-semibold tabular-nums text-ink">
+            {todayFocusMinutes}m
           </div>
-          <div>
-            <div className="font-display text-2xl text-ink">{todayFocusMinutes}m</div>
-            <div className="font-sans text-xs text-ink-soft">Focused today</div>
+        </div>
+        <div className="px-5 py-4">
+          <div className="text-[11px] uppercase tracking-wider text-ink-soft">
+            Sessions completed
           </div>
-        </Card>
-
-        <Card padding="md" className="flex items-center gap-3.5">
-          <div className="grid h-10 w-10 shrink-0 place-items-center rounded-2xl bg-mint-100 text-mint-700">
-            <Coffee size={20} />
+          <div className="mt-1 font-display text-3xl font-semibold tabular-nums text-ink">
+            {todaySessions.length}
           </div>
-          <div>
-            <div className="font-display text-2xl text-ink">{todaySessions.length}</div>
-            <div className="font-sans text-xs text-ink-soft">Sessions completed</div>
-          </div>
-        </Card>
+        </div>
       </div>
     </div>
   );

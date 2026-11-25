@@ -50,7 +50,6 @@ export function TaskFilters({
     (filters.tag !== 'all' ? 1 : 0) +
     (filters.sort !== 'smart' ? 1 : 0);
 
-  // Close menus on outside click
   useEffect(() => {
     function handleClickOutside(e: MouseEvent) {
       if (containerRef.current && !containerRef.current.contains(e.target as Node)) {
@@ -78,13 +77,13 @@ export function TaskFilters({
   const sortLabel = TASK_SORT_LABELS[filters.sort] ?? 'Smart sort';
 
   return (
-    <div ref={containerRef} className="mb-3 space-y-2">
+    <div ref={containerRef} className="mb-4 space-y-2.5">
       {showSearch && (
         <div className="relative">
           <Search
-            size={15}
+            size={14}
             aria-hidden="true"
-            className="pointer-events-none absolute top-1/2 left-3 -translate-y-1/2 text-ink-soft"
+            className="pointer-events-none absolute top-1/2 left-3 -translate-y-1/2 text-text-faint"
           />
           <input
             type="search"
@@ -92,14 +91,14 @@ export function TaskFilters({
             onChange={(event) => onQueryChange(event.target.value)}
             placeholder="Search your tasks..."
             aria-label="Search your tasks"
-            className="w-full rounded-full border border-lilac-200 bg-cream/90 py-1.5 pr-8 pl-9 text-xs text-ink placeholder:text-ink-soft/70 focus:border-accent focus:outline-none"
+            className="w-full rounded-[4px] border border-lilac-200 bg-cream py-2 pr-8 pl-8.5 text-sm font-sans text-ink placeholder:text-text-faint placeholder:italic focus:border-accent focus:outline-none"
           />
           {query.length > 0 && (
             <button
               type="button"
               onClick={() => onQueryChange('')}
               aria-label="Clear search"
-              className="absolute top-1/2 right-2 grid h-6 w-6 -translate-y-1/2 place-items-center rounded-full text-ink-soft hover:text-ink"
+              className="absolute top-1/2 right-1.5 grid h-6 w-6 -translate-y-1/2 place-items-center rounded-[3px] text-ink-soft hover:text-ink"
             >
               <X size={13} aria-hidden="true" />
             </button>
@@ -107,11 +106,10 @@ export function TaskFilters({
         </div>
       )}
 
-      {/* Sleek inline filter strip without buttons or cards */}
-      <div className="flex flex-wrap items-center gap-x-4 gap-y-1.5 text-xs text-ink-soft">
-        <div className="flex items-center gap-1 text-[11px] font-sans">
-          <SlidersHorizontal size={13} className="text-accent" />
-          <span>Filters:</span>
+      <div className="flex flex-wrap items-center gap-x-3.5 gap-y-1.5 text-xs font-sans text-ink-soft">
+        <div className="flex items-center gap-1.5 text-text-faint">
+          <SlidersHorizontal size={12} className="text-accent" />
+          <span>Index:</span>
         </div>
 
         {/* Project Menu */}
@@ -120,10 +118,10 @@ export function TaskFilters({
             type="button"
             onClick={() => setOpenMenu(openMenu === 'project' ? null : 'project')}
             className={cx(
-              'inline-flex items-center gap-1 font-title transition cursor-pointer py-0.5 px-1.5 rounded-lg',
+              'inline-flex items-center gap-1 transition cursor-pointer py-1 px-2 rounded-[3px]',
               filters.projectId !== 'all'
-                ? 'bg-lilac-200 text-ink font-semibold'
-                : 'hover:text-ink hover:bg-lilac-100/50',
+                ? 'bg-paper-2 text-ink font-medium'
+                : 'hover:text-ink hover:bg-paper-2/60',
             )}
           >
             <span>{projectLabel}</span>
@@ -131,14 +129,14 @@ export function TaskFilters({
           </button>
 
           {openMenu === 'project' && (
-            <div className="absolute left-0 top-full z-50 mt-1 min-w-[170px] rounded-2xl border border-divider bg-card p-1 shadow-soft animate-pop">
+            <div className="absolute left-0 top-full z-50 mt-1 min-w-[180px] rounded-[4px] border border-lilac-200 bg-cream p-1 shadow-lift motion-safe:animate-fade-in">
               <button
                 type="button"
                 onClick={() => {
                   onChange({ projectId: 'all' });
                   setOpenMenu(null);
                 }}
-                className="flex w-full items-center justify-between rounded-xl px-2.5 py-1.5 text-left text-xs font-title text-ink hover:bg-lilac-100"
+                className="flex w-full items-center justify-between rounded-[3px] px-2.5 py-1.5 text-left text-xs font-sans text-ink hover:bg-paper-2/70 cursor-pointer"
               >
                 <span>All projects</span>
                 {filters.projectId === 'all' && <Check size={13} className="text-accent" />}
@@ -149,7 +147,7 @@ export function TaskFilters({
                   onChange({ projectId: 'none' });
                   setOpenMenu(null);
                 }}
-                className="flex w-full items-center justify-between rounded-xl px-2.5 py-1.5 text-left text-xs font-title text-ink hover:bg-lilac-100"
+                className="flex w-full items-center justify-between rounded-[3px] px-2.5 py-1.5 text-left text-xs font-sans text-ink hover:bg-paper-2/70 cursor-pointer"
               >
                 <span>No project</span>
                 {filters.projectId === 'none' && <Check size={13} className="text-accent" />}
@@ -163,9 +161,9 @@ export function TaskFilters({
                     onChange({ projectId: project.id });
                     setOpenMenu(null);
                   }}
-                  className="flex w-full items-center justify-between rounded-xl px-2.5 py-1.5 text-left text-xs font-title text-ink hover:bg-lilac-100"
+                  className="flex w-full items-center justify-between rounded-[3px] px-2.5 py-1.5 text-left text-xs font-sans text-ink hover:bg-paper-2/70 cursor-pointer"
                 >
-                  <span className="truncate max-w-[130px]">
+                  <span className="truncate max-w-[140px]">
                     {project.emoji} {project.name}
                   </span>
                   {filters.projectId === project.id && (
@@ -183,10 +181,10 @@ export function TaskFilters({
             type="button"
             onClick={() => setOpenMenu(openMenu === 'priority' ? null : 'priority')}
             className={cx(
-              'inline-flex items-center gap-1 font-title transition cursor-pointer py-0.5 px-1.5 rounded-lg',
+              'inline-flex items-center gap-1 transition cursor-pointer py-1 px-2 rounded-[3px]',
               filters.priority !== 'all'
-                ? 'bg-lilac-200 text-ink font-semibold'
-                : 'hover:text-ink hover:bg-lilac-100/50',
+                ? 'bg-paper-2 text-ink font-medium'
+                : 'hover:text-ink hover:bg-paper-2/60',
             )}
           >
             <span>{priorityLabel}</span>
@@ -194,14 +192,14 @@ export function TaskFilters({
           </button>
 
           {openMenu === 'priority' && (
-            <div className="absolute left-0 top-full z-50 mt-1 min-w-[150px] rounded-2xl border border-divider bg-card p-1 shadow-soft animate-pop">
+            <div className="absolute left-0 top-full z-50 mt-1 min-w-[155px] rounded-[4px] border border-lilac-200 bg-cream p-1 shadow-lift motion-safe:animate-fade-in">
               <button
                 type="button"
                 onClick={() => {
                   onChange({ priority: 'all' });
                   setOpenMenu(null);
                 }}
-                className="flex w-full items-center justify-between rounded-xl px-2.5 py-1.5 text-left text-xs font-title text-ink hover:bg-lilac-100"
+                className="flex w-full items-center justify-between rounded-[3px] px-2.5 py-1.5 text-left text-xs font-sans text-ink hover:bg-paper-2/70 cursor-pointer"
               >
                 <span>Any priority</span>
                 {filters.priority === 'all' && <Check size={13} className="text-accent" />}
@@ -214,7 +212,7 @@ export function TaskFilters({
                     onChange({ priority: key });
                     setOpenMenu(null);
                   }}
-                  className="flex w-full items-center justify-between rounded-xl px-2.5 py-1.5 text-left text-xs font-title text-ink hover:bg-lilac-100"
+                  className="flex w-full items-center justify-between rounded-[3px] px-2.5 py-1.5 text-left text-xs font-sans text-ink hover:bg-paper-2/70 cursor-pointer"
                 >
                   <span>{PRIORITY_STYLES[key].label}</span>
                   {filters.priority === key && <Check size={13} className="text-accent" />}
@@ -224,17 +222,17 @@ export function TaskFilters({
           )}
         </div>
 
-        {/* Tags Menu (if tags exist) */}
+        {/* Tags Menu */}
         {tags.length > 0 && (
           <div className="relative">
             <button
               type="button"
               onClick={() => setOpenMenu(openMenu === 'tag' ? null : 'tag')}
               className={cx(
-                'inline-flex items-center gap-1 font-title transition cursor-pointer py-0.5 px-1.5 rounded-lg',
+                'inline-flex items-center gap-1 transition cursor-pointer py-1 px-2 rounded-[3px]',
                 filters.tag !== 'all'
-                  ? 'bg-lilac-200 text-ink font-semibold'
-                  : 'hover:text-ink hover:bg-lilac-100/50',
+                  ? 'bg-paper-2 text-ink font-medium'
+                  : 'hover:text-ink hover:bg-paper-2/60',
               )}
             >
               <span>{tagLabel}</span>
@@ -242,14 +240,14 @@ export function TaskFilters({
             </button>
 
             {openMenu === 'tag' && (
-              <div className="absolute left-0 top-full z-50 mt-1 max-h-52 overflow-y-auto min-w-[140px] rounded-2xl border border-divider bg-card p-1 shadow-soft animate-pop">
+              <div className="absolute left-0 top-full z-50 mt-1 max-h-52 overflow-y-auto min-w-[145px] rounded-[4px] border border-lilac-200 bg-cream p-1 shadow-lift motion-safe:animate-fade-in">
                 <button
                   type="button"
                   onClick={() => {
                     onChange({ tag: 'all' });
                     setOpenMenu(null);
                   }}
-                  className="flex w-full items-center justify-between rounded-xl px-2.5 py-1.5 text-left text-xs font-title text-ink hover:bg-lilac-100"
+                  className="flex w-full items-center justify-between rounded-[3px] px-2.5 py-1.5 text-left text-xs font-sans text-ink hover:bg-paper-2/70 cursor-pointer"
                 >
                   <span>Any tag</span>
                   {filters.tag === 'all' && <Check size={13} className="text-accent" />}
@@ -262,7 +260,7 @@ export function TaskFilters({
                       onChange({ tag });
                       setOpenMenu(null);
                     }}
-                    className="flex w-full items-center justify-between rounded-xl px-2.5 py-1.5 text-left text-xs font-title text-ink hover:bg-lilac-100"
+                    className="flex w-full items-center justify-between rounded-[3px] px-2.5 py-1.5 text-left text-xs font-sans text-ink hover:bg-paper-2/70 cursor-pointer"
                   >
                     <span>#{tag}</span>
                     {filters.tag === tag && <Check size={13} className="text-accent" />}
@@ -279,19 +277,19 @@ export function TaskFilters({
             type="button"
             onClick={() => setOpenMenu(openMenu === 'sort' ? null : 'sort')}
             className={cx(
-              'inline-flex items-center gap-1 font-title transition cursor-pointer py-0.5 px-1.5 rounded-lg',
+              'inline-flex items-center gap-1 transition cursor-pointer py-1 px-2 rounded-[3px]',
               filters.sort !== 'smart'
-                ? 'bg-lilac-200 text-ink font-semibold'
-                : 'hover:text-ink hover:bg-lilac-100/50',
+                ? 'bg-paper-2 text-ink font-medium'
+                : 'hover:text-ink hover:bg-paper-2/60',
             )}
           >
-            <span className="text-[11px] font-sans opacity-70">Sort:</span>
+            <span className="text-text-faint">Sort:</span>
             <span>{sortLabel}</span>
             <ChevronDown size={11} className="opacity-70" />
           </button>
 
           {openMenu === 'sort' && (
-            <div className="absolute right-0 top-full z-50 mt-1 min-w-[160px] rounded-2xl border border-divider bg-card p-1 shadow-soft animate-pop">
+            <div className="absolute right-0 top-full z-50 mt-1 min-w-[165px] rounded-[4px] border border-lilac-200 bg-cream p-1 shadow-lift motion-safe:animate-fade-in">
               {(Object.keys(TASK_SORT_LABELS) as TaskSort[]).map((key) => (
                 <button
                   key={key}
@@ -300,7 +298,7 @@ export function TaskFilters({
                     onChange({ sort: key });
                     setOpenMenu(null);
                   }}
-                  className="flex w-full items-center justify-between rounded-xl px-2.5 py-1.5 text-left text-xs font-title text-ink hover:bg-lilac-100"
+                  className="flex w-full items-center justify-between rounded-[3px] px-2.5 py-1.5 text-left text-xs font-sans text-ink hover:bg-paper-2/70 cursor-pointer"
                 >
                   <span>{TASK_SORT_LABELS[key]}</span>
                   {filters.sort === key && <Check size={13} className="text-accent" />}
@@ -310,12 +308,11 @@ export function TaskFilters({
           )}
         </div>
 
-        {/* Reset filter tag */}
         {activeCount > 0 && (
           <button
             type="button"
             onClick={() => onChange(DEFAULT_FILTERS)}
-            className="text-[11px] font-sans text-ink-soft hover:text-ink underline transition cursor-pointer"
+            className="text-xs font-sans text-ink-soft hover:text-accent underline underline-offset-2 transition cursor-pointer tabular-nums"
           >
             Clear all ({activeCount})
           </button>

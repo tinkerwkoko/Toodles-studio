@@ -1,15 +1,15 @@
 import type { AccentColor, Priority } from '../types';
 
 export interface AccentClasses {
-  /** soft fill for chips, cards and column headers */
+  /** soft paper wash for accents and column tints */
   soft: string;
   /** slightly stronger fill for dots, bars and decorations */
   mid: string;
-  /** gentle border */
+  /** gentle archival border */
   border: string;
   /** text that stays readable on the soft fill */
   text: string;
-  /** solid pill (white text) */
+  /** solid ink fill with high-contrast label */
   solid: string;
   /** raw value for SVG fills and icon tints */
   hex: string;
@@ -18,68 +18,68 @@ export interface AccentClasses {
 /**
  * Every class name is written out literally so Tailwind's scanner keeps it.
  * Palette keys are shared by projects, board columns, task cards and habits.
- * Colours are the Toodles mauve-and-cream palette (see src/index.css).
+ * Mapped to Toodles' vintage stationery & library ink palette (see src/index.css).
  */
 export const ACCENTS: Record<AccentColor, AccentClasses> = {
   lilac: {
-    soft: 'bg-lilac-300',
+    soft: 'bg-rose-100',
     mid: 'bg-lilac-300',
-    border: 'border-lilac-200',
-    text: 'text-ink',
-    solid: 'bg-lilac-300 text-ink',
-    hex: '#D9BFCC',
+    border: 'border-rose-200',
+    text: 'text-rose-700',
+    solid: 'bg-lilac-300 text-primary-ink',
+    hex: '#713F46',
   },
   peach: {
-    soft: 'bg-peach-300',
-    mid: 'bg-peach-300',
-    border: 'border-peach-300',
+    soft: 'bg-peach-100',
+    mid: 'bg-peach-500',
+    border: 'border-peach-200',
     text: 'text-peach-700',
-    solid: 'bg-peach-300 text-peach-700',
-    hex: '#F4C3A8',
+    solid: 'bg-peach-500 text-primary-ink',
+    hex: '#A4664B',
   },
   mint: {
     soft: 'bg-mint-100',
-    mid: 'bg-mint-300',
-    border: 'border-mint-100',
-    text: 'text-ink',
-    solid: 'bg-mint-300 text-ink',
-    hex: '#DCE6D3',
+    mid: 'bg-mint-500',
+    border: 'border-mint-200',
+    text: 'text-mint-700',
+    solid: 'bg-mint-500 text-primary-ink',
+    hex: '#465747',
   },
   butter: {
     soft: 'bg-butter-100',
-    mid: 'bg-butter-300',
-    border: 'border-butter-100',
-    text: 'text-ink',
-    solid: 'bg-butter-300 text-ink',
-    hex: '#F6EAC2',
+    mid: 'bg-butter-500',
+    border: 'border-butter-200',
+    text: 'text-butter-700',
+    solid: 'bg-butter-500 text-primary-ink',
+    hex: '#9B7C39',
   },
   sky: {
     soft: 'bg-sky-100',
-    mid: 'bg-sky-300',
-    border: 'border-sky-100',
-    text: 'text-ink',
-    solid: 'bg-sky-300 text-ink',
-    hex: '#D3E2EC',
+    mid: 'bg-sky-500',
+    border: 'border-sky-200',
+    text: 'text-sky-700',
+    solid: 'bg-sky-500 text-primary-ink',
+    hex: '#526A7C',
   },
   rose: {
     soft: 'bg-rose-100',
     mid: 'bg-rose-300',
-    border: 'border-rose-100',
-    text: 'text-ink',
-    solid: 'bg-rose-300 text-ink',
-    hex: '#F3DCCB',
+    border: 'border-rose-200',
+    text: 'text-rose-700',
+    solid: 'bg-rose-500 text-primary-ink',
+    hex: '#B88F89',
   },
 };
 
 export const ACCENT_KEYS: AccentColor[] = ['lilac', 'peach', 'mint', 'butter', 'sky', 'rose'];
 
 export const ACCENT_LABELS: Record<AccentColor, string> = {
-  lilac: 'Lilac',
-  peach: 'Peach',
-  mint: 'Mint',
-  butter: 'Butter',
-  sky: 'Sky',
-  rose: 'Rose',
+  lilac: 'Burgundy',
+  peach: 'Terracotta',
+  mint: 'Forest',
+  butter: 'Ochre',
+  sky: 'Slate',
+  rose: 'Dusty Rose',
 };
 
 export function accent(color: AccentColor | null | undefined): AccentClasses {
@@ -96,27 +96,27 @@ export interface PriorityStyle {
 export const PRIORITY_STYLES: Record<Priority, PriorityStyle> = {
   none: {
     label: 'No priority',
-    chip: 'bg-peach-100 text-peach-700 border-peach-200',
-    dot: 'bg-peach-200',
+    chip: 'bg-paper-2/70 text-ink-soft border-lilac-200',
+    dot: 'bg-lilac-200',
     icon: 'text-ink-soft',
   },
   low: {
     label: 'Low',
-    chip: 'bg-sky-100 text-ink border-sky-100',
+    chip: 'bg-sky-100 text-sky-700 border-sky-200',
     dot: 'bg-sky-500',
     icon: 'text-sky-500',
   },
   medium: {
     label: 'Medium',
-    chip: 'bg-butter-100 text-ink border-butter-100',
+    chip: 'bg-butter-100 text-butter-700 border-butter-200',
     dot: 'bg-butter-500',
     icon: 'text-butter-500',
   },
   high: {
     label: 'High',
-    chip: 'bg-peach-300 text-peach-700 border-peach-300',
-    dot: 'bg-peach-500',
-    icon: 'text-peach-700',
+    chip: 'bg-rose-100 text-rose-700 border-rose-200',
+    dot: 'bg-lilac-300',
+    icon: 'text-rose-700',
   },
 };
 

@@ -7,7 +7,7 @@ import { useUi } from '../../store/useUi';
 import { Dialog } from '../ui/Dialog';
 
 /**
- * Mobile navigation: My Nook, Tasks, raised center +, Projects, More.
+ * Mobile navigation: My Nook, Tasks, raised burgundy center +, Projects, More.
  */
 export function BottomNav() {
   const { openQuickCreate } = useUi();
@@ -30,10 +30,9 @@ export function BottomNav() {
     <>
       <nav
         aria-label="Mobile navigation"
-        className="fixed inset-x-0 bottom-0 z-40 border-t border-divider bg-cream pb-safe backdrop-blur md:hidden"
+        className="fixed inset-x-0 bottom-0 z-40 border-t border-lilac-200 bg-cream/95 pb-safe backdrop-blur-sm md:hidden"
       >
         <ul className="mx-auto flex max-w-md items-center justify-between px-2 py-1">
-          {/* Nook & Tasks */}
           {nook && (
             <li className="flex-1">
               <NavLink
@@ -41,8 +40,8 @@ export function BottomNav() {
                 end
                 className={({ isActive }) =>
                   cx(
-                    'flex min-h-[44px] flex-col items-center justify-center gap-0.5 rounded-[9px] text-[11px] font-title transition',
-                    isActive ? 'text-ink font-medium' : 'text-ink-soft',
+                    'flex min-h-[44px] flex-col items-center justify-center gap-0.5 rounded-[4px] text-[11px] font-sans transition',
+                    isActive ? 'text-accent font-semibold' : 'text-ink-soft',
                   )
                 }
               >
@@ -50,7 +49,7 @@ export function BottomNav() {
                   const Icon = nook.icon;
                   return (
                     <>
-                      <Icon size={19} className={isActive ? 'text-ink' : 'text-ink-soft'} />
+                      <Icon size={18} strokeWidth={isActive ? 2.1 : 1.7} />
                       <span>{nook.label}</span>
                     </>
                   );
@@ -65,8 +64,8 @@ export function BottomNav() {
                 to={tasks.to}
                 className={({ isActive }) =>
                   cx(
-                    'flex min-h-[44px] flex-col items-center justify-center gap-0.5 rounded-[9px] text-[11px] font-title transition',
-                    isActive ? 'text-ink font-medium' : 'text-ink-soft',
+                    'flex min-h-[44px] flex-col items-center justify-center gap-0.5 rounded-[4px] text-[11px] font-sans transition',
+                    isActive ? 'text-accent font-semibold' : 'text-ink-soft',
                   )
                 }
               >
@@ -74,7 +73,7 @@ export function BottomNav() {
                   const Icon = tasks.icon;
                   return (
                     <>
-                      <Icon size={19} className={isActive ? 'text-ink' : 'text-ink-soft'} />
+                      <Icon size={18} strokeWidth={isActive ? 2.1 : 1.7} />
                       <span>{tasks.label}</span>
                     </>
                   );
@@ -83,27 +82,26 @@ export function BottomNav() {
             </li>
           )}
 
-          {/* Raised center plus button */}
+          {/* Raised wax-seal burgundy plus button */}
           <li className="relative flex flex-1 items-center justify-center">
             <button
               type="button"
               onClick={openQuickCreate}
               aria-label="Quick create"
-              className="-mt-5 grid h-12 w-12 place-items-center rounded-full border border-lilac-200 bg-lilac-300 text-ink shadow-none transition active:scale-95 hover:bg-lilac-400"
+              className="-mt-5 grid h-12 w-12 place-items-center rounded-full border-2 border-cream bg-lilac-300 text-primary-ink shadow-soft transition active:scale-95 hover:bg-lilac-400 cursor-pointer"
             >
-              <Plus size={22} strokeWidth={2.4} aria-hidden="true" />
+              <Plus size={21} strokeWidth={2.2} aria-hidden="true" />
             </button>
           </li>
 
-          {/* Projects */}
           {projects && (
             <li className="flex-1">
               <NavLink
                 to={projects.to}
                 className={({ isActive }) =>
                   cx(
-                    'flex min-h-[44px] flex-col items-center justify-center gap-0.5 rounded-[9px] text-[11px] font-title transition',
-                    isActive ? 'text-ink font-medium' : 'text-ink-soft',
+                    'flex min-h-[44px] flex-col items-center justify-center gap-0.5 rounded-[4px] text-[11px] font-sans transition',
+                    isActive ? 'text-accent font-semibold' : 'text-ink-soft',
                   )
                 }
               >
@@ -111,7 +109,7 @@ export function BottomNav() {
                   const Icon = projects.icon;
                   return (
                     <>
-                      <Icon size={19} className={isActive ? 'text-ink' : 'text-ink-soft'} />
+                      <Icon size={18} strokeWidth={isActive ? 2.1 : 1.7} />
                       <span>{projects.label}</span>
                     </>
                   );
@@ -120,32 +118,30 @@ export function BottomNav() {
             </li>
           )}
 
-          {/* More */}
           <li className="flex-1">
             <button
               type="button"
               onClick={() => setMoreOpen(true)}
               aria-label="More pages"
               className={cx(
-                'flex w-full min-h-[44px] flex-col items-center justify-center gap-0.5 rounded-[9px] text-[11px] font-title transition',
-                isMoreActive ? 'text-ink font-medium' : 'text-ink-soft',
+                'flex w-full min-h-[44px] flex-col items-center justify-center gap-0.5 rounded-[4px] text-[11px] font-sans transition cursor-pointer',
+                isMoreActive ? 'text-accent font-semibold' : 'text-ink-soft',
               )}
             >
-              <MoreHorizontal size={19} className={isMoreActive ? 'text-ink' : 'text-ink-soft'} />
+              <MoreHorizontal size={18} strokeWidth={isMoreActive ? 2.1 : 1.7} />
               <span>More</span>
             </button>
           </li>
         </ul>
       </nav>
 
-      {/* More sheet */}
       <Dialog
         open={moreOpen}
         onClose={() => setMoreOpen(false)}
         title="More sections"
         description="Explore the rest of your quiet space."
       >
-        <div className="grid gap-2">
+        <div className="divide-y divide-divider">
           {MOBILE_MORE_ITEMS.map((item) => {
             const Icon = item.icon;
             const isItemActive =
@@ -156,14 +152,14 @@ export function BottomNav() {
                 type="button"
                 onClick={() => handleMoreSelect(item.to)}
                 className={cx(
-                  'flex items-center gap-3 rounded-[9px] border border-lilac-200 p-3 text-left transition',
-                  isItemActive ? 'bg-lilac-200 text-ink' : 'bg-cream text-ink hover:bg-lilac-100',
+                  'flex w-full items-center gap-3 px-2 py-3 text-left transition cursor-pointer',
+                  isItemActive ? 'text-accent font-semibold' : 'text-ink hover:bg-paper-2/50',
                 )}
               >
-                <span className="grid h-8 w-8 place-items-center rounded-[7px] bg-lilac-100 text-ink">
-                  <Icon size={18} />
+                <span className="grid h-8 w-8 place-items-center rounded-[4px] bg-paper-2/75 text-ink-soft">
+                  <Icon size={17} className={isItemActive ? 'text-accent' : undefined} />
                 </span>
-                <span className="font-title font-medium text-sm text-ink">{item.label}</span>
+                <span className="font-sans text-sm">{item.label}</span>
               </button>
             );
           })}

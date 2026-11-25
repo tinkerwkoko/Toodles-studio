@@ -25,14 +25,12 @@ export function TodayListCard() {
   const [moveUnfinishedOpen, setMoveUnfinishedOpen] = useState(false);
   const [targetMoveDate, setTargetMoveDate] = useState(addDays(today, 1));
 
-  // All tasks due or starting today
   const tasksDueToday = data.tasks.filter((t) => isTaskDueToday(t, today) || isTaskCompletedToday(t, today));
   const totalDue = tasksDueToday.length;
   const undoneDue = tasksDueToday.filter((t) => t.status === 'todo');
   const doneDue = tasksDueToday.filter((t) => t.status === 'done');
   const undoneCount = undoneDue.length;
 
-  // Estimates calculation
   const hasAllEstimates =
     totalDue > 0 &&
     tasksDueToday.every((t) => typeof t.estimate === 'number' && t.estimate > 0);
@@ -58,18 +56,17 @@ export function TodayListCard() {
   const displayedTasks = activeTab === 'todo' ? undoneDue : doneDue;
 
   return (
-    <Card padding="md" className="space-y-3">
-      {/* Top row: Section title & metrics */}
-      <div className="flex flex-wrap items-center justify-between gap-2 border-b border-divider pb-2.5">
-        <div className="flex items-center gap-2">
-          <h2 className="font-display text-[18px] text-ink">Today's list</h2>
+    <Card padding="md" className="space-y-4">
+      <div className="flex flex-wrap items-baseline justify-between gap-2">
+        <div className="flex flex-wrap items-baseline gap-2.5">
+          <h2 className="font-display text-2xl font-semibold text-ink">Today&apos;s list</h2>
           {totalDue > 0 && (
-            <span className="rounded-full bg-lilac-100 px-2 py-0.5 text-xs font-sans text-ink-soft">
+            <span className="text-xs font-sans text-ink-soft tabular-nums">
               {undoneCount} of {totalDue} left
             </span>
           )}
           {committedText && (
-            <span className="text-xs font-sans text-text-faint">
+            <span className="text-xs font-sans italic text-text-faint tabular-nums">
               · {committedText}
             </span>
           )}
@@ -82,14 +79,13 @@ export function TodayListCard() {
               setTargetMoveDate(addDays(today, 1));
               setMoveUnfinishedOpen(true);
             }}
-            className="text-xs font-sans text-ink-soft hover:text-ink underline transition cursor-pointer"
+            className="text-xs font-sans text-ink-soft hover:text-accent underline underline-offset-4 transition cursor-pointer"
           >
             Move unfinished
           </button>
         )}
       </div>
 
-      {/* Tabs: To do / Done */}
       <Tabs
         ariaLabel="Today's task status"
         activeId={activeTab}
@@ -100,20 +96,19 @@ export function TodayListCard() {
         ]}
       />
 
-      {/* Task list or empty state */}
       {displayedTasks.length === 0 ? (
-        <div className="flex flex-col items-center justify-center py-6 text-center">
-          <Cat pose="sleepy" size={54} animated={false} />
-          <p className="mt-2 text-sm font-sans text-ink-soft">
+        <div className="flex flex-col items-center justify-center py-7 text-center">
+          <Cat pose="sleepy" size={56} animated={false} />
+          <p className="mt-2.5 text-sm font-sans italic text-ink-soft max-w-sm">
             {activeTab === 'todo'
               ? 'Nothing is due today. Add something small if you feel like it.'
               : 'No tasks completed today yet.'}
           </p>
           {activeTab === 'todo' && (
-            <div className="mt-3">
+            <div className="mt-3.5">
               <Button
                 size="sm"
-                variant="soft"
+                variant="outline"
                 onClick={() => openCreate('task')}
                 icon={<Plus size={14} aria-hidden="true" />}
               >
@@ -127,9 +122,9 @@ export function TodayListCard() {
           {displayedTasks.map((task) => (
             <li
               key={task.id}
-              className="flex items-center justify-between gap-3 py-2.5 transition hover:bg-lilac-50/50 rounded-[6px] px-1"
+              className="flex items-center justify-between gap-3 py-3 transition hover:bg-lilac-50/70 rounded-[4px] px-1.5"
             >
-              <div className="flex flex-1 items-center gap-2.5 min-w-0">
+              <div className="flex flex-1 items-center gap-3 min-w-0">
                 <TaskCheckbox
                   checked={task.status === 'done'}
                   onChange={() => actions.toggleTaskDone(task.id)}
@@ -140,16 +135,16 @@ export function TodayListCard() {
                   onClick={() => setDetailTaskId(task.id)}
                 >
                   <p
-                    className={`font-title font-medium text-[15px] truncate ${
+                    className={`font-sans text-[15px] leading-snug truncate ${
                       task.status === 'done'
-                        ? 'line-through text-ink-soft'
-                        : 'text-ink'
+                        ? 'line-through text-ink-soft/80'
+                        : 'text-ink font-medium'
                     }`}
                   >
                     {task.title}
                   </p>
                   {(task.dueTime || task.estimate) && (
-                    <p className="font-sans text-xs text-text-faint">
+                    <p className="mt-0.5 font-sans text-xs text-text-faint tabular-nums">
                       {task.dueTime ? task.dueTime : ''}
                       {task.dueTime && task.estimate ? ' · ' : ''}
                       {task.estimate ? formatEstimate(task.estimate) : ''}
@@ -158,7 +153,6 @@ export function TodayListCard() {
                 </div>
               </div>
 
-              {/* Task menu */}
               <Menu
                 label={`Options for ${task.title}`}
                 items={[
@@ -184,7 +178,7 @@ export function TodayListCard() {
                   },
                 ]}
               >
-                <span className="grid h-7 w-7 place-items-center rounded-[6px] text-ink-soft hover:bg-lilac-100 hover:text-ink">
+                <span className="grid h-7 w-7 place-items-center rounded-[4px] text-ink-soft hover:bg-paper-2 hover:text-ink">
                   <MoreVertical size={15} />
                 </span>
               </Menu>
@@ -193,7 +187,6 @@ export function TodayListCard() {
         </ul>
       )}
 
-      {/* Pick a date dialog */}
       <Dialog
         open={!!datePickerTask}
         onClose={() => setDatePickerTask(null)}
@@ -207,7 +200,7 @@ export function TodayListCard() {
             placeholder="Select due date"
           />
           <div className="flex justify-end gap-2">
-            <Button variant="soft" size="sm" onClick={() => setDatePickerTask(null)}>
+            <Button variant="ghost" size="sm" onClick={() => setDatePickerTask(null)}>
               Cancel
             </Button>
             <Button variant="primary" size="sm" onClick={handleSaveCustomDate}>
@@ -216,7 +209,7 @@ export function TodayListCard() {
           </div>
         </div>
       </Dialog>
-      {/* Move unfinished tasks dialog */}
+
       <Dialog
         open={moveUnfinishedOpen}
         onClose={() => setMoveUnfinishedOpen(false)}
@@ -224,7 +217,7 @@ export function TodayListCard() {
         size="sm"
       >
         <div className="space-y-4">
-          <p className="text-xs sm:text-sm font-sans text-ink-soft">
+          <p className="text-xs sm:text-sm font-sans text-ink-soft leading-relaxed">
             Choose which day you would like to move your {undoneCount} unfinished task{undoneCount === 1 ? '' : 's'} to:
           </p>
 
@@ -232,10 +225,10 @@ export function TodayListCard() {
             <button
               type="button"
               onClick={() => setTargetMoveDate(addDays(today, 1))}
-              className={`rounded-2xl border px-3 py-2 text-xs font-title font-medium transition cursor-pointer ${
+              className={`rounded-[4px] border px-3 py-2 text-xs font-sans font-medium transition cursor-pointer ${
                 targetMoveDate === addDays(today, 1)
-                  ? 'border-accent bg-lilac-200 text-ink shadow-sm'
-                  : 'border-divider bg-cream text-ink-soft hover:bg-lilac-100'
+                  ? 'border-accent bg-rose-100 text-rose-700'
+                  : 'border-divider bg-cream text-ink-soft hover:bg-paper-2'
               }`}
             >
               Tomorrow
@@ -243,18 +236,18 @@ export function TodayListCard() {
             <button
               type="button"
               onClick={() => setTargetMoveDate(addDays(today, 7))}
-              className={`rounded-2xl border px-3 py-2 text-xs font-title font-medium transition cursor-pointer ${
+              className={`rounded-[4px] border px-3 py-2 text-xs font-sans font-medium transition cursor-pointer ${
                 targetMoveDate === addDays(today, 7)
-                  ? 'border-accent bg-lilac-200 text-ink shadow-sm'
-                  : 'border-divider bg-cream text-ink-soft hover:bg-lilac-100'
+                  ? 'border-accent bg-rose-100 text-rose-700'
+                  : 'border-divider bg-cream text-ink-soft hover:bg-paper-2'
               }`}
             >
               Next week
             </button>
           </div>
 
-          <div className="space-y-1">
-            <span className="text-xs font-title font-medium text-ink">Or pick a specific day</span>
+          <div className="space-y-1.5">
+            <span className="text-xs font-sans font-medium text-ink">Or pick a specific day</span>
             <DatePicker
               value={targetMoveDate}
               onChange={(d) => setTargetMoveDate(d || addDays(today, 1))}

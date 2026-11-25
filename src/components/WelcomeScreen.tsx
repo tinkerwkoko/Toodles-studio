@@ -10,7 +10,7 @@ export interface WelcomeScreenProps {
 const ROTATING_LINES = [
   'Untangle your day, one tiny win at a time.',
   'Your to-dos, your moods, your habits, all tucked into one cozy place.',
-  'No sign-ups. No clutter. Just you and a very helpful cat.',
+  'No clutter. Synced across your devices. Just you and a very helpful cat.',
 ];
 
 const VISIBLE_MS = 1900;
@@ -42,24 +42,28 @@ export function WelcomeScreen({ onDone }: WelcomeScreenProps) {
 
   return (
     <SplashShell leaving={leaving} onSkip={() => setLeaving(true)}>
-      <div className="flex w-full max-w-md flex-col items-center px-6 text-center">
-        <Cat pose="sleepy" size={168} />
-        <h1 className="mt-5 text-5xl leading-none tracking-tight sm:text-6xl">Toodles</h1>
-        <p className="mt-3 text-lg font-bold text-ink">Small tasks, big calm.</p>
+      <div className="flex w-full max-w-md flex-col items-center px-8 py-10 text-center">
+        <span className="font-hand text-lg text-ink-soft tracking-wide">Ex Libris</span>
+        <div className="my-3 h-px w-16 bg-lilac-200" />
+        <Cat pose="sleepy" size={156} />
+        <h1 className="mt-4 font-display text-5xl sm:text-6xl font-semibold leading-none tracking-tight text-ink">
+          Toodles
+        </h1>
+        <p className="mt-2 font-hand text-2xl text-accent">Small tasks, big calm.</p>
 
-        <div className="mt-5 flex min-h-16 items-center justify-center">
+        <div className="mt-5 flex min-h-14 items-center justify-center">
           <p
             key={lineIndex}
-            className="text-[0.95rem] text-ink-soft motion-safe:animate-fade-in"
+            className="text-sm font-sans italic text-ink-soft motion-safe:animate-fade-in leading-relaxed"
           >
             {ROTATING_LINES[lineIndex]}
           </p>
         </div>
 
-        <div className="mt-2 h-2 w-52 overflow-hidden rounded-full bg-lilac-100">
-          <div className="h-full rounded-full bg-lilac-300 motion-safe:animate-grow" />
+        <div className="mt-3 h-[3px] w-48 overflow-hidden rounded-[2px] bg-paper-2">
+          <div className="h-full bg-lilac-300 motion-safe:animate-grow" />
         </div>
-        <p className="mt-3 text-xs font-bold tracking-[0.2em] text-ink-soft uppercase">
+        <p className="mt-3 text-[11px] font-sans tracking-[0.18em] text-text-faint uppercase">
           Tucking things away
         </p>
       </div>
@@ -73,7 +77,7 @@ interface SplashShellProps {
   children: ReactNode;
 }
 
-/** Flat cream wash that fades out once the splash is finished. */
+/** Warm parchment bookplate wash that fades out once the splash is finished. */
 export function SplashShell({ leaving, onSkip, children }: SplashShellProps) {
   return (
     <div

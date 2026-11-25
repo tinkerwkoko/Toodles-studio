@@ -9,13 +9,13 @@ export interface CatFaceProps {
   animated?: boolean;
 }
 
-const FUR = 'var(--cat-body, #FFFBF7)';
-const LINE = 'var(--cat-outline, #B592A4)';
-const WHISKER = 'var(--cat-whisker, var(--cat-outline, #B592A4))';
-const FACE = 'var(--cat-face, #4A3540)';
-const NOSE = 'var(--cat-nose, #F4C3A8)';
-const BLUSH = 'var(--cat-blush, #F4C3A8)';
-const ACCENT = 'var(--cat-stripes, #D9BFCC)';
+const FUR = 'var(--cat-body, #FBF7EF)';
+const LINE = 'var(--cat-outline, #6C5447)';
+const WHISKER = 'var(--cat-whisker, var(--cat-outline, #8B7365))';
+const FACE = 'var(--cat-face, #45382F)';
+const NOSE = 'var(--cat-nose, #B88F89)';
+const BLUSH = 'var(--cat-blush, #D4A69D)';
+const ACCENT = 'var(--cat-stripes, #A58A7A)';
 
 /** Cat expressions used by the mood tracker, widgets, and calm page headings. */
 export function CatFace({
@@ -93,7 +93,7 @@ export function CatFace({
             x="48"
             y="23"
             fontSize="9"
-            fontFamily="Chewy, cursive"
+            fontFamily="Caveat, cursive"
             fill={ACCENT}
             opacity="0.9"
           >
@@ -103,7 +103,7 @@ export function CatFace({
             x="54"
             y="16"
             fontSize="7"
-            fontFamily="Chewy, cursive"
+            fontFamily="Caveat, cursive"
             fill={ACCENT}
             opacity="0.85"
           >

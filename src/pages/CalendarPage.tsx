@@ -1,11 +1,12 @@
 import { useMemo, useState } from 'react';
-import { Calendar as CalendarIcon, ChevronLeft, ChevronRight, Clock, Plus } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Clock, Plus } from 'lucide-react';
 import { CatFace } from '../components/CatFace';
 import { addDays, formatLongDay, todayString } from '../lib/date';
 import { accent } from '../lib/color';
 import { Button } from '../components/ui/Button';
 import { Card } from '../components/ui/Card';
 import { TaskCheckbox } from '../components/ui/TaskCheckbox';
+import { cx } from '../lib/cx';
 import { useToodles } from '../store/useToodles';
 import { useUi } from '../store/useUi';
 
@@ -121,46 +122,42 @@ export function CalendarPage() {
   }
 
   return (
-    <div className="mx-auto max-w-5xl space-y-6">
-      {/* Page Header */}
-      <div className="flex flex-wrap items-center justify-between gap-3">
-        <div className="flex items-center gap-3">
-          <div className="grid h-10 w-10 place-items-center rounded-2xl bg-lilac-200 text-ink">
-            <CalendarIcon size={20} />
-          </div>
-          <div>
-            <div className="flex items-center gap-2">
-              <h1 className="font-display text-3xl text-ink leading-tight">Time Blocking</h1>
-              {selectedMood && (
-                <div className="inline-flex items-center gap-1.5 rounded-full bg-lilac-100 px-2.5 py-0.5 border border-lilac-200">
-                  <CatFace mood={selectedMood.mood} size={18} decorative />
-                  <span className="text-[11px] font-title font-medium text-ink capitalize">
-                    {selectedMood.mood}
-                  </span>
-                </div>
-              )}
-            </div>
-            <p className="font-sans text-xs text-ink-soft">
-              {formatLongDay(selectedDate)}
-            </p>
+    <div className="mx-auto max-w-5xl space-y-6 pb-6">
+      {/* Editorial Almanac Header */}
+      <header className="flex flex-wrap items-end justify-between gap-4 border-b border-divider pb-5">
+        <div className="space-y-1">
+          <p className="font-hand text-[1.1rem] leading-none text-ink-soft">
+            {formatLongDay(selectedDate)}
+          </p>
+          <div className="flex flex-wrap items-center gap-3">
+            <h1 className="font-display text-3xl font-semibold tracking-tight text-ink sm:text-[2.15rem]">
+              Time Blocking
+            </h1>
+            {selectedMood && (
+              <span className="inline-flex items-center gap-1.5 text-xs text-ink-soft">
+                <span aria-hidden="true" className="text-divider">·</span>
+                <CatFace mood={selectedMood.mood} size={18} decorative />
+                <span className="italic capitalize">{selectedMood.mood}</span>
+              </span>
+            )}
           </div>
         </div>
 
-        {/* View and Date Controls */}
-        <div className="flex items-center gap-2">
-          <div className="flex items-center rounded-full border border-lilac-200 bg-cream p-0.5">
+        {/* Date & View Controls */}
+        <div className="flex flex-wrap items-center gap-2">
+          <div className="inline-flex items-center rounded-[4px] border border-lilac-200 bg-cream p-0.5">
             <button
               type="button"
               onClick={() => stepDate(-1)}
               aria-label="Previous"
-              className="grid h-7 w-7 place-items-center rounded-full text-ink hover:bg-lilac-100 transition"
+              className="grid h-8 w-8 place-items-center rounded-[3px] text-ink-soft transition hover:bg-lilac-100 hover:text-ink"
             >
               <ChevronLeft size={16} />
             </button>
             <button
               type="button"
               onClick={() => setSelectedDate(today)}
-              className="px-2.5 text-xs font-title font-medium text-ink hover:underline"
+              className="px-2.5 text-xs font-medium text-ink transition hover:text-lilac-700"
             >
               Today
             </button>
@@ -168,28 +165,34 @@ export function CalendarPage() {
               type="button"
               onClick={() => stepDate(1)}
               aria-label="Next"
-              className="grid h-7 w-7 place-items-center rounded-full text-ink hover:bg-lilac-100 transition"
+              className="grid h-8 w-8 place-items-center rounded-[3px] text-ink-soft transition hover:bg-lilac-100 hover:text-ink"
             >
               <ChevronRight size={16} />
             </button>
           </div>
 
-          <div className="flex rounded-full border border-lilac-200 bg-cream p-0.5">
+          <div className="inline-flex rounded-[4px] border border-lilac-200 bg-paper-2 p-0.5">
             <button
               type="button"
               onClick={() => setViewMode('day')}
-              className={`rounded-full px-3 py-1 text-xs font-title font-medium transition ${
-                viewMode === 'day' ? 'bg-accent text-ink font-bold shadow-sm' : 'text-ink-soft hover:text-ink'
-              }`}
+              className={cx(
+                'rounded-[3px] px-3 py-1.5 text-xs font-medium transition',
+                viewMode === 'day'
+                  ? 'bg-cream text-ink shadow-soft'
+                  : 'text-ink-soft hover:text-ink',
+              )}
             >
               Day
             </button>
             <button
               type="button"
               onClick={() => setViewMode('week')}
-              className={`rounded-full px-3 py-1 text-xs font-title font-medium transition ${
-                viewMode === 'week' ? 'bg-accent text-ink font-bold shadow-sm' : 'text-ink-soft hover:text-ink'
-              }`}
+              className={cx(
+                'rounded-[3px] px-3 py-1.5 text-xs font-medium transition',
+                viewMode === 'week'
+                  ? 'bg-cream text-ink shadow-soft'
+                  : 'text-ink-soft hover:text-ink',
+              )}
             >
               Week
             </button>
@@ -204,10 +207,10 @@ export function CalendarPage() {
             New task
           </Button>
         </div>
-      </div>
+      </header>
 
-      {/* Week Day Pills */}
-      <div className="grid grid-cols-7 gap-1 sm:gap-2">
+      {/* Week Almanac Strip */}
+      <div className="paper-sheet grid grid-cols-7 divide-x divide-divider/70 overflow-hidden rounded-[5px]">
         {weekDays.map((d) => {
           const dateObj = new Date(d + 'T12:00:00');
           const dayName = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'][dateObj.getDay()];
@@ -221,33 +224,54 @@ export function CalendarPage() {
               key={d}
               type="button"
               onClick={() => setSelectedDate(d)}
-              className={`flex flex-col items-center justify-center py-2 px-1 rounded-2xl border transition ${
+              className={cx(
+                'relative flex flex-col items-center justify-center gap-0.5 py-2.5 px-1 transition',
                 isSelected
-                  ? 'border-accent bg-lilac-200 text-ink shadow-sm'
+                  ? 'bg-lilac-300 text-primary-ink'
                   : isToday
-                    ? 'border-accent/40 bg-cream text-ink'
-                    : 'border-lilac-200 bg-cream/70 text-ink-soft hover:bg-lilac-100/60'
-              }`}
+                    ? 'bg-paper-2/70 text-ink hover:bg-paper-2'
+                    : 'bg-transparent text-ink-soft hover:bg-lilac-100/50 hover:text-ink',
+              )}
             >
-              <span className="text-[11px] font-sans">{dayName}</span>
-              <span className="font-title font-medium text-sm text-ink">{dayNum}</span>
+              <span
+                className={cx(
+                  'text-[10px] uppercase tracking-wider',
+                  isSelected ? 'text-primary-ink/80' : 'text-ink-soft',
+                )}
+              >
+                {dayName}
+              </span>
+              <span
+                className={cx(
+                  'font-display text-lg font-semibold tabular-nums leading-tight',
+                  isSelected ? 'text-primary-ink' : 'text-ink',
+                )}
+              >
+                {dayNum}
+              </span>
               {dayMood ? (
                 <div className="mt-0.5">
-                  <CatFace mood={dayMood.mood} size={18} decorative />
+                  <CatFace mood={dayMood.mood} size={17} decorative />
                 </div>
               ) : (
-                <span className="h-[18px] w-[18px]" />
+                <span className="h-[17px] w-[17px]" aria-hidden="true" />
+              )}
+              {isToday && !isSelected && (
+                <span
+                  aria-hidden="true"
+                  className="absolute bottom-1 h-1 w-1 rounded-full bg-lilac-300"
+                />
               )}
             </button>
           );
         })}
       </div>
 
-      {/* Main Grid & Sidebar */}
-      <div className="grid gap-6 lg:grid-cols-[1fr_300px] items-start">
-        {/* Time Blocking Schedule Grid */}
-        <Card padding="md" className="space-y-1 border-lilac-200">
-          <div className="divide-y divide-divider">
+      {/* Main Hourly Ledger & Margin List */}
+      <div className="grid items-start gap-8 lg:grid-cols-[1fr_290px]">
+        {/* Time Blocking Schedule Ledger */}
+        <Card padding="none" className="overflow-hidden">
+          <div className="divide-y divide-divider/65">
             {HOURS.map((hour) => {
               const hourString = `${String(hour).padStart(2, '0')}:00`;
               const tasksInHour = scheduledTasks.filter((t) => {
@@ -257,21 +281,28 @@ export function CalendarPage() {
               });
 
               return (
-                <div key={hour} className="flex min-h-[58px] py-1.5 gap-3 group">
-                  {/* Hour label */}
-                  <span className="w-14 shrink-0 font-sans text-xs text-ink-soft pt-1 text-right">
+                <div
+                  key={hour}
+                  className="group flex min-h-[56px] items-stretch transition hover:bg-lilac-100/35"
+                >
+                  {/* Hour margin */}
+                  <span className="w-16 shrink-0 border-r border-divider/60 px-3 py-2.5 text-right text-xs tabular-nums text-ink-soft">
                     {hourString}
                   </span>
 
-                  {/* Hour Slot Container */}
-                  <div className="flex-1 rounded-xl p-1 transition group-hover:bg-lilac-50/50 flex flex-wrap gap-2 items-center">
+                  {/* Hour slot */}
+                  <div className="flex flex-1 flex-wrap items-center gap-2 px-3 py-2">
                     {tasksInHour.map((task) => {
                       const tone = accent(task.color);
                       return (
                         <div
                           key={task.id}
                           onClick={() => setDetailTaskId(task.id)}
-                          className={`flex items-center gap-2 rounded-xl border px-3 py-1.5 text-xs font-title cursor-pointer transition hover:scale-101 shadow-sm ${tone.soft} ${tone.border}`}
+                          className={cx(
+                            'flex cursor-pointer items-center gap-2 rounded-[4px] border px-2.5 py-1.5 text-xs transition hover:brightness-[0.98]',
+                            tone.soft,
+                            tone.border,
+                          )}
                         >
                           <TaskCheckbox
                             checked={task.status === 'done'}
@@ -279,11 +310,11 @@ export function CalendarPage() {
                             label={`Mark ${task.title} as done`}
                             size="sm"
                           />
-                          <span className="font-medium text-ink truncate max-w-[200px]">
+                          <span className="max-w-[220px] truncate font-medium text-ink">
                             {task.title}
                           </span>
                           {task.estimate && (
-                            <span className="text-[10px] font-sans text-ink-soft opacity-80">
+                            <span className="text-[11px] tabular-nums text-ink-soft">
                               {task.estimate}m
                             </span>
                           )}
@@ -302,7 +333,7 @@ export function CalendarPage() {
                         })
                       }
                       title={`Add task at ${hourString}`}
-                      className="opacity-0 group-hover:opacity-100 inline-flex items-center gap-1 text-[11px] font-title text-ink-soft hover:text-ink transition px-2 py-1 rounded-lg hover:bg-lilac-100"
+                      className="inline-flex items-center gap-1 rounded-[3px] px-2 py-1 text-[11px] text-ink-soft opacity-0 transition hover:bg-lilac-100 hover:text-ink focus:opacity-100 group-hover:opacity-100"
                     >
                       <Plus size={12} />
                       <span>{tasksInHour.length === 0 ? `Plan at ${hourString}` : 'Add another'}</span>
@@ -314,46 +345,50 @@ export function CalendarPage() {
           </div>
         </Card>
 
-        {/* Unscheduled / Waiting tasks for this day */}
-        <div className="space-y-4">
-          <Card padding="md" className="space-y-3 border-lilac-200">
-            <div className="flex items-center justify-between border-b border-divider pb-2">
-              <h2 className="font-display text-lg text-ink">Unscheduled for today</h2>
-              <span className="rounded-full bg-lilac-100 px-2 py-0.5 text-xs font-sans text-ink-soft">
+        {/* Unscheduled Margin Notes */}
+        <aside className="space-y-4">
+          <Card variant="aged" padding="md" className="space-y-3">
+            <div className="flex items-baseline justify-between border-b border-divider pb-2">
+              <h2 className="font-display text-xl font-semibold text-ink">
+                Unscheduled for today
+              </h2>
+              <span className="text-xs tabular-nums text-ink-soft">
                 {unscheduledTasks.length}
               </span>
             </div>
 
             {unscheduledTasks.length === 0 ? (
-              <p className="text-xs font-sans text-ink-soft py-4 text-center">
-                All tasks for today have a quiet time slot!
+              <p className="py-4 text-center text-xs italic text-ink-soft">
+                All tasks for today have a quiet time slot.
               </p>
             ) : (
-              <ul className="space-y-2">
+              <ul className="divide-y divide-divider/65">
                 {unscheduledTasks.map((task) => (
                   <li
                     key={task.id}
-                    className="flex flex-col gap-1.5 rounded-2xl border border-lilac-200 bg-cream p-2.5 shadow-none"
+                    className="flex items-center justify-between gap-2 py-2.5 first:pt-1 last:pb-0"
                   >
-                    <div className="flex items-center justify-between gap-2">
-                      <span className="font-title font-medium text-xs text-ink truncate flex-1">
-                        {task.title}
-                      </span>
-                      <button
-                        type="button"
-                        onClick={() => handleScheduleTask(task.id, 9)}
-                        className="inline-flex items-center gap-1 text-[11px] font-title text-accent hover:underline shrink-0"
-                      >
-                        <Clock size={11} />
-                        <span>Slot at 9am</span>
-                      </button>
-                    </div>
+                    <button
+                      type="button"
+                      onClick={() => setDetailTaskId(task.id)}
+                      className="min-w-0 flex-1 truncate text-left text-xs font-medium text-ink transition hover:text-lilac-700"
+                    >
+                      {task.title}
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => handleScheduleTask(task.id, 9)}
+                      className="inline-flex shrink-0 items-center gap-1 text-[11px] font-medium text-lilac-700 transition hover:underline"
+                    >
+                      <Clock size={11} aria-hidden="true" />
+                      <span>Slot at 9am</span>
+                    </button>
                   </li>
                 ))}
               </ul>
             )}
           </Card>
-        </div>
+        </aside>
       </div>
     </div>
   );

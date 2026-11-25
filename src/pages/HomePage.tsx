@@ -44,24 +44,24 @@ export function HomePage() {
   );
 
   return (
-    <div className="space-y-6">
-      {/* Top greeting on the far left with cat face sitting beside it */}
-      <div className="flex flex-col gap-1">
-        <div className="flex items-center gap-3">
-          <h1 className="font-display text-3xl sm:text-4xl text-ink leading-tight">
-            {greetingHeading}
-          </h1>
-          <Cat pose={isNight ? 'sleepy' : 'happy'} size={44} animated />
-        </div>
-        <p className="font-sans text-sm text-ink-soft">
+    <div className="space-y-8">
+      {/* Diary entry header: handwritten date + editorial serif greeting */}
+      <header className="pb-4 border-b border-divider flex flex-col gap-1">
+        <p className="font-hand text-xl text-accent leading-none">
           {formatLongDay(today)}
         </p>
-      </div>
+        <div className="flex items-center gap-3 pt-0.5">
+          <h1 className="font-display text-4xl sm:text-[2.75rem] font-semibold text-ink leading-none tracking-tight">
+            {greetingHeading}
+          </h1>
+          <Cat pose={isNight ? 'sleepy' : 'happy'} size={42} animated />
+        </div>
+      </header>
 
-      {/* Your cozy corner card with mascot cat */}
+      {/* Open letter-paper welcome anchor */}
       <HeroCard hasTasks={data.tasks.length > 0} />
 
-      {/* 5-tile stat strip */}
+      {/* Archival ledger index strip */}
       <NookStats
         upcomingCount={counts.upcoming}
         overdueCount={counts.overdue}
@@ -69,19 +69,19 @@ export function HomePage() {
         completedCount={counts.completed}
       />
 
-      {/* Active projects back on dashboard */}
+      {/* Active projects folio shelf */}
       {activeProjects.length > 0 && (
-        <section className="space-y-3">
-          <div className="flex items-center justify-between">
-            <h2 className="font-display text-[18px] text-ink">Active projects</h2>
+        <section className="space-y-3.5">
+          <div className="flex items-baseline justify-between border-b border-divider pb-2">
+            <h2 className="font-display text-2xl font-semibold text-ink">Active projects</h2>
             <Link
               to="/projects"
-              className="text-xs font-title font-medium text-ink-soft hover:text-ink hover:underline"
+              className="text-xs font-sans text-ink-soft hover:text-accent underline underline-offset-4 transition tabular-nums"
             >
               See all ({counts.projects})
             </Link>
           </div>
-          <div className="grid gap-3 sm:grid-cols-2 md:grid-cols-3">
+          <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-3">
             {activeProjects.map((project) => (
               <ProjectCard
                 key={project.id}
@@ -94,19 +94,17 @@ export function HomePage() {
         </section>
       )}
 
-      {/* Two columns, stacked on mobile */}
-      <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_340px] items-start">
-        {/* Left column */}
-        <div className="space-y-6 min-w-0">
+      {/* Asymmetric two-column diary spread: main ledger + margin notes */}
+      <div className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_320px] items-start">
+        <div className="space-y-8 min-w-0">
           <TodayListCard />
           <ComingUpList />
         </div>
 
-        {/* Right column */}
-        <div className="space-y-6 min-w-0">
+        <aside className="space-y-6 min-w-0">
           <TodayFeelingCard />
           <TodayHabitsCard />
-        </div>
+        </aside>
       </div>
     </div>
   );

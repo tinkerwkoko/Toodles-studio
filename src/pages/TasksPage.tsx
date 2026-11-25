@@ -83,7 +83,7 @@ export function TasksPage({ scope: initialScope = 'all' }: { scope?: TaskScope }
           <Button
             className="hidden sm:inline-flex"
             onClick={() => openCreate('task')}
-            icon={<Plus size={18} aria-hidden="true" />}
+            icon={<Plus size={16} aria-hidden="true" />}
           >
             New task
           </Button>
@@ -114,8 +114,8 @@ export function TasksPage({ scope: initialScope = 'all' }: { scope?: TaskScope }
         showSearch={!isDesktop}
       />
 
-      <div className="lg:grid lg:grid-cols-[minmax(0,1fr)_400px] lg:items-start lg:gap-6">
-        <div>
+      <div className="lg:grid lg:grid-cols-[minmax(0,1fr)_390px] lg:items-start lg:gap-7">
+        <div className="min-w-0">
           <TaskList
             tasks={tasks}
             onOpen={openTask}
@@ -127,15 +127,16 @@ export function TasksPage({ scope: initialScope = 'all' }: { scope?: TaskScope }
         </div>
 
         {isDesktop && (
-          <aside className="sticky top-24 hidden lg:block">
-            <Card padding="lg">
+          <aside className="sticky top-[78px] hidden lg:block">
+            <Card padding="lg" variant={detailTask ? 'paper' : 'aged'}>
               {detailTask ? (
                 <TaskDetail task={detailTask} onDeleted={() => setDetailTaskId(null)} />
               ) : (
-                <div className="text-center">
-                  <p className="mb-2 font-display text-lg text-lilac-700">Pick a task</p>
-                  <p className="text-sm text-ink-soft">
-                    Choose something on the left to read its notes, tick off little steps and change
+                <div className="py-8 text-center space-y-1.5">
+                  <p className="font-hand text-xl text-accent">Notes &amp; details</p>
+                  <p className="font-display text-2xl font-semibold text-ink">Pick a task</p>
+                  <p className="text-sm font-sans italic text-ink-soft leading-relaxed max-w-xs mx-auto">
+                    Choose an entry on the left to read its notes, tick off little steps, or adjust
                     the details.
                   </p>
                 </div>

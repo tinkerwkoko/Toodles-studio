@@ -10,22 +10,22 @@ export interface StatTileProps {
   className?: string;
 }
 
-/** Small "today at a glance" figure. */
+/** Small archival ledger figure. */
 export function StatTile({ label, value, hint, icon, className }: StatTileProps) {
   return (
-    <Card padding="sm" className={cx('flex items-center gap-3', className)}>
+    <Card padding="sm" variant="aged" className={cx('flex items-center gap-3', className)}>
       {icon && (
         <span
           aria-hidden="true"
-          className="grid h-10 w-10 shrink-0 place-items-center rounded-2xl bg-lilac-300 text-ink"
+          className="grid h-9 w-9 shrink-0 place-items-center rounded-[4px] border border-divider bg-cream text-accent"
         >
           {icon}
         </span>
       )}
       <div className="min-w-0">
-        <p className="font-display text-xl leading-none text-ink">{value}</p>
-        <p className="truncate text-xs font-bold text-ink-soft">{label}</p>
-        {hint && <p className="truncate text-xs text-ink-soft">{hint}</p>}
+        <p className="font-display text-2xl font-semibold leading-none text-ink tabular-nums">{value}</p>
+        <p className="mt-0.5 truncate text-xs font-sans text-ink-soft">{label}</p>
+        {hint && <p className="truncate text-[11px] font-sans italic text-text-faint">{hint}</p>}
       </div>
     </Card>
   );

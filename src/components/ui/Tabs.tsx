@@ -17,8 +17,7 @@ export interface TabsProps {
 }
 
 /**
- * Text tabs with a thin underline under the active one.
- * Inactive tabs are faint and darken on hover.
+ * Editorial ledger tabs with a refined burgundy rule beneath the active tab.
  */
 export function Tabs({
   items,
@@ -50,7 +49,7 @@ export function Tabs({
       aria-label={ariaLabel}
       onKeyDown={handleKeyDown}
       className={cx(
-        'flex items-center gap-4 overflow-x-auto no-scrollbar border-b border-divider',
+        'flex items-center gap-6 overflow-x-auto no-scrollbar border-b border-lilac-200/80',
         className,
       )}
     >
@@ -60,22 +59,23 @@ export function Tabs({
           <button
             key={tab.id}
             role="tab"
+            type="button"
             aria-selected={isActive}
             tabIndex={isActive ? 0 : -1}
             onClick={() => onChange(tab.id)}
             className={cx(
-              'group relative inline-flex items-center gap-1.5 pb-2 pt-1 text-sm font-title font-medium transition duration-150',
-              'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent',
+              'group relative -mb-px inline-flex shrink-0 items-center gap-1.5 pb-2.5 pt-1 text-sm font-sans transition duration-150 cursor-pointer',
+              'focus-visible:outline-none focus-visible:text-accent',
               isActive
-                ? 'text-ink border-b-2 border-accent'
-                : 'text-ink-soft hover:text-ink border-b-2 border-transparent',
+                ? 'border-b-2 border-accent font-semibold text-ink'
+                : 'border-b-2 border-transparent text-ink-soft hover:text-ink',
             )}
           >
             {tab.icon && (
               <span
                 className={cx(
                   'transition duration-150',
-                  isActive ? 'text-ink' : 'text-text-faint group-hover:text-ink',
+                  isActive ? 'text-accent' : 'text-text-faint group-hover:text-ink',
                 )}
               >
                 {tab.icon}
@@ -85,8 +85,8 @@ export function Tabs({
             {typeof tab.count === 'number' && (
               <span
                 className={cx(
-                  'ml-0.5 rounded-full px-1.5 py-0.2 text-[11px] font-sans transition',
-                  isActive ? 'bg-lilac-200 text-ink' : 'bg-lilac-100 text-ink-soft',
+                  'ml-0.5 text-xs tabular-nums transition',
+                  isActive ? 'text-accent font-semibold' : 'text-text-faint',
                 )}
               >
                 {tab.count}

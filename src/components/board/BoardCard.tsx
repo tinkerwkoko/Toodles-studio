@@ -13,7 +13,6 @@ import type { AccentColor, BoardColumn, Task } from '../../types';
 import { ACCENT_KEYS, ACCENT_LABELS, accent } from '../../lib/color';
 import { formatDay, formatTime, isToday } from '../../lib/date';
 import { isTaskOverdue, subtaskProgress } from '../../lib/task';
-import { Chip } from '../ui/Chip';
 import { Menu, type MenuItem } from '../ui/Menu';
 import { ProgressBar } from '../ui/ProgressBar';
 import { SubtaskChecklist } from '../tasks/SubtaskChecklist';
@@ -23,14 +22,12 @@ import { useUi } from '../../store/useUi';
 
 export interface BoardCardProps {
   task: Task;
-  /** All board columns, so "Move to…" is always available, not just dragging. */
   columns: BoardColumn[];
   onOpen: (task: Task) => void;
-  /** Dragging is enabled from tablet width up; phones use "Move to…". */
   dragEnabled: boolean;
 }
 
-/** One kanban card: title, colour, dates, subtask progress and a steps drawer. */
+/** Tactile index card for the kanban board — crisp stationery look without heavy borders or pill clutter. */
 export function BoardCard({ task, columns, onOpen, dragEnabled }: BoardCardProps) {
   const { actions } = useToodles();
   const { pushToast, celebrate } = useUi();
@@ -72,7 +69,7 @@ export function BoardCard({ task, columns, onOpen, dragEnabled }: BoardCardProps
     })),
     {
       label: done ? 'Reopen task' : 'Mark as done',
-      icon: <CheckCheck size={16} aria-hidden="true" />,
+      icon: <CheckCheck size={15} aria-hidden="true" />,
       onSelect: () => {
         actions.toggleTaskDone(task.id);
         if (done) return;
@@ -82,7 +79,7 @@ export function BoardCard({ task, columns, onOpen, dragEnabled }: BoardCardProps
     },
     {
       label: 'Delete card',
-      icon: <Trash2 size={16} aria-hidden="true" />,
+      icon: <Trash2 size={15} aria-hidden="true" />,
       danger: true,
       onSelect: () => {
         actions.deleteTask(task.id);
@@ -96,9 +93,8 @@ export function BoardCard({ task, columns, onOpen, dragEnabled }: BoardCardProps
       ref={setNodeRef}
       style={{ transform: CSS.Transform.toString(transform), transition }}
       className={cx(
-        'rounded-2xl border border-lilac-200 border-l-4 bg-cream p-3 shadow-soft',
-        tone.border,
-        isDragging && 'opacity-80 shadow-lift ring-2 ring-lilac-300',
+        'paper-sheet rounded-[4px] border border-divider/90 p-3 transition',
+        isDragging && 'opacity-80 shadow-lift ring-1 ring-accent',
       )}
     >
       <div className="flex items-start gap-1.5">
@@ -108,59 +104,72 @@ export function BoardCard({ task, columns, onOpen, dragEnabled }: BoardCardProps
             {...attributes}
             {...listeners}
             aria-label={`Drag ${task.title}`}
-            className="mt-0.5 grid h-8 w-7 shrink-0 cursor-grab touch-none place-items-center rounded-lg text-lilac-400 hover:bg-lilac-100"
+            className="mt-0.5 grid h-7 w-6 shrink-0 cursor-grab touch-none place-items-center rounded-[3px] text-text-faint hover:bg-paper-2 hover:text-ink"
           >
-            <GripVertical size={16} aria-hidden="true" />
+            <GripVertical size={14} aria-hidden="true" />
           </button>
-        ) : (
-          <span aria-hidden="true" className="h-8 w-3 shrink-0" />
-        )}
+        ) : null}
 
         <button
           type="button"
           onClick={() => onOpen(task)}
-          className="min-w-0 flex-1 text-left"
+          className="min-w-0 flex-1 text-left cursor-pointer"
           aria-label={`Open ${task.title}`}
         >
-          <h3
-            className={cx(
-              'font-title text-[17px] font-medium leading-snug wrap-break-word',
-              done ? 'text-ink-soft line-through' : 'text-ink',
-            )}
-          >
-            {task.title}
-          </h3>
+          <div className="flex items-start gap-2">
+            <span
+              className={cx('mt-1.5 h-2 w-2 shrink-0 rounded-full', tone.mid)}
+              aria-hidden="true"
+            />
+            <h3
+              className={cx(
+                'font-sans text-sm font-medium leading-snug wrap-break-word',
+                done ? 'text-ink-soft line-through' : 'text-ink',
+              )}
+            >
+              {task.title}
+            </h3>
+          </div>
         </button>
 
         <Menu label={`Card options for ${task.title}`} header="Move to…" items={menuItems}>
-          <MoreVertical size={17} aria-hidden="true" />
+          <MoreVertical size={15} aria-hidden="true" />
         </Menu>
       </div>
 
-      <div className="mt-2 flex flex-wrap items-center gap-1.5">
-        {task.dueDate && (
-          <Chip
-            tone={overdue ? 'border-rose-200 bg-rose-100 text-ink' : isToday(task.dueDate) ? 'border-lilac-200 bg-lilac-300 text-ink' : undefined}
-          >
-            <CalendarDays size={13} aria-hidden="true" />
-            {overdue ? 'Overdue · ' : ''}
-            {formatDay(task.dueDate)}
-            {task.dueTime ? ` ${formatTime(task.dueTime)}` : ''}
-          </Chip>
-        )}
-        {progress.total > 0 && (
-          <Chip>
-            <ListTodo size={13} aria-hidden="true" />
-            {progress.done} / {progress.total} steps
-          </Chip>
-        )}
-      </div>
+      {(task.dueDate || progress.total > 0) && (
+        <div className="mt-2.5 flex flex-wrap items-center gap-x-3 gap-y-1 text-[11px] font-sans text-ink-soft tabular-nums">
+          {task.dueDate && (
+            <span
+              className={cx(
+                'inline-flex items-center gap-1',
+                overdue ? 'text-rose-700 font-medium' : isToday(task.dueDate) ? 'text-accent font-medium' : '',
+              )}
+            >
+              <CalendarDays size={12} aria-hidden="true" />
+              <span>
+                {overdue ? 'Overdue · ' : ''}
+                {formatDay(task.dueDate)}
+                {task.dueTime ? ` ${formatTime(task.dueTime)}` : ''}
+              </span>
+            </span>
+          )}
+          {progress.total > 0 && (
+            <span className="inline-flex items-center gap-1 text-text-faint">
+              <ListTodo size={12} aria-hidden="true" />
+              <span>
+                {progress.done}/{progress.total} steps
+              </span>
+            </span>
+          )}
+        </div>
+      )}
 
       {progress.total > 0 && (
         <ProgressBar
           value={progress.percent}
           label={`Subtasks for ${task.title}`}
-          tone={progress.done === progress.total ? 'bg-mint-300' : 'bg-lilac-300'}
+          tone={progress.done === progress.total ? 'bg-mint-500' : tone.mid}
           className="mt-2"
         />
       )}
@@ -170,14 +179,14 @@ export function BoardCard({ task, columns, onOpen, dragEnabled }: BoardCardProps
           type="button"
           onClick={() => setShowSteps((current) => !current)}
           aria-expanded={showSteps}
-          className="mt-2 min-h-11 rounded-full bg-lilac-300 px-3 text-xs font-bold text-ink hover:bg-lilac-200"
+          className="mt-2 text-xs font-sans text-accent hover:underline underline-offset-4 cursor-pointer tabular-nums"
         >
           {showSteps ? 'Hide steps' : `Steps (${progress.done}/${progress.total})`}
         </button>
       )}
 
       {showSteps && (
-        <div className="mt-2 rounded-2xl border border-lilac-200 bg-lilac-50/70 p-2.5">
+        <div className="mt-2.5 border-t border-divider pt-2.5">
           <SubtaskChecklist task={task} />
         </div>
       )}

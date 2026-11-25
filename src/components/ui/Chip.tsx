@@ -9,13 +9,13 @@ export interface ChipProps {
   size?: 'sm' | 'md';
 }
 
-/** Small rounded label used for dates, tags, priorities and counts. */
+/** Understated archival index label — never a loud glossy pill. */
 export function Chip({ children, className, tone, size = 'sm' }: ChipProps) {
   return (
     <span
       className={cx(
-        'inline-flex max-w-full items-center gap-1.5 rounded-full border-[1.5px] border-peach-200 bg-peach-100 font-semibold text-peach-700',
-        size === 'sm' ? 'px-2.5 py-0.5 text-xs' : 'px-3 py-1 text-sm',
+        'inline-flex max-w-full items-center gap-1.5 rounded-[3px] border border-divider bg-paper-2/65 font-sans font-medium text-ink-soft',
+        size === 'sm' ? 'px-2 py-0.5 text-[11px] leading-tight' : 'px-2.5 py-1 text-xs leading-tight',
         tone,
         className,
       )}
@@ -33,7 +33,7 @@ export interface ColorDotProps {
 export function ColorDot({ className, label }: ColorDotProps) {
   return (
     <span
-      className={cx('inline-block h-2.5 w-2.5 shrink-0 rounded-full', className)}
+      className={cx('inline-block h-2 w-2 shrink-0 rounded-full', className)}
       aria-hidden={label ? undefined : true}
       aria-label={label}
       role={label ? 'img' : undefined}

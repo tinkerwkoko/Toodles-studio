@@ -3,6 +3,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { LayoutGrid, Pencil, Plus, Trash2 } from 'lucide-react';
 import type { BoardColumn, Task } from '../types';
 import { BoardView } from '../components/board/BoardView';
+import { Button } from '../components/ui/Button';
 import { Dialog } from '../components/ui/Dialog';
 import { EmptyState } from '../components/ui/EmptyState';
 import { IconButton } from '../components/ui/IconButton';
@@ -42,7 +43,6 @@ export function ProjectDetailPage() {
   const openCount = tasks.filter((task) => task.status === 'todo').length;
   const doneCount = tasks.length - openCount;
 
-  // Older projects may have no board yet: seed the default columns once.
   useEffect(() => {
     if (project && columns.length === 0) actions.ensureBoardColumns(project.id);
   }, [project, columns.length, actions]);
@@ -52,7 +52,7 @@ export function ProjectDetailPage() {
       <EmptyState
         pose="curious"
         title="That project is not here"
-        sentence="It may have been deleted, or the link came from another device. Nothing is shared between browsers."
+        sentence="It may have been deleted, or belongs to a different account. Sign in with Google to sync projects across devices."
         actionLabel="See all projects"
         onAction={() => navigate('/projects')}
       />
@@ -70,7 +70,7 @@ export function ProjectDetailPage() {
   };
 
   const listView = (
-    <div className="space-y-6">
+    <div className="space-y-8">
       <TaskList
         tasks={sortTasks(tasks.filter((task) => task.status === 'todo'), 'smart')}
         onOpen={(task: Task) => setDetailTaskId(task.id)}
@@ -88,8 +88,10 @@ export function ProjectDetailPage() {
       />
 
       {doneCount > 0 && (
-        <section className="space-y-2.5">
-          <h2 className="text-lg text-mint-700">Finished here ({doneCount})</h2>
+        <section className="space-y-3">
+          <h2 className="font-display text-2xl font-semibold text-mint-700 tabular-nums">
+            Finished here ({doneCount})
+          </h2>
           <TaskList
             tasks={tasks.filter((task) => task.status === 'done')}
             onOpen={(task: Task) => setDetailTaskId(task.id)}
@@ -103,16 +105,14 @@ export function ProjectDetailPage() {
   return (
     <div className="pb-4">
       <ProjectHeader project={project} doneCount={doneCount} totalCount={tasks.length}>
-        <div className="flex flex-col gap-2">
+        <div className="flex flex-col gap-2.5">
           <div className="flex flex-wrap items-center gap-2">
-            <button
-              type="button"
+            <Button
               onClick={() => addTask()}
-              className="inline-flex min-h-11 items-center gap-2 rounded-full bg-lilac-300 px-5 font-display text-ink transition hover:bg-lilac-200"
+              icon={<Plus size={16} aria-hidden="true" />}
             >
-              <Plus size={18} aria-hidden="true" />
               New task
-            </button>
+            </Button>
 
             <SegmentedControl
               label="Project view"
@@ -126,21 +126,21 @@ export function ProjectDetailPage() {
             />
 
             <IconButton label={`Edit ${project.name}`} onClick={() => setEditing(true)}>
-              <Pencil size={18} aria-hidden="true" />
+              <Pencil size={16} aria-hidden="true" />
             </IconButton>
             <IconButton
               label={`Delete ${project.name}`}
               tone="danger"
               onClick={() => setDeleting(true)}
             >
-              <Trash2 size={18} aria-hidden="true" />
+              <Trash2 size={16} aria-hidden="true" />
             </IconButton>
           </div>
 
           {view === 'board' && (
-            <p className="flex items-center gap-1.5 text-xs text-ink-soft">
-              <LayoutGrid size={14} aria-hidden="true" />
-              Cards are tasks. Use the ⋮ menu on a card to move it or change its colour.
+            <p className="flex items-center gap-1.5 text-xs font-sans italic text-ink-soft">
+              <LayoutGrid size={13} aria-hidden="true" />
+              Cards are tasks. Use the ⋮ menu on a card to move it or change its ink colour.
             </p>
           )}
         </div>

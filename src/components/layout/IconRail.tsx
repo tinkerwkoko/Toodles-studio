@@ -12,19 +12,19 @@ export function IconRail() {
   return (
     <nav
       aria-label="Sections"
-      className="fixed inset-y-0 left-0 z-30 hidden w-19 flex-col items-center gap-1 border-r border-lilac-200 bg-lilac-100/70 py-4 md:flex lg:hidden"
+      className="fixed inset-y-0 left-0 z-30 hidden w-19 flex-col items-center gap-1 border-r border-divider bg-sidebar py-4 md:flex lg:hidden"
     >
       <span className="mb-2">
-        <Cat pose="sleepy" size={40} animated={false} title="Toodles" />
+        <Cat pose="sleepy" size={38} animated={false} title="Toodles" />
       </span>
 
       <button
         type="button"
         onClick={openQuickCreate}
         aria-label="Create something"
-        className="mb-2 grid h-12 w-12 place-items-center rounded-full bg-lilac-300 text-ink transition hover:bg-lilac-200 active:scale-95"
+        className="mb-2 grid h-11 w-11 place-items-center rounded-[4px] bg-lilac-300 text-primary-ink transition hover:bg-lilac-400 active:scale-95"
       >
-        <Plus size={22} strokeWidth={2.6} aria-hidden="true" />
+        <Plus size={20} strokeWidth={2.3} aria-hidden="true" />
       </button>
 
       <ul className="flex w-full flex-1 flex-col items-center gap-1 overflow-y-auto">
@@ -36,14 +36,20 @@ export function IconRail() {
               title={item.label}
               className={({ isActive }) =>
                 cx(
-                  'flex min-h-12 flex-col items-center justify-center gap-0.5 rounded-2xl text-[0.62rem] font-bold transition',
-                  isActive ? 'bg-lilac-300 text-ink' : 'text-ink-soft hover:bg-lilac-100',
+                  'flex min-h-12 flex-col items-center justify-center gap-0.5 rounded-[4px] text-[0.62rem] font-medium transition',
+                  isActive
+                    ? 'bg-lilac-300 text-primary-ink'
+                    : 'text-ink-soft hover:bg-lilac-100 hover:text-ink',
                 )
               }
             >
               {({ isActive }) => (
                 <>
-                  <item.icon size={19} aria-hidden="true" className={isActive ? 'text-ink' : ''} />
+                  <item.icon
+                    size={18}
+                    aria-hidden="true"
+                    className={isActive ? 'text-primary-ink' : ''}
+                  />
                   <span className="truncate">{item.shortLabel}</span>
                 </>
               )}

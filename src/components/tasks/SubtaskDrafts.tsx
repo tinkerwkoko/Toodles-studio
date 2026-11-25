@@ -23,8 +23,8 @@ export function SubtaskDrafts({
   onRename,
 }: SubtaskDraftProps) {
   return (
-    <fieldset className="space-y-2 rounded-2xl border border-lilac-200 bg-cream/70 p-3">
-      <legend className="px-1 text-sm font-bold text-lilac-700">
+    <fieldset className="space-y-2.5 border-t border-divider pt-4">
+      <legend className="text-[13px] font-sans font-medium text-ink tabular-nums">
         Little steps {values.subtasks.length > 0 && `(${values.subtasks.length})`}
       </legend>
 
@@ -34,21 +34,21 @@ export function SubtaskDrafts({
             <li key={subtask.id} className="flex items-center gap-2">
               <span
                 aria-hidden="true"
-                className={cx('h-2.5 w-2.5 rounded-full', accent(subtask.color).mid)}
+                className={cx('h-2 w-2 rounded-full shrink-0', accent(subtask.color).mid)}
               />
               <input
                 value={subtask.title}
                 onChange={(event) => onRename(subtask.id, event.target.value)}
                 aria-label="Subtask title"
-                className="min-h-11 flex-1 rounded-xl border border-lilac-200 bg-cream px-3 text-sm focus:border-lilac-400 focus:outline-none"
+                className="h-9 flex-1 rounded-[4px] border border-lilac-200 bg-cream px-3 font-sans text-sm text-ink focus:border-accent focus:outline-none"
               />
               <button
                 type="button"
                 onClick={() => onRemove(subtask.id)}
                 aria-label={`Remove subtask ${subtask.title}`}
-                className="grid h-11 w-11 place-items-center rounded-full text-rose-700 transition hover:bg-rose-100"
+                className="grid h-9 w-9 place-items-center rounded-[4px] text-rose-700 transition hover:bg-rose-100 cursor-pointer"
               >
-                <Trash2 size={17} aria-hidden="true" />
+                <Trash2 size={15} aria-hidden="true" />
               </button>
             </li>
           ))}
@@ -67,13 +67,14 @@ export function SubtaskDrafts({
           }}
           placeholder="Break it into small steps..."
           aria-label="Add a subtask"
-          className="min-h-11 flex-1 rounded-xl border border-lilac-200 bg-cream px-3 text-sm focus:border-lilac-400 focus:outline-none"
+          className="h-9 flex-1 rounded-[4px] border border-lilac-200 bg-cream px-3 font-sans text-sm text-ink placeholder:text-text-faint placeholder:italic focus:border-accent focus:outline-none"
         />
         <Button
-          variant="soft"
+          variant="outline"
+          size="sm"
           onClick={onAdd}
           disabled={draft.trim().length === 0}
-          icon={<Plus size={17} aria-hidden="true" />}
+          icon={<Plus size={14} aria-hidden="true" />}
         >
           Add
         </Button>

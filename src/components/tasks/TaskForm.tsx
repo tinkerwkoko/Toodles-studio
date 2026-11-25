@@ -74,7 +74,7 @@ export function TaskForm({
 
   return (
     <form onSubmit={handleSubmit} className="space-y-5">
-      <div className="space-y-2">
+      <div className="space-y-2.5">
         <label htmlFor="task-title" className="sr-only">
           Task title
         </label>
@@ -84,7 +84,7 @@ export function TaskForm({
           value={values.title}
           onChange={(event) => patch({ title: event.target.value })}
           placeholder="What needs to get done?"
-          className="w-full rounded-2xl border border-lilac-200 bg-cream px-4 py-3 font-display text-xl text-ink placeholder:text-ink-soft/60 focus:border-lilac-400 focus:outline-none focus:ring-4 focus:ring-lilac-200/70"
+          className="w-full rounded-[4px] border border-lilac-200 bg-cream px-3.5 py-2.5 font-display text-2xl font-semibold text-ink placeholder:text-text-faint placeholder:italic focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/15"
         />
         <label htmlFor="task-notes" className="sr-only">
           Notes
@@ -98,7 +98,7 @@ export function TaskForm({
         />
       </div>
 
-      <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+      <div className="grid grid-cols-1 gap-3.5 sm:grid-cols-2">
         <TaskFields
           values={values}
           patch={patch}
@@ -133,8 +133,8 @@ export function TaskForm({
 
       {children}
 
-      <div className="flex flex-col gap-3 border-t border-lilac-200 pt-4 sm:flex-row sm:items-center sm:justify-between">
-        <p className="text-xs text-ink-soft">
+      <div className="flex flex-col gap-3 border-t border-divider pt-4 sm:flex-row sm:items-center sm:justify-between">
+        <p className="text-xs font-sans italic text-ink-soft">
           {hint ?? 'A title is all you need. Everything else can wait until later.'}
         </p>
         <div className="flex items-center gap-2">
@@ -142,7 +142,7 @@ export function TaskForm({
             <Button
               variant="ghost"
               onClick={onDelete}
-              icon={<Trash2 size={17} aria-hidden="true" />}
+              icon={<Trash2 size={15} aria-hidden="true" />}
               className="text-rose-700 hover:bg-rose-100"
             >
               Delete
@@ -155,7 +155,7 @@ export function TaskForm({
       </div>
 
       {quickCreate && (
-        <div className="border-t border-dashed border-lilac-200 pt-3 text-center text-sm text-ink-soft">
+        <div className="border-t border-divider pt-3.5 text-center text-xs font-sans text-ink-soft">
           {quickCreate}
         </div>
       )}

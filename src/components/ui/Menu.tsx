@@ -20,7 +20,7 @@ export interface MenuProps {
 }
 
 /**
- * Small accessible popover menu. Used for task actions and the mobile
+ * Accessible archival popover menu. Used for task actions and the mobile
  * "Move to…" alternative to dragging kanban cards.
  */
 export function Menu({
@@ -97,7 +97,7 @@ export function Menu({
           setOpen((current) => !current);
         }}
         className={cx(
-          'grid h-11 w-11 place-items-center rounded-full text-lilac-700 transition hover:bg-lilac-100 cursor-pointer',
+          'grid h-9 w-9 place-items-center rounded-[4px] text-ink-soft transition hover:bg-paper-2/80 hover:text-ink cursor-pointer',
           buttonClassName,
         )}
       >
@@ -109,12 +109,12 @@ export function Menu({
           role="menu"
           aria-label={header ?? label}
           className={cx(
-            'absolute z-[100] mt-1 min-w-48 overflow-hidden rounded-2xl border border-lilac-200 bg-cream shadow-lift motion-safe:animate-fade-in',
+            'absolute z-[100] mt-1 min-w-48 overflow-hidden rounded-[4px] border border-lilac-200 bg-cream shadow-lift motion-safe:animate-fade-in',
             align === 'right' ? 'right-0' : 'left-0',
           )}
         >
           {header && (
-            <p className="border-b border-lilac-100 px-4 py-2 text-xs font-bold tracking-wide text-ink-soft uppercase">
+            <p className="border-b border-divider px-3.5 py-2 text-[11px] font-sans font-medium tracking-[0.08em] text-text-faint uppercase">
               {header}
             </p>
           )}
@@ -131,18 +131,18 @@ export function Menu({
                   setOpen(false);
                 }}
                 className={cx(
-                  'flex w-full items-center gap-2.5 px-4 py-2 text-left font-title text-sm transition cursor-pointer',
+                  'flex w-full items-center gap-2.5 px-3.5 py-2 text-left font-sans text-sm transition cursor-pointer',
                   item.disabled && 'pointer-events-none opacity-40',
                   item.danger
-                    ? 'text-rose-700 hover:bg-rose-100 hover:text-rose-700'
-                    : 'text-ink hover:bg-lilac-100',
+                    ? 'text-rose-700 hover:bg-rose-100'
+                    : 'text-ink hover:bg-paper-2/70',
                 )}
               >
                 {item.icon && (
                   <span
                     className={cx(
                       'grid h-4 w-4 shrink-0 place-items-center',
-                      item.danger ? 'text-rose-700' : 'text-lilac-700',
+                      item.danger ? 'text-rose-700' : 'text-ink-soft',
                     )}
                     aria-hidden="true"
                   >

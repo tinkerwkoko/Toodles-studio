@@ -3,7 +3,6 @@ import { PRIORITY_STYLES, accent } from '../../lib/color';
 import { formatDay, formatEstimate, formatTime, isToday } from '../../lib/date';
 import { REPEAT_SHORT, isTaskOverdue, subtaskProgress } from '../../lib/task';
 import { AlarmClock, Bell, CalendarDays, Clock, Repeat } from 'lucide-react';
-import { Chip } from '../ui/Chip';
 import { ProgressBar } from '../ui/ProgressBar';
 import { cx } from '../../lib/cx';
 import { useToodles } from '../../store/useToodles';
@@ -13,7 +12,7 @@ export interface TaskCardMetaProps {
   showProject?: boolean;
 }
 
-/** The little chip row under a task title. Colour is always paired with an icon. */
+/** Quiet inline archival metadata — no pill capsules cluttering every task row. */
 export function TaskCardMeta({ task, showProject = true }: TaskCardMetaProps) {
   const { data } = useToodles();
   const done = task.status === 'done';
@@ -22,91 +21,111 @@ export function TaskCardMeta({ task, showProject = true }: TaskCardMetaProps) {
   const project = data.projects.find((item) => item.id === task.projectId);
   const tone = accent(task.color);
 
+  const hasMeta =
+    Boolean(task.dueDate) ||
+    Boolean(!task.dueDate && task.startDate) ||
+    Boolean(showProject && project) ||
+    task.priority !== 'none' ||
+    Boolean(task.estimate) ||
+    task.repeat !== 'none' ||
+    task.reminder ||
+    task.tags.length > 0 ||
+    Boolean(done && task.completedAt);
+
   return (
     <>
-      <div className="mt-2 flex flex-wrap items-center gap-1.5">
-        {task.dueDate && (
-          <Chip
-            tone={
-              overdue
-                ? 'border-rose-200 bg-rose-100 text-ink'
-                : isToday(task.dueDate)
-                  ? 'border-lilac-300 bg-lilac-100 text-ink'
-                  : undefined
-            }
-          >
-            {overdue ? (
-              <AlarmClock size={13} aria-hidden="true" />
-            ) : (
-              <CalendarDays size={13} aria-hidden="true" />
-            )}
-            {overdue ? 'Overdue · ' : ''}
-            {formatDay(task.dueDate)}
-            {task.dueTime ? ` · ${formatTime(task.dueTime)}` : ''}
-          </Chip>
-        )}
+      {hasMeta && (
+        <div className="mt-1.5 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs font-sans text-ink-soft tabular-nums">
+          {task.dueDate && (
+            <span
+              className={cx(
+                'inline-flex items-center gap-1',
+                overdue
+                  ? 'font-medium text-rose-700'
+                  : isToday(task.dueDate)
+                    ? 'font-medium text-accent'
+                    : 'text-ink-soft',
+              )}
+            >
+              {overdue ? (
+                <AlarmClock size={12} aria-hidden="true" />
+              ) : (
+                <CalendarDays size={12} aria-hidden="true" />
+              )}
+              <span>
+                {overdue ? 'Overdue · ' : ''}
+                {formatDay(task.dueDate)}
+                {task.dueTime ? ` · ${formatTime(task.dueTime)}` : ''}
+              </span>
+            </span>
+          )}
 
-        {!task.dueDate && task.startDate && (
-          <Chip>
-            <CalendarDays size={13} aria-hidden="true" /> Starts {formatDay(task.startDate)}
-          </Chip>
-        )}
+          {!task.dueDate && task.startDate && (
+            <span className="inline-flex items-center gap-1 text-ink-soft">
+              <CalendarDays size={12} aria-hidden="true" />
+              <span>Starts {formatDay(task.startDate)}</span>
+            </span>
+          )}
 
-        {showProject && project && (
-          <Chip tone={cx(tone.soft, tone.border, tone.text)}>
-            <span className={cx('h-2.5 w-2.5 rounded-full', tone.mid)} aria-hidden="true" />
-            {project.emoji} {project.name}
-          </Chip>
-        )}
+          {showProject && project && (
+            <span className="inline-flex items-center gap-1.5 text-ink-soft">
+              <span className={cx('h-2 w-2 rounded-full', tone.mid)} aria-hidden="true" />
+              <span>{project.name}</span>
+            </span>
+          )}
 
-        {task.priority !== 'none' && (
-          <Chip tone={PRIORITY_STYLES[task.priority].chip}>
-            {PRIORITY_STYLES[task.priority].label} priority
-          </Chip>
-        )}
+          {task.priority !== 'none' && (
+            <span className={cx('inline-flex items-center gap-1 font-medium', PRIORITY_STYLES[task.priority].icon)}>
+              <span className={cx('h-1.5 w-1.5 rounded-full', PRIORITY_STYLES[task.priority].dot)} aria-hidden="true" />
+              <span>{PRIORITY_STYLES[task.priority].label}</span>
+            </span>
+          )}
 
-        {task.estimate ? (
-          <Chip>
-            <Clock size={13} aria-hidden="true" />
-            {formatEstimate(task.estimate)}
-          </Chip>
-        ) : null}
+          {task.estimate ? (
+            <span className="inline-flex items-center gap-1 text-text-faint">
+              <Clock size={12} aria-hidden="true" />
+              <span>{formatEstimate(task.estimate)}</span>
+            </span>
+          ) : null}
 
-        {task.repeat !== 'none' && (
-          <Chip>
-            <Repeat size={13} aria-hidden="true" />
-            {REPEAT_SHORT[task.repeat]}
-          </Chip>
-        )}
+          {task.repeat !== 'none' && (
+            <span className="inline-flex items-center gap-1 text-text-faint">
+              <Repeat size={12} aria-hidden="true" />
+              <span>{REPEAT_SHORT[task.repeat]}</span>
+            </span>
+          )}
 
-        {task.reminder && (
-          <Chip tone="border-butter-200 bg-butter-100 text-butter-700">
-            <Bell size={13} aria-hidden="true" />
-            Reminder
-          </Chip>
-        )}
+          {task.reminder && (
+            <span className="inline-flex items-center gap-1 text-butter-700">
+              <Bell size={12} aria-hidden="true" />
+              <span>Reminder</span>
+            </span>
+          )}
 
-        {task.tags.map((tag) => (
-          <Chip key={tag}>#{tag}</Chip>
-        ))}
+          {task.tags.map((tag) => (
+            <span key={tag} className="italic text-text-faint">
+              #{tag}
+            </span>
+          ))}
 
-        {done && task.completedAt && (
-          <Chip tone="border-mint-200 bg-mint-100 text-mint-700">
-            Finished {formatDay(task.completedAt.slice(0, 10))}
-          </Chip>
-        )}
-      </div>
+          {done && task.completedAt && (
+            <span className="text-mint-700">
+              Finished {formatDay(task.completedAt.slice(0, 10))}
+            </span>
+          )}
+        </div>
+      )}
 
       {progress.total > 0 && (
-        <div className="mt-2.5 flex items-center gap-2">
+        <div className="mt-2 flex items-center gap-2.5">
           <ProgressBar
             value={progress.percent}
             label={`Subtasks for ${task.title}`}
-            tone={progress.done === progress.total ? 'bg-mint-500' : 'bg-lilac-500'}
-            className="max-w-40"
+            tone={progress.done === progress.total ? 'bg-mint-500' : 'bg-lilac-300'}
+            className="max-w-36"
           />
-          <span className="text-xs font-bold text-ink-soft">
-            {progress.done} / {progress.total} steps
+          <span className="text-[11px] font-sans text-text-faint tabular-nums">
+            {progress.done}/{progress.total} steps
           </span>
         </div>
       )}

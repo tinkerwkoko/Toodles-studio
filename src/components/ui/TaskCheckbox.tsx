@@ -13,7 +13,7 @@ export interface TaskCheckboxProps {
   className?: string;
 }
 
-/** Round tick box. State is shown with a tick and strikethrough, not colour alone. */
+/** Journal ink checkbox. State is shown with a crisp tick and strikethrough, not colour alone. */
 export function TaskCheckbox({
   checked,
   onChange,
@@ -23,7 +23,7 @@ export function TaskCheckbox({
   className,
 }: TaskCheckboxProps) {
   const tone = accent(color);
-  const dimension = size === 'sm' ? 'h-6 w-6' : 'h-7 w-7';
+  const dimension = size === 'sm' ? 'h-[20px] w-[20px]' : 'h-[22px] w-[22px]';
   return (
     <button
       type="button"
@@ -35,19 +35,19 @@ export function TaskCheckbox({
         onChange();
       }}
       className={cx(
-        // Completed checkbox is filled mauve with a dark check icon.
-        'grid shrink-0 place-items-center rounded-full border-2 transition duration-200',
+        'grid shrink-0 place-items-center rounded-[3px] border-[1.5px] transition duration-150 cursor-pointer',
+        'focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent',
         dimension,
         checked
           ? cx('border-transparent', tone.solid)
-          : 'border-lilac-200 bg-cream hover:border-lilac-600',
+          : 'border-lilac-200 bg-cream hover:border-accent',
         className,
       )}
     >
       {checked && (
         <Check
-          size={size === 'sm' ? 14 : 16}
-          strokeWidth={3.5}
+          size={size === 'sm' ? 12 : 14}
+          strokeWidth={2.8}
           aria-hidden="true"
           className="motion-safe:animate-pop"
         />

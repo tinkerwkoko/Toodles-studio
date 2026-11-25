@@ -40,7 +40,7 @@ export function ProjectDialogs({
         open={openEdit}
         onClose={onCloseEdit}
         title={`Edit “${project.name}”`}
-        description="Rename it, change the icon or give it a new colour."
+        description="Rename it, change the icon or give it a new ink colour."
       >
         <ProjectForm
           key={`edit-${project.id}`}
@@ -51,6 +51,7 @@ export function ProjectDialogs({
             emoji: project.emoji,
             icon: project.icon,
             cover: project.cover,
+            coverPosition: project.coverPosition,
           }}
           submitLabel="Save changes"
           onSubmit={saveProject}
@@ -64,7 +65,7 @@ export function ProjectDialogs({
         description="This cannot be undone, so pick what should happen to the tasks inside."
         footer={
           <div className="flex flex-col-reverse gap-2 sm:flex-row sm:justify-end">
-            <Button variant="outline" onClick={onCloseDelete}>
+            <Button variant="ghost" onClick={onCloseDelete}>
               Keep the project
             </Button>
             <Button
@@ -92,17 +93,17 @@ export function ProjectDialogs({
           </div>
         }
       >
-        <div className="space-y-3 text-[0.95rem] text-ink-soft">
+        <div className="space-y-3 text-sm font-sans text-ink-soft leading-relaxed">
           <p>
             This project holds{' '}
-            <strong className="text-ink">
+            <strong className="font-semibold text-ink">
               {taskCount === 0 ? 'no tasks' : `${taskCount} task${taskCount === 1 ? '' : 's'}`}
             </strong>
             . You can delete just the project and keep the tasks (they move to “no project”), or
             remove the project and its tasks together.
           </p>
-          <p className="rounded-2xl border border-lilac-200 bg-lilac-50 p-3 text-sm">
-            Both choices also remove this project's board columns.
+          <p className="rounded-[4px] border border-divider bg-paper-2/60 p-3 text-xs italic">
+            Both choices also remove this project&apos;s board columns.
           </p>
         </div>
       </Dialog>

@@ -7,7 +7,7 @@ the same change.
 
 ## 1. What Toodles is
 
-Toodles is a private, local-first personal productivity app: tasks, subtasks, projects, kanban boards,
+Toodles is a private, cross-device personal productivity app: tasks, subtasks, projects, kanban boards,
 a diary, mood logs, habits and a completed-work archive. It should feel like a soft, warm, hand-drawn
 storybook planner — cozy, calm, a little playful — never like a corporate dashboard or generic SaaS.
 
@@ -21,24 +21,25 @@ Tagline: **"Small tasks, big calm."**
 - `react-router-dom` for routing
 - `lucide-react` for icons
 - `@dnd-kit/*` for kanban drag and drop
-- `localStorage` for persistence
+- Firebase (`firebase/auth` Google OAuth + `firebase/firestore` real-time persistence under `/users/{uid}/...`)
+  with `localStorage` for offline cache and optional guest mode
 - Deploy target: Vercel static site (`vercel.json` rewrites every path to `index.html`)
 
-Explicitly **not** allowed: backend/API routes, database, auth/login, accounts, cloud sync, analytics,
-payments, AI features, social features, team features, server-side notifications, extra UI kits or
-state-management libraries (no Redux/Zustand/React Query). No secrets, no `.env` files.
+Explicitly **not** allowed without approval: analytics/tracking, payments, AI features, social features,
+team features, extra UI kits or state-management libraries (no Redux/Zustand/React Query).
 
 ## 3. Privacy rules (non-negotiable)
 
-- All user data lives in **one versioned localStorage key**: `toodles`, value
+- Cloud data is strictly isolated per verified Google Auth UID under `/users/{uid}/...` with hardened
+  `firestore.rules` (owner-only read/write, no cross-tenant access, no public listing).
+- Local cache / guest data lives in **one versioned localStorage key**: `toodles`, value
   `{ version: number, ...collections }`. Every read/write goes through `src/store/storage.ts`, wrapped
   in `try/catch`.
-- No component touches `localStorage` directly, and no personal data ever goes into the URL, query
-  string, route params or `navigate()` state. Search/filter state lives in React memory.
-- Fresh browser, fresh device or incognito window = **empty workspace**. Never ship sample, demo or
-  seeded data with the app (a clearly-labelled demo is only allowed if the user asks for one).
+- No component touches `localStorage` or Firestore directly — all mutations go through `ToodlesProvider`.
+  No personal data ever goes into the URL, query string, route params or `navigate()` state.
+- Fresh account or guest session = **empty workspace**. Never ship sample, demo or seeded data.
 - Only IDs (`crypto.randomUUID()`) and ISO date strings are stored. Dates that mean "a calendar day"
-  are stored as `YYYY-MM-DD` in local time; timestamps are full ISO 8601 strings.
+  are stored as `YYYY-MM-DD` in local time; timestamps are server timestamps in Firestore and ISO 8601 strings in state.
 
 ## 4. Folder structure
 
@@ -79,29 +80,27 @@ growing a mega-component.
 
 ## 5. Design tokens
 
-Defined once in `src/index.css` under `@theme`. Use the Tailwind utilities, never raw hex in JSX.
+Defined once in `src/index.css` under `@theme` (backed by `:root` and `[data-theme='dark']` CSS custom properties). Use the Tailwind utilities, never raw hex in JSX.
 
-| Token | Value | Use |
-| --- | --- | --- |
-| `lilac-50` | `#F8F2EF` | page background |
-| `lilac-100` | `#F1E7E6` | sidebar/icon rail |
-| `lilac-200` | `#E4D0D9` | borders/dividers |
-| `lilac-300` | `#D9BFCC` | primary/active/selected |
-| `lilac-500` | `#D9BFCC` | primary buttons, active nav |
-| `lilac-700` | `#4A3540` | main text |
-| `ink` | `#4A3540` | body text |
+| Token | Light Mode (Parchment) | Dark Mode (Old Library at Night) | Use |
+| --- | --- | --- | --- |
+| `lilac-50` | `#F4EBDD` | `#1B1511` | page background |
+| `cream` / `card` | `#FBF7EF` | `#241C17` | primary paper surface |
+| `paper-2` | `#E9DDCB` | `#2E241E` | secondary aged-paper surface |
+| `lilac-200` | `#D7C7B2` | `#44362C` | hairline borders & dividers |
+| `lilac-300` | `#713F46` | `#9E5962` | deep burgundy primary actions & bookmark edge (pair with `text-primary-ink`) |
+| `dusty-rose` | `#B88F89` | `#B2837C` | muted rose accents & decorative rules |
+| `forest` | `#465747` | `#6F876F` | supporting botanical green |
+| `ink` | `#45382F` | `#ECE1CF` | primary warm charcoal / parchment ink |
+| `ink-soft` | `#817365` | `#AE9D8B` | secondary sepia ink |
 
-Pastel accents (each has `100 / 200 / 300 / 500 / 700`): `peach`, `mint`, `butter`, `sky`, `rose`.
-Rule of thumb: `-100` background, `-200` border, `-300` dot/decoration, `-500` solid fill, `-700` text on light fills.
-Text contrast must stay AA: use `ink` or `*-700` on light surfaces, white only on `lilac-500`+.
+Archival ink-wash accents (each has `100 / 200 / 300 / 500 / 700`): `peach` (terracotta), `mint` (forest), `butter` (ochre), `sky` (slate), `rose` (dusty rose), `lilac` (burgundy).
+Text contrast must stay AA in both light and dark modes: pair `bg-lilac-300` with `text-primary-ink`.
 
-- Fonts: **Chewy** for display headings (`font-display`), **Fredoka** for item titles (`font-title`),
-  **Handlee** for body copy (`font-sans`), via Google Fonts.
-- Shape: cards and sheets are `rounded-3xl` (24px), buttons are pills, borders are soft
-  (`border-lilac-200`), shadows are gentle (`shadow-soft`), never harsh black lines.
-- Light mode only.
-- Animations: small and soft (blink, check pop, slide-up sheet, fade). All motion must sit behind
-  `prefers-reduced-motion` guards — the global CSS reset kills animation/transition durations.
+- Fonts: **Cormorant Garamond** for editorial display headings (`font-display`, `font-title`), **Lora** for readable book-serif body & controls (`font-sans`), **Caveat** (`font-hand`) strictly for handwritten dates, annotations, and small marginalia.
+- Shape: crisp stationery corners (`rounded-[4px]` to `rounded-[6px]`), hairline dividers (`border-divider`), layered paper surfaces (`.paper-sheet`, `.paper-stack`, `.ruled-paper`, `.deckled-bottom`), and subtle parchment grain. Avoid pill-badge clutter and excessive nested card borders.
+- Light and dark modes supported via `applyTheme` (`system | light | dark`).
+- Animations: small and soft (blink, check pop, slide-up sheet, fade). All motion must sit behind `prefers-reduced-motion` guards — the global CSS reset kills animation/transition durations.
 - Touch targets ≥ 44px on mobile; no horizontal page scroll from 320px up.
 
 ## 6. Data model

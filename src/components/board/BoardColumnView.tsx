@@ -18,14 +18,13 @@ export interface BoardColumnViewProps {
   index: number;
   total: number;
   tasks: Task[];
-  /** All columns of the board, for each card's "Move to…" menu. */
   columns: BoardColumn[];
   dragEnabled: boolean;
   onOpenTask: (task: Task) => void;
   onAddTask: (column: BoardColumn) => void;
 }
 
-/** One board column: name, count, column menu and its stack of cards. */
+/** Library catalogue card tray: aged parchment column with crisp index cards. */
 export function BoardColumnView({
   column,
   index,
@@ -51,7 +50,7 @@ export function BoardColumnView({
   const columnMenu: MenuItem[] = [
     {
       label: 'Rename column',
-      icon: <Pencil size={16} aria-hidden="true" />,
+      icon: <Pencil size={15} aria-hidden="true" />,
       onSelect: () => setEditing(true),
     },
     ...ACCENT_KEYS.map((key: AccentColor) => ({
@@ -61,19 +60,19 @@ export function BoardColumnView({
     })),
     {
       label: 'Move left',
-      icon: <ChevronLeft size={16} aria-hidden="true" />,
+      icon: <ChevronLeft size={15} aria-hidden="true" />,
       disabled: index === 0,
       onSelect: () => actions.moveColumn(column.id, -1),
     },
     {
       label: 'Move right',
-      icon: <ChevronRight size={16} aria-hidden="true" />,
+      icon: <ChevronRight size={15} aria-hidden="true" />,
       disabled: index === total - 1,
       onSelect: () => actions.moveColumn(column.id, 1),
     },
     {
       label: 'Delete column',
-      icon: <Trash2 size={16} aria-hidden="true" />,
+      icon: <Trash2 size={15} aria-hidden="true" />,
       danger: true,
       disabled: total <= 1,
       onSelect: () => setConfirmDelete(true),
@@ -90,28 +89,28 @@ export function BoardColumnView({
     <section
       aria-label={`${column.name} column`}
       className={cx(
-        'flex w-[84vw] max-w-[19rem] shrink-0 snap-start flex-col rounded-3xl border p-3',
-        tone.soft,
-        tone.border,
-        isOver && 'ring-2 ring-lilac-400',
+        'flex w-[84vw] max-w-[19rem] shrink-0 snap-start flex-col rounded-[5px] border border-divider/90 bg-paper-2/55 p-3',
+        isOver && 'ring-2 ring-accent/50 bg-paper-2/90',
       )}
     >
-      <header className="flex items-center gap-1.5">
-        <span className={cx('h-3 w-3 shrink-0 rounded-full', tone.mid)} aria-hidden="true" />
-        <h3 className={cx('min-w-0 flex-1 truncate text-base font-title font-medium', tone.text)}>{column.name}</h3>
-        <span className="rounded-full bg-cream/80 px-2 py-0.5 text-xs font-bold text-ink-soft">
+      <header className="flex items-center gap-2 border-b border-divider pb-2.5">
+        <span className={cx('h-2.5 w-2.5 shrink-0 rounded-full', tone.mid)} aria-hidden="true" />
+        <h3 className="min-w-0 flex-1 truncate font-display text-xl font-semibold text-ink leading-none">
+          {column.name}
+        </h3>
+        <span className="text-xs font-sans text-text-faint tabular-nums">
           {tasks.length}
         </span>
-        <div className="flex items-center gap-0.5">
+        <div className="flex items-center">
           <button
             type="button"
             disabled={index === 0}
             onClick={() => actions.moveColumn(column.id, -1)}
             aria-label={`Move ${column.name} column left`}
             title="Move left"
-            className="grid h-7 w-7 place-items-center rounded-full text-ink-soft hover:bg-cream/60 hover:text-ink disabled:opacity-30 disabled:pointer-events-none transition cursor-pointer"
+            className="grid h-7 w-7 place-items-center rounded-[3px] text-ink-soft hover:bg-cream/80 hover:text-ink disabled:opacity-25 disabled:pointer-events-none transition cursor-pointer"
           >
-            <ChevronLeft size={15} />
+            <ChevronLeft size={14} />
           </button>
           <button
             type="button"
@@ -119,18 +118,18 @@ export function BoardColumnView({
             onClick={() => actions.moveColumn(column.id, 1)}
             aria-label={`Move ${column.name} column right`}
             title="Move right"
-            className="grid h-7 w-7 place-items-center rounded-full text-ink-soft hover:bg-cream/60 hover:text-ink disabled:opacity-30 disabled:pointer-events-none transition cursor-pointer"
+            className="grid h-7 w-7 place-items-center rounded-[3px] text-ink-soft hover:bg-cream/80 hover:text-ink disabled:opacity-25 disabled:pointer-events-none transition cursor-pointer"
           >
-            <ChevronRight size={15} />
+            <ChevronRight size={14} />
           </button>
         </div>
         <Menu label={`Options for ${column.name}`} header="Column" items={columnMenu}>
-          <MoreVertical size={17} aria-hidden="true" />
+          <MoreVertical size={15} aria-hidden="true" />
         </Menu>
       </header>
 
       <SortableContext items={tasks.map((task) => task.id)} strategy={verticalListSortingStrategy}>
-        <ul ref={setNodeRef} className="mt-3 flex min-h-20 flex-1 flex-col gap-2">
+        <ul ref={setNodeRef} className="mt-3 flex min-h-20 flex-1 flex-col gap-2.5">
           {tasks.map((task) => (
             <li key={task.id}>
               <BoardCard
@@ -145,16 +144,17 @@ export function BoardColumnView({
       </SortableContext>
 
       {tasks.length === 0 && (
-        <p className="mt-2 flex-1 py-3 text-center text-sm text-ink-soft">
+        <p className="mt-2 flex-1 py-4 text-center text-xs font-sans italic text-text-faint">
           {dragEnabled ? 'Drop a card here' : 'Nothing here yet'}
         </p>
       )}
 
       <Button
-        variant="soft"
-        className="mt-2 w-full"
+        variant="ghost"
+        size="sm"
+        className="mt-2.5 w-full justify-start text-ink-soft hover:text-ink"
         onClick={() => onAddTask(column)}
-        icon={<Plus size={17} aria-hidden="true" />}
+        icon={<Plus size={14} aria-hidden="true" />}
       >
         Add a card
       </Button>

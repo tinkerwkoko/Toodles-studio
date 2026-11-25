@@ -64,7 +64,9 @@ export function HabitForm({ initial, submitLabel, onSubmit, onDelete }: HabitFor
       </Field>
 
       <fieldset className="space-y-2">
-        <legend className="text-sm font-bold text-lilac-700">How often?</legend>
+        <legend className="text-xs font-medium uppercase tracking-wider text-ink-soft">
+          How often?
+        </legend>
         <div className="flex flex-wrap gap-2">
           {(['daily', 'weekly'] as const).map((option) => (
             <button
@@ -73,9 +75,9 @@ export function HabitForm({ initial, submitLabel, onSubmit, onDelete }: HabitFor
               aria-pressed={frequency === option}
               onClick={() => setFrequency(option)}
               className={cx(
-                'min-h-11 rounded-full border px-4 text-sm font-bold transition',
+                'min-h-10 rounded-[4px] border px-4 text-sm font-medium transition',
                 frequency === option
-                  ? 'border-lilac-300 bg-lilac-300 text-ink'
+                  ? 'border-lilac-300 bg-lilac-300 text-primary-ink'
                   : 'border-lilac-200 bg-cream text-ink hover:bg-lilac-100',
               )}
             >
@@ -87,8 +89,10 @@ export function HabitForm({ initial, submitLabel, onSubmit, onDelete }: HabitFor
 
       {frequency === 'weekly' && (
         <fieldset className="space-y-2">
-          <legend className="text-sm font-bold text-lilac-700">Which days?</legend>
-          <div className="flex flex-wrap gap-2">
+          <legend className="text-xs font-medium uppercase tracking-wider text-ink-soft">
+            Which days?
+          </legend>
+          <div className="flex flex-wrap gap-1.5">
             {ALL_DAYS.map((day) => (
               <button
                 key={day}
@@ -97,9 +101,9 @@ export function HabitForm({ initial, submitLabel, onSubmit, onDelete }: HabitFor
                 aria-pressed={weekdays.includes(day)}
                 onClick={() => toggleDay(day)}
                 className={cx(
-                  'grid h-11 w-11 place-items-center rounded-2xl border text-xs font-bold transition',
+                  'grid h-10 w-10 place-items-center rounded-[4px] border text-xs font-medium transition',
                   weekdays.includes(day)
-                    ? 'border-lilac-300 bg-lilac-300 text-ink'
+                    ? 'border-lilac-300 bg-lilac-300 text-primary-ink'
                     : 'border-lilac-200 bg-cream text-ink hover:bg-lilac-100',
                 )}
               >
@@ -111,7 +115,9 @@ export function HabitForm({ initial, submitLabel, onSubmit, onDelete }: HabitFor
       )}
 
       <fieldset className="space-y-2">
-        <legend className="text-sm font-bold text-lilac-700">Colour</legend>
+        <legend className="text-xs font-medium uppercase tracking-wider text-ink-soft">
+          Ink colour
+        </legend>
         <div className="flex flex-wrap gap-2">
           {ACCENT_KEYS.map((key) => (
             <button
@@ -121,16 +127,16 @@ export function HabitForm({ initial, submitLabel, onSubmit, onDelete }: HabitFor
               aria-pressed={color === key}
               onClick={() => setColor(key)}
               className={cx(
-                'h-9 w-9 rounded-full border-2 transition',
+                'h-8 w-8 rounded-[4px] border-2 transition',
                 accent(key).mid,
-                color === key ? 'scale-105 border-lilac-700' : 'border-transparent hover:scale-105',
+                color === key ? 'scale-105 border-ink' : 'border-transparent hover:scale-105',
               )}
             />
           ))}
         </div>
       </fieldset>
 
-      <div className="flex items-center justify-end gap-2 border-t border-lilac-200 pt-4">
+      <div className="flex items-center justify-end gap-2 border-t border-divider pt-4">
         {onDelete && (
           <Button variant="ghost" className="text-rose-700 hover:bg-rose-100" onClick={onDelete}>
             Delete habit

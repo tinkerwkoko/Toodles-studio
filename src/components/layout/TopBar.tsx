@@ -8,7 +8,7 @@ import { AccountDialog } from '../auth/AccountDialog';
 
 export function TopBar() {
   const { searchTerm, setSearchTerm } = useUi();
-  const { data, actions } = useToodles();
+  const { data, actions, isCloudConnected } = useToodles();
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -28,53 +28,52 @@ export function TopBar() {
     actions.updateSettings({ sidebarOpen: !sidebarOpen });
   }
 
-  const account = data.settings.account;
+  const account = isCloudConnected ? data.settings.account : null;
   const nickname = account?.name || data.settings.displayName.trim() || 'Friend';
 
   return (
-    <header className="sticky top-0 z-40 w-full border-b border-divider bg-cream-banner/95 backdrop-blur">
-      <div className="flex h-[56px] w-full items-center justify-between">
-        {/* Far left: Cat logo + writing with vertical divider exactly matching sidebar on desktop */}
+    <header className="sticky top-0 z-40 w-full border-b border-lilac-200/80 bg-cream/95 backdrop-blur-sm">
+      <div className="flex h-[58px] w-full items-center justify-between">
+        {/* Far left: Bookplate wordmark matching sidebar width on desktop */}
         <div
-          className={`flex h-full shrink-0 items-center justify-between border-divider px-3 md:px-4 bg-sidebar transition-all duration-200 ${
+          className={`flex h-full shrink-0 items-center justify-between border-divider px-3.5 md:px-5 bg-sidebar/95 transition-all duration-200 ${
             sidebarOpen ? 'w-auto md:w-56 md:border-r' : 'w-auto md:w-auto md:border-r-0'
           }`}
         >
           <Link
             to="/"
-            className="flex items-center gap-2.5 text-ink hover:opacity-90 transition group min-w-0"
+            className="flex items-center gap-2.5 text-ink hover:opacity-85 transition group min-w-0"
             title="Toodles - Go to Dashboard"
           >
-            <Cat pose="happy" size={32} animated={false} />
+            <Cat pose="happy" size={30} animated={false} />
             <div className="flex flex-col min-w-0">
-              <span className="font-display text-[20px] font-bold leading-tight tracking-wide text-ink">
+              <span className="font-display text-[22px] font-semibold leading-none tracking-tight text-ink">
                 Toodles
               </span>
-              <span className="hidden sm:block font-sans text-[11px] text-ink-soft leading-none">
+              <span className="hidden sm:block font-hand text-[14px] text-ink-soft leading-none mt-0.5">
                 Small tasks, big calm.
               </span>
             </div>
           </Link>
 
-          {/* Desktop/Tablet sidebar collapse toggle */}
           <button
             type="button"
             onClick={toggleSidebar}
             aria-label={sidebarOpen ? 'Collapse sidebar' : 'Expand sidebar'}
             title={sidebarOpen ? 'Collapse sidebar' : 'Expand sidebar'}
-            className="hidden md:grid h-7 w-7 place-items-center rounded-lg text-ink-soft hover:bg-lilac-200/60 hover:text-ink transition ml-1 cursor-pointer shrink-0"
+            className="hidden md:grid h-7 w-7 place-items-center rounded-[4px] text-ink-soft hover:bg-paper-2 hover:text-ink transition ml-1 cursor-pointer shrink-0"
           >
             {sidebarOpen ? <PanelLeftClose size={15} /> : <PanelLeft size={15} />}
           </button>
         </div>
 
-        {/* Center Search bar: flexible, perfectly centered in available space, never overlaps sidebar */}
-        <div className="flex-1 flex justify-center items-center min-w-0 px-2 sm:px-4">
-          <div className="relative w-full max-w-[190px] sm:max-w-xs md:max-w-sm lg:max-w-md">
+        {/* Center Search bar: understated archival search rule */}
+        <div className="flex-1 flex justify-center items-center min-w-0 px-3 sm:px-5">
+          <div className="relative w-full max-w-[200px] sm:max-w-xs md:max-w-sm lg:max-w-md">
             <Search
-              size={15}
+              size={14}
               aria-hidden="true"
-              className="pointer-events-none absolute top-1/2 left-3 -translate-y-1/2 text-ink-soft"
+              className="pointer-events-none absolute top-1/2 left-3 -translate-y-1/2 text-text-faint"
             />
             <input
               type="search"
@@ -82,14 +81,14 @@ export function TopBar() {
               onChange={(event) => updateSearch(event.target.value)}
               placeholder="Search tasks, notes and tags"
               aria-label="Search everything"
-              className="h-[36px] w-full rounded-full border border-lilac-200 bg-cream pr-8 pl-9 text-xs sm:text-sm text-ink placeholder:text-ink-soft/70 transition focus:border-accent focus:outline-none"
+              className="h-[34px] w-full rounded-[4px] border border-divider bg-lilac-50/75 pr-8 pl-8.5 text-xs sm:text-sm font-sans text-ink placeholder:text-text-faint placeholder:italic transition focus:border-accent focus:bg-cream focus:outline-none"
             />
             {searching && (
               <button
                 type="button"
                 onClick={() => setSearchTerm('')}
                 aria-label="Clear search"
-                className="absolute top-1/2 right-2 grid h-6 w-6 -translate-y-1/2 place-items-center rounded-full text-ink-soft hover:text-ink cursor-pointer"
+                className="absolute top-1/2 right-1.5 grid h-6 w-6 -translate-y-1/2 place-items-center rounded-[3px] text-ink-soft hover:text-ink cursor-pointer"
               >
                 <X size={13} aria-hidden="true" />
               </button>
@@ -97,15 +96,24 @@ export function TopBar() {
           </div>
         </div>
 
-        {/* Right zone: User Profile / Sign In button */}
+        {/* Right zone: Quiet reader/account trigger */}
         <div className="flex items-center gap-2 px-3 md:px-5 shrink-0">
           <button
             type="button"
             onClick={() => setAccountOpen(true)}
-            title={account ? `Account: ${account.name}` : 'Sign in / Account profile'}
-            className="inline-flex items-center gap-1.5 rounded-full border border-lilac-200 bg-cream px-3 py-1.5 text-xs font-title font-medium text-ink hover:bg-lilac-100 transition shadow-none shrink-0 cursor-pointer"
+            title={account ? `Synced as ${account.name}` : 'Sign in with Google to sync'}
+            className="inline-flex items-center gap-2 rounded-[4px] border border-divider bg-lilac-50/70 px-2.5 sm:px-3 py-1.5 text-xs font-sans font-medium text-ink hover:border-dusty-rose hover:bg-paper-2/70 transition shrink-0 cursor-pointer"
           >
-            <User size={13} className="text-accent shrink-0" aria-hidden="true" />
+            {account?.avatar ? (
+              <img
+                src={account.avatar}
+                alt=""
+                referrerPolicy="no-referrer"
+                className="h-4 w-4 rounded-full object-cover shrink-0 border border-divider"
+              />
+            ) : (
+              <User size={13} className="text-accent shrink-0" aria-hidden="true" />
+            )}
             <span className="truncate max-w-[85px] sm:max-w-[120px]">
               {account ? nickname : 'Sign in'}
             </span>

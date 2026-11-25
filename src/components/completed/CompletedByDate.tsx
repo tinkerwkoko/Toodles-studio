@@ -3,7 +3,6 @@ import { groupByDate } from '../../lib/archive';
 import { formatDay } from '../../lib/date';
 import { EmptyState } from '../ui/EmptyState';
 import { CompletedRow } from './CompletedRow';
-import { cx } from '../../lib/cx';
 
 export interface CompletedByDateProps {
   tasks: Task[];
@@ -37,21 +36,22 @@ export function CompletedByDate({
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-8">
       {year.months.map((month) => (
-        <section key={`${year.year}-${month.month}`} className="space-y-3">
-          <h2 className="text-lg text-lilac-700">
-            {month.label}{' '}
-            <span className="text-sm font-semibold text-ink-soft">{year.year}</span>
-            <span className="ml-2 rounded-full bg-lilac-100 px-2 py-0.5 text-xs font-bold text-lilac-700">
+        <section key={`${year.year}-${month.month}`} className="space-y-4">
+          <div className="flex items-baseline gap-2.5 border-b border-divider pb-2">
+            <h2 className="font-display text-2xl font-semibold text-ink">
+              {month.label} <span className="text-ink-soft">{year.year}</span>
+            </h2>
+            <span className="text-xs tabular-nums text-ink-soft">
               {month.days.reduce((sum, day) => sum + day.tasks.length, 0)}
             </span>
-          </h2>
+          </div>
 
           {month.days.map((day) => (
             <div key={day.date} className="space-y-2">
-              <h3 className={cx('text-sm font-bold text-ink-soft')}>{formatDay(day.date)}</h3>
-              <ul className="space-y-2">
+              <h3 className="font-hand text-base text-ink-soft">{formatDay(day.date)}</h3>
+              <ul className="paper-sheet divide-y divide-divider/65 overflow-hidden rounded-[5px]">
                 {day.tasks.map((task) => (
                   <CompletedRow
                     key={task.id}

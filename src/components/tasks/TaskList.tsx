@@ -31,25 +31,27 @@ export function TaskList({
 
   if (!groupByDate) {
     return (
-      <ul className="space-y-2.5">
-        {tasks.map((task) => (
-          <li key={task.id} className="relative">
-            <TaskCard
-              task={task}
-              onOpen={onOpen}
-              showProject={showProject}
-              selected={selectedId === task.id}
-            />
-          </li>
-        ))}
-      </ul>
+      <div className="paper-sheet rounded-[5px] border border-divider/80 overflow-visible">
+        <ul className="divide-y divide-divider">
+          {tasks.map((task) => (
+            <li key={task.id} className="relative">
+              <TaskCard
+                task={task}
+                onOpen={onOpen}
+                showProject={showProject}
+                selected={selectedId === task.id}
+              />
+            </li>
+          ))}
+        </ul>
+      </div>
     );
   }
 
   const groups = groupByDueDate(tasks);
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-7">
       {groups.map((group) => (
         <DateSection
           key={group.date}
@@ -58,18 +60,20 @@ export function TaskList({
           tone={tone}
           action={sectionAction?.(group.date)}
         >
-          <ul className="space-y-2.5">
-            {group.items.map((task) => (
-              <li key={task.id} className="relative">
-                <TaskCard
-                  task={task}
-                  onOpen={onOpen}
-                  showProject={showProject}
-                  selected={selectedId === task.id}
-                />
-              </li>
-            ))}
-          </ul>
+          <div className="paper-sheet rounded-[5px] border border-divider/80 overflow-visible">
+            <ul className="divide-y divide-divider">
+              {group.items.map((task) => (
+                <li key={task.id} className="relative">
+                  <TaskCard
+                    task={task}
+                    onOpen={onOpen}
+                    showProject={showProject}
+                    selected={selectedId === task.id}
+                  />
+                </li>
+              ))}
+            </ul>
+          </div>
         </DateSection>
       ))}
     </div>

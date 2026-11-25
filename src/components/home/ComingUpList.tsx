@@ -10,7 +10,6 @@ export function ComingUpList() {
   const { setDetailTaskId } = useUi();
   const today = todayString();
 
-  // Find next 5 open tasks after today
   const upcomingTasks = data.tasks
     .filter((task) => task.status === 'todo' && !!task.dueDate && task.dueDate > today)
     .sort((a, b) => (a.dueDate ?? '').localeCompare(b.dueDate ?? ''))
@@ -20,7 +19,6 @@ export function ComingUpList() {
     return null;
   }
 
-  // Group by date
   const grouped: Record<string, Task[]> = {};
   upcomingTasks.forEach((task) => {
     const key = task.dueDate!;
@@ -29,28 +27,28 @@ export function ComingUpList() {
   });
 
   return (
-    <div className="space-y-2">
-      <div className="flex items-center justify-between gap-2">
-        <h2 className="font-display text-[18px] text-ink">Coming up</h2>
+    <section className="space-y-3">
+      <div className="flex items-baseline justify-between gap-2 border-b border-divider pb-2">
+        <h2 className="font-display text-2xl font-semibold text-ink">Coming up</h2>
         <Link
           to="/tasks?tab=upcoming"
-          className="text-xs font-title font-medium text-ink-soft hover:text-ink hover:underline"
+          className="text-xs font-sans text-ink-soft hover:text-accent underline underline-offset-4 transition"
         >
           See all
         </Link>
       </div>
 
-      <div className="divide-y divide-divider border-t border-b border-divider">
+      <div className="divide-y divide-divider">
         {Object.entries(grouped).map(([date, tasks]) => (
-          <div key={date} className="py-2">
-            <span className="block font-sans text-xs text-text-faint mb-1">
+          <div key={date} className="py-3 first:pt-1">
+            <span className="block font-hand text-lg text-accent leading-none mb-2">
               {formatDay(date)}
             </span>
             <ul className="space-y-1">
               {tasks.map((task) => (
                 <li
                   key={task.id}
-                  className="flex items-center gap-2.5 py-1 px-1 rounded-[6px] hover:bg-lilac-50/50 transition cursor-pointer"
+                  className="flex items-center gap-3 py-1.5 px-1.5 rounded-[4px] hover:bg-cream/80 transition cursor-pointer"
                   onClick={() => setDetailTaskId(task.id)}
                 >
                   <TaskCheckbox
@@ -58,11 +56,13 @@ export function ComingUpList() {
                     onChange={() => actions.toggleTaskDone(task.id)}
                     label={`Mark ${task.title} as done`}
                   />
-                  <span className="font-title font-medium text-[15px] text-ink flex-1 truncate">
+                  <span className="font-sans text-[15px] text-ink flex-1 truncate">
                     {task.title}
                   </span>
                   {task.dueTime && (
-                    <span className="font-sans text-xs text-text-faint">{task.dueTime}</span>
+                    <span className="font-sans text-xs text-text-faint tabular-nums">
+                      {task.dueTime}
+                    </span>
                   )}
                 </li>
               ))}
@@ -70,6 +70,6 @@ export function ComingUpList() {
           </div>
         ))}
       </div>
-    </div>
+    </section>
   );
 }

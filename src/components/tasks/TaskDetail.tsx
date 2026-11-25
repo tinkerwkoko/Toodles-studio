@@ -2,11 +2,10 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { CalendarDays, Clock, FolderHeart, Repeat, Trash2 } from 'lucide-react';
 import type { Task } from '../../types';
-import { PRIORITY_STYLES, accent } from '../../lib/color';
+import { PRIORITY_STYLES } from '../../lib/color';
 import { formatDay, formatEstimate, formatTimestamp } from '../../lib/date';
 import { REPEAT_LABELS } from '../../lib/task';
 import { Button } from '../ui/Button';
-import { Chip } from '../ui/Chip';
 import { ConfirmDialog } from '../ui/ConfirmDialog';
 import { TaskCheckbox } from '../ui/TaskCheckbox';
 import { SubtaskChecklist } from './SubtaskChecklist';
@@ -21,18 +20,18 @@ export interface TaskDetailProps {
   onDeleted?: () => void;
 }
 
-/** Everything about one task: status, subtasks and editable fields. */
+/** Everything about one task: clean hairline sections without nested boxes. */
 export function TaskDetail({ task, onDeleted }: TaskDetailProps) {
   const { data, actions } = useToodles();
   const { pushToast, celebrate } = useUi();
   const [confirmDelete, setConfirmDelete] = useState(false);
 
   const project = data.projects.find((item) => item.id === task.projectId);
-  const tone = accent(task.color);
   const done = task.status === 'done';
 
   return (
-    <div className="space-y-5">
+    <div className="space-y-6">
+      {/* Entry heading & quiet metadata */}
       <div className="flex items-start gap-3">
         <TaskCheckbox
           checked={done}
@@ -50,76 +49,71 @@ export function TaskDetail({ task, onDeleted }: TaskDetailProps) {
         <div className="min-w-0 flex-1">
           <h2
             className={cx(
-              'font-title text-2xl font-medium leading-snug wrap-break-word',
+              'font-display text-2xl sm:text-[1.65rem] font-semibold leading-tight wrap-break-word',
               done ? 'text-ink-soft line-through' : 'text-ink',
             )}
           >
             {task.title}
           </h2>
 
-          <div className="mt-2 flex flex-wrap items-center gap-1.5">
-            <Chip tone={cx(tone.soft, tone.border, tone.text)}>
-              {done ? 'Completed' : 'Still open'}
-            </Chip>
+          <div className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs font-sans text-ink-soft tabular-nums">
+            <span className={done ? 'text-mint-700 font-medium' : 'text-accent font-medium'}>
+              {done ? 'Completed' : 'Open'}
+            </span>
             {project && (
-              <Chip tone={cx(tone.soft, tone.border, tone.text)}>
-                <FolderHeart size={13} aria-hidden="true" />
-                {project.emoji} {project.name}
-              </Chip>
+              <Link
+                to={`/projects/${project.id}`}
+                className="inline-flex items-center gap-1 hover:text-accent underline underline-offset-2"
+              >
+                <FolderHeart size={12} aria-hidden="true" />
+                <span>{project.name}</span>
+              </Link>
             )}
             {task.dueDate && (
-              <Chip>
-                <CalendarDays size={13} aria-hidden="true" />
-                {formatDay(task.dueDate, { withYear: 'auto' })}
-              </Chip>
+              <span className="inline-flex items-center gap-1">
+                <CalendarDays size={12} aria-hidden="true" />
+                <span>{formatDay(task.dueDate, { withYear: 'auto' })}</span>
+              </span>
             )}
             {task.estimate ? (
-              <Chip>
-                <Clock size={13} aria-hidden="true" />
-                {formatEstimate(task.estimate)}
-              </Chip>
+              <span className="inline-flex items-center gap-1">
+                <Clock size={12} aria-hidden="true" />
+                <span>{formatEstimate(task.estimate)}</span>
+              </span>
             ) : null}
             {task.priority !== 'none' && (
-              <Chip tone={PRIORITY_STYLES[task.priority].chip}>
+              <span className={cx('font-medium', PRIORITY_STYLES[task.priority].icon)}>
                 {PRIORITY_STYLES[task.priority].label} priority
-              </Chip>
+              </span>
             )}
             {task.repeat !== 'none' && (
-              <Chip>
-                <Repeat size={13} aria-hidden="true" />
-                {REPEAT_LABELS[task.repeat]}
-              </Chip>
+              <span className="inline-flex items-center gap-1">
+                <Repeat size={12} aria-hidden="true" />
+                <span>{REPEAT_LABELS[task.repeat]}</span>
+              </span>
             )}
           </div>
 
-          <p className="mt-2 text-xs text-ink-soft">
+          <p className="mt-1.5 text-[11px] font-sans italic text-text-faint">
             Added {formatTimestamp(task.createdAt)}
             {task.completedAt ? ` · Completed ${formatTimestamp(task.completedAt)}` : ''}
           </p>
         </div>
       </div>
 
-      <div className="rounded-3xl border border-lilac-200 bg-lilac-50/70 p-4">
+      {/* Subtasks — separated by hairline rule, no nested rounded card */}
+      <div className="border-t border-divider pt-5">
         <SubtaskChecklist task={task} />
       </div>
 
-      {project && (
-        <Link
-          to={`/projects/${project.id}`}
-          className="inline-flex items-center gap-2 text-sm font-bold text-lilac-700 hover:underline"
-        >
-          <FolderHeart size={16} aria-hidden="true" />
-          Open {project.name}
-        </Link>
-      )}
-
-      <section className="rounded-3xl border border-lilac-200 bg-cream p-4">
-        <h3 className="mb-3 text-base">Edit details</h3>
+      {/* Edit details — clean hairline section */}
+      <section className="border-t border-divider pt-5">
+        <h3 className="mb-3.5 font-display text-xl font-semibold text-ink">Edit details</h3>
         <TaskForm
           key={task.id}
           initial={taskToFormValues(task)}
           submitLabel="Save changes"
-          hint="Changes are saved into this browser only."
+          hint="Changes are saved automatically to your workspace."
           onSubmit={(values) => {
             actions.updateTask(task.id, formValuesToTaskPatch(values, task));
             pushToast('Changes saved', 'success');
@@ -127,12 +121,14 @@ export function TaskDetail({ task, onDeleted }: TaskDetailProps) {
         />
       </section>
 
-      <div className="flex flex-wrap items-center justify-between gap-2 rounded-3xl border border-dashed border-rose-200 bg-rose-100/40 p-3">
-        <p className="text-sm text-ink-soft">Done with this one for good?</p>
+      {/* Quiet delete bar */}
+      <div className="flex flex-wrap items-center justify-between gap-2 border-t border-divider pt-4">
+        <p className="text-xs font-sans italic text-ink-soft">Done with this one for good?</p>
         <Button
           variant="ghost"
+          size="sm"
           className="text-rose-700 hover:bg-rose-100"
-          icon={<Trash2 size={16} aria-hidden="true" />}
+          icon={<Trash2 size={14} aria-hidden="true" />}
           onClick={() => setConfirmDelete(true)}
         >
           Delete task

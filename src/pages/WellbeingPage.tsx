@@ -1,4 +1,5 @@
 import { useMemo, useState } from 'react';
+import { Plus } from 'lucide-react';
 import type { DateString, Habit, MoodLevel } from '../types';
 import { HabitCard } from '../components/habits/HabitCard';
 import { HabitForm } from '../components/habits/HabitForm';
@@ -10,7 +11,7 @@ import { Dialog } from '../components/ui/Dialog';
 import { EmptyState } from '../components/ui/EmptyState';
 import { PageHeader } from '../components/ui/PageHeader';
 import { Textarea } from '../components/ui/Field';
-import { todayString } from '../lib/date';
+import { formatLongDay, todayString } from '../lib/date';
 import { useToodles } from '../store/useToodles';
 import { useUi } from '../store/useUi';
 
@@ -38,7 +39,7 @@ export function WellbeingPage() {
   function logMood(mood: MoodLevel): void {
     actions.logMood(selectedDate, mood, selectedLog?.note ?? note);
     setNote('');
-    pushToast('Mood logged 🌤️', 'success');
+    pushToast('Mood logged', 'success');
   }
 
   function stepMonth(delta: number): void {
@@ -49,66 +50,78 @@ export function WellbeingPage() {
   }
 
   const moodPanel = (
-    <Card padding="lg" className="space-y-4">
-      <h2 className="text-lg">Mood</h2>
-      <p className="text-sm text-ink-soft">
-        {selectedDate === today ? 'How is today feeling?' : `How was ${selectedDate}?`}
-      </p>
+    <Card padding="lg" className="space-y-5">
+      <div className="border-b border-divider pb-3">
+        <p className="font-hand text-[1.05rem] leading-none text-ink-soft">
+          {selectedDate === today ? 'Today’s reflection' : formatLongDay(selectedDate)}
+        </p>
+        <h2 className="mt-1 font-display text-2xl font-semibold text-ink">Mood Almanac</h2>
+        <p className="mt-0.5 text-sm text-ink-soft">
+          {selectedDate === today ? 'How is today feeling?' : `How was ${selectedDate}?`}
+        </p>
+      </div>
 
       <MoodPicker value={selectedLog?.mood ?? null} onChange={logMood} />
 
-      <Textarea
-        rows={2}
-        value={selectedLog ? selectedLog.note : note}
-        onChange={(event) => setNote(event.target.value)}
-        placeholder="A short note (optional)"
-        aria-label="Note for this day"
-      />
+      <div className="space-y-2.5">
+        <Textarea
+          rows={2}
+          value={selectedLog ? selectedLog.note : note}
+          onChange={(event) => setNote(event.target.value)}
+          placeholder="A short margin note (optional)"
+          aria-label="Note for this day"
+        />
 
-      <div className="flex flex-wrap gap-2">
-        <Button
-          size="sm"
-          disabled={!selectedLog || note.trim().length === 0}
-          onClick={() => {
-            if (!selectedLog) return;
-            actions.logMood(selectedDate, selectedLog.mood, note);
-            setNote('');
-            pushToast('Note saved');
-          }}
-        >
-          Save note
-        </Button>
-        {selectedLog && (
+        <div className="flex flex-wrap items-center gap-2">
           <Button
             size="sm"
-            variant="ghost"
+            disabled={!selectedLog || note.trim().length === 0}
             onClick={() => {
-              actions.clearMood(selectedDate);
+              if (!selectedLog) return;
+              actions.logMood(selectedDate, selectedLog.mood, note);
               setNote('');
-              pushToast('Mood removed');
+              pushToast('Note saved');
             }}
           >
-            Clear this day
+            Save note
           </Button>
-        )}
+          {selectedLog && (
+            <Button
+              size="sm"
+              variant="ghost"
+              onClick={() => {
+                actions.clearMood(selectedDate);
+                setNote('');
+                pushToast('Mood removed');
+              }}
+            >
+              Clear this day
+            </Button>
+          )}
+        </div>
       </div>
 
-      <MoodCalendar
-        year={cursor.year}
-        month={cursor.month}
-        logs={data.moods}
-        selected={selectedDate}
-        onSelect={setSelectedDate}
-        onStep={stepMonth}
-      />
+      <div className="border-t border-divider pt-5">
+        <MoodCalendar
+          year={cursor.year}
+          month={cursor.month}
+          logs={data.moods}
+          selected={selectedDate}
+          onSelect={setSelectedDate}
+          onStep={stepMonth}
+        />
+      </div>
     </Card>
   );
 
   const habitPanel = (
-    <Card padding="lg" className="space-y-4">
-      <div className="flex items-center justify-between gap-2">
-        <h2 className="text-lg">Habits</h2>
-        <Button size="sm" onClick={() => setCreating(true)}>
+    <Card variant="aged" padding="lg" className="space-y-4">
+      <div className="flex items-end justify-between gap-2 border-b border-divider pb-3">
+        <div>
+          <p className="font-hand text-[1.05rem] leading-none text-ink-soft">Daily practice</p>
+          <h2 className="mt-1 font-display text-2xl font-semibold text-ink">Habits</h2>
+        </div>
+        <Button size="sm" icon={<Plus size={14} aria-hidden="true" />} onClick={() => setCreating(true)}>
           New habit
         </Button>
       </div>
@@ -123,7 +136,7 @@ export function WellbeingPage() {
           onAction={() => setCreating(true)}
         />
       ) : (
-        <ul className="space-y-3">
+        <ul className="divide-y divide-divider/75">
           {habits.map((habit) => (
             <HabitCard
               key={habit.id}
@@ -139,14 +152,14 @@ export function WellbeingPage() {
   );
 
   return (
-    <div className="pb-4">
+    <div className="mx-auto max-w-5xl pb-6">
       <PageHeader
         title="Mood & habits"
         subtitle="Gentle, private notes to yourself. No scores, no pressure."
         pose="curious"
       />
 
-      <div className="grid gap-4 lg:grid-cols-2 lg:items-start">
+      <div className="grid gap-6 lg:grid-cols-2 lg:items-start">
         {moodPanel}
         {habitPanel}
       </div>
@@ -158,7 +171,7 @@ export function WellbeingPage() {
           onSubmit={(values) => {
             actions.addHabit(values);
             setCreating(false);
-            pushToast(`“${values.name}” is on your list 🌱`, 'success');
+            pushToast(`“${values.name}” is on your list`, 'success');
           }}
         />
       </Dialog>
@@ -189,4 +202,3 @@ export function WellbeingPage() {
     </div>
   );
 }
-

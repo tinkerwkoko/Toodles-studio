@@ -24,8 +24,8 @@ export function CompletedRow({ task, project, onOpen }: CompletedRowProps) {
   const tone = accent(task.color);
 
   return (
-    <li className="flex items-center gap-3 rounded-2xl border border-lilac-200 bg-cream px-3 py-2.5">
-      <span className={cx('h-2.5 w-2.5 shrink-0 rounded-full', tone.mid)} aria-hidden="true" />
+    <li className="flex items-center gap-3 px-4 py-3 transition hover:bg-lilac-100/35">
+      <span className={cx('h-2 w-2 shrink-0 rounded-[2px]', tone.mid)} aria-hidden="true" />
 
       <button
         type="button"
@@ -33,19 +33,19 @@ export function CompletedRow({ task, project, onOpen }: CompletedRowProps) {
         className="min-w-0 flex-1 text-left"
         aria-label={`Open ${task.title}`}
       >
-        <span className="block truncate text-[0.95rem] text-ink-soft line-through">
+        <span className="block truncate text-[0.94rem] text-ink-soft line-through">
           {task.title}
         </span>
-        <span className="mt-0.5 flex flex-wrap items-center gap-x-2 gap-y-0.5 text-xs text-ink-soft">
-          {date && <span>Finished {formatDay(date)}</span>}
+        <span className="mt-0.5 flex flex-wrap items-center gap-x-2.5 gap-y-0.5 text-xs text-ink-soft">
+          {date && <span className="tabular-nums">Finished {formatDay(date)}</span>}
           {project && (
             <span className="truncate">
-              {project.emoji} {project.name}
+              · {project.emoji} {project.name}
             </span>
           )}
           {progress.total > 0 && (
-            <span>
-              {progress.done} / {progress.total} steps
+            <span className="tabular-nums">
+              · {progress.done} / {progress.total} steps
             </span>
           )}
         </span>
@@ -57,7 +57,7 @@ export function CompletedRow({ task, project, onOpen }: CompletedRowProps) {
         items={[
           {
             label: 'Reopen task',
-            icon: <RotateCcw size={16} aria-hidden="true" />,
+            icon: <RotateCcw size={15} aria-hidden="true" />,
             onSelect: () => {
               actions.setTaskStatus(task.id, 'todo');
               celebrate(task.id);
@@ -66,7 +66,7 @@ export function CompletedRow({ task, project, onOpen }: CompletedRowProps) {
           },
           {
             label: 'Delete task',
-            icon: <Trash2 size={16} aria-hidden="true" />,
+            icon: <Trash2 size={15} aria-hidden="true" />,
             danger: true,
             onSelect: () => {
               actions.deleteTask(task.id);
@@ -75,7 +75,7 @@ export function CompletedRow({ task, project, onOpen }: CompletedRowProps) {
           },
         ]}
       >
-        <MoreVertical size={17} aria-hidden="true" />
+        <MoreVertical size={16} aria-hidden="true" />
       </Menu>
     </li>
   );

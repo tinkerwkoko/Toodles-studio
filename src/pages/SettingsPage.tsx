@@ -1,5 +1,17 @@
 import { useRef, useState } from 'react';
-import { Bell, Check, Download, Monitor, Moon, Shield, Sun, Trash2, Upload, User } from 'lucide-react';
+import {
+  Bell,
+  Check,
+  Cloud,
+  Download,
+  Monitor,
+  Moon,
+  Shield,
+  Sun,
+  Trash2,
+  Upload,
+  User,
+} from 'lucide-react';
 import { Cat } from '../components/Cat';
 import { Button } from '../components/ui/Button';
 import { Card } from '../components/ui/Card';
@@ -8,6 +20,7 @@ import { Input } from '../components/ui/Field';
 import { PageHeader } from '../components/ui/PageHeader';
 import { AccountDialog } from '../components/auth/AccountDialog';
 import { useNotificationPermission } from '../hooks/useNotificationPermission';
+import { cx } from '../lib/cx';
 import { useToodles } from '../store/useToodles';
 import { useUi } from '../store/useUi';
 import type { ThemeMode } from '../types';
@@ -16,7 +29,7 @@ type ImportState = { tone: 'success' | 'error'; message: string } | null;
 
 /** `/settings`: account, profile nickname, theme, data export, import, erase, and reminder status. */
 export function SettingsPage() {
-  const { data, actions, storageBlocked } = useToodles();
+  const { data, actions, isCloudConnected, cloudSyncing, storageBlocked } = useToodles();
   const { pushToast } = useUi();
   const { permission, request } = useNotificationPermission();
   const fileInput = useRef<HTMLInputElement | null>(null);
@@ -24,24 +37,21 @@ export function SettingsPage() {
   const [message, setMessage] = useState<ImportState>(null);
   const [accountDialogOpen, setAccountDialogOpen] = useState(false);
 
-  const account = data.settings.account;
-  const [nicknameInput, setNicknameInput] = useState(account?.name || data.settings.displayName || '');
+  const account = isCloudConnected ? data.settings.account : null;
+  const [nicknameInput, setNicknameInput] = useState(
+    account?.name || data.settings.displayName || '',
+  );
   const [nicknameSaved, setNicknameSaved] = useState(false);
 
   function handleSaveNickname() {
     const trimmed = nicknameInput.trim();
-    actions.updateSettings({ displayName: trimmed });
-    if (account) {
-      actions.updateSettings({
-        account: {
-          ...account,
-          name: trimmed,
-        },
-      });
-    }
+    actions.updateSettings({
+      displayName: trimmed,
+      ...(account ? { account: { ...account, name: trimmed || account.name } } : {}),
+    });
     setNicknameSaved(true);
     setTimeout(() => setNicknameSaved(false), 2000);
-    pushToast('Nickname saved ✨', 'success');
+    pushToast('Nickname saved', 'success');
   }
 
   function handleThemeChange(theme: ThemeMode) {
@@ -85,24 +95,27 @@ export function SettingsPage() {
   }
 
   return (
-    <div className="pb-4 space-y-6">
+    <div className="mx-auto max-w-4xl space-y-6 pb-6">
       <PageHeader
         title="Settings"
-        subtitle="Customize your workspace, account profile, appearance, reminders, and data."
+        subtitle="Customize your workspace, Google sync, reading light, reminders, and archive."
         pose="curious"
       />
 
-      <div className="grid gap-4 lg:grid-cols-2 lg:items-start">
-        {/* Account & Profile Card */}
+      <div className="grid gap-5 lg:grid-cols-2 lg:items-start">
+        {/* Account & Cloud Sync */}
         <Card padding="lg" className="space-y-4">
-          <div className="flex items-center justify-between">
+          <div className="flex items-center justify-between border-b border-divider pb-2.5">
             <div className="flex items-center gap-2">
-              <User size={18} className="text-accent" />
-              <h2 className="text-lg">Account Profile</h2>
+              <Cloud size={17} className="text-lilac-700" aria-hidden="true" />
+              <h2 className="font-display text-xl font-semibold text-ink">
+                Account &amp; Cloud Sync
+              </h2>
             </div>
             {account && (
-              <span className="rounded-full bg-mint-100 px-2.5 py-0.5 text-xs font-title font-medium text-mint-700 flex items-center gap-1">
-                <span>Active</span>
+              <span className="inline-flex items-center gap-1 rounded-[3px] border border-mint-200 bg-mint-100 px-2 py-0.5 text-[11px] font-medium text-mint-700">
+                <Cloud size={11} aria-hidden="true" />
+                <span>{cloudSyncing ? 'Syncing…' : 'Synced'}</span>
               </span>
             )}
           </div>
@@ -110,15 +123,18 @@ export function SettingsPage() {
           {account ? (
             <div className="space-y-3">
               <p className="text-sm text-ink-soft">
-                Signed in as <strong className="text-ink">{account.name}</strong> ({account.email}). Your personal workspace is active and securely saved.
+                Signed in with Google as <strong className="text-ink">{account.name}</strong> (
+                {account.email}).
               </p>
-              <div className="rounded-xl border border-divider bg-lilac-100/50 p-2.5 text-xs text-ink-soft space-y-1">
-                <p className="font-semibold text-ink">Device sync & privacy</p>
-                <p>
-                  Toodles stores all your tasks and projects in this browser on this device. Because there is no tracking or cloud database, data does not sync across devices automatically. To move or backup your data, use <strong>Export JSON</strong> below.
+              <div className="space-y-1 rounded-[4px] border border-lilac-200/80 bg-paper-2/65 p-3 text-xs text-ink-soft">
+                <p className="font-semibold text-ink">Real-time cross-device sync active</p>
+                <p className="leading-relaxed">
+                  Your tasks, projects, kanban boards, diary pages, moods, habits, and focus
+                  sessions persist in your private cloud database and stay in sync automatically
+                  across all your devices.
                 </p>
               </div>
-              <div className="flex items-center gap-2 pt-1">
+              <div className="pt-1">
                 <Button
                   size="sm"
                   variant="primary"
@@ -132,16 +148,17 @@ export function SettingsPage() {
           ) : (
             <div className="space-y-3">
               <p className="text-sm text-ink-soft">
-                Sign in or create an account for a personalized experience, or continue using Toodles locally as a guest.
+                You are currently using guest mode on this device only. Sign in with Google to sync
+                your workspace automatically across phone, tablet, and desktop.
               </p>
-              <div className="flex items-center gap-2 pt-1">
+              <div className="pt-1">
                 <Button
                   size="sm"
                   variant="primary"
                   onClick={() => setAccountDialogOpen(true)}
-                  icon={<User size={14} />}
+                  icon={<Cloud size={14} />}
                 >
-                  Sign in or create account
+                  Sign in with Google
                 </Button>
               </div>
             </div>
@@ -150,12 +167,12 @@ export function SettingsPage() {
 
         {/* Profile & Nickname */}
         <Card padding="lg" className="space-y-4">
-          <div className="flex items-center gap-2">
-            <User size={18} className="text-accent" />
-            <h2 className="text-lg">Your nickname</h2>
+          <div className="flex items-center gap-2 border-b border-divider pb-2.5">
+            <User size={17} className="text-lilac-700" aria-hidden="true" />
+            <h2 className="font-display text-xl font-semibold text-ink">Your nickname</h2>
           </div>
           <p className="text-sm text-ink-soft">
-            How Toodles greets you on your dashboard, header, and workspace.
+            How Toodles addresses you on your desk header and opening page.
           </p>
 
           <div className="flex items-center gap-2">
@@ -174,7 +191,7 @@ export function SettingsPage() {
             <Button
               onClick={handleSaveNickname}
               variant={nicknameSaved ? 'primary' : 'soft'}
-              icon={nicknameSaved ? <Check size={16} /> : undefined}
+              icon={nicknameSaved ? <Check size={15} /> : undefined}
             >
               {nicknameSaved ? 'Saved' : 'Save'}
             </Button>
@@ -183,69 +200,64 @@ export function SettingsPage() {
 
         {/* Theme & Appearance */}
         <Card padding="lg" className="space-y-4">
-          <h2 className="text-lg">Appearance</h2>
+          <div className="border-b border-divider pb-2.5">
+            <h2 className="font-display text-xl font-semibold text-ink">Reading light</h2>
+          </div>
           <p className="text-sm text-ink-soft">
-            Choose your mood: candlelit dark mode, soft daytime cream, or follow your system.
+            Choose warm daylight parchment, an old library at night, or follow your system.
           </p>
           <div className="grid grid-cols-3 gap-2">
-            <button
-              type="button"
-              onClick={() => handleThemeChange('system')}
-              className={`flex flex-col items-center gap-2 rounded-2xl border p-3 text-xs font-title transition cursor-pointer ${
-                data.settings.theme === 'system'
-                  ? 'border-accent bg-lilac-200 text-ink shadow-sm'
-                  : 'border-lilac-200 bg-cream text-ink-soft hover:bg-lilac-50'
-              }`}
-            >
-              <Monitor size={18} />
-              <span>System</span>
-            </button>
-            <button
-              type="button"
-              onClick={() => handleThemeChange('light')}
-              className={`flex flex-col items-center gap-2 rounded-2xl border p-3 text-xs font-title transition cursor-pointer ${
-                data.settings.theme === 'light'
-                  ? 'border-accent bg-lilac-200 text-ink shadow-sm'
-                  : 'border-lilac-200 bg-cream text-ink-soft hover:bg-lilac-50'
-              }`}
-            >
-              <Sun size={18} />
-              <span>Light</span>
-            </button>
-            <button
-              type="button"
-              onClick={() => handleThemeChange('dark')}
-              className={`flex flex-col items-center gap-2 rounded-2xl border p-3 text-xs font-title transition cursor-pointer ${
-                data.settings.theme === 'dark'
-                  ? 'border-accent bg-lilac-200 text-ink shadow-sm'
-                  : 'border-lilac-200 bg-cream text-ink-soft hover:bg-lilac-50'
-              }`}
-            >
-              <Moon size={18} />
-              <span>Dark</span>
-            </button>
+            {(
+              [
+                ['system', 'System', Monitor],
+                ['light', 'Parchment', Sun],
+                ['dark', 'Night Library', Moon],
+              ] as const
+            ).map(([value, label, Icon]) => {
+              const active = data.settings.theme === value;
+              return (
+                <button
+                  key={value}
+                  type="button"
+                  onClick={() => handleThemeChange(value)}
+                  className={cx(
+                    'flex cursor-pointer flex-col items-center gap-1.5 rounded-[4px] border p-3 text-xs font-medium transition',
+                    active
+                      ? 'border-lilac-300 bg-lilac-300 text-primary-ink'
+                      : 'border-lilac-200 bg-cream text-ink-soft hover:bg-lilac-100/60 hover:text-ink',
+                  )}
+                >
+                  <Icon size={17} aria-hidden="true" />
+                  <span>{label}</span>
+                </button>
+              );
+            })}
           </div>
         </Card>
 
         {/* Reminders */}
         <Card padding="lg" className="space-y-3">
-          <h2 className="text-lg">Reminders</h2>
+          <div className="border-b border-divider pb-2.5">
+            <h2 className="font-display text-xl font-semibold text-ink">Reminders</h2>
+          </div>
           <p className="text-sm text-ink-soft">
             Receive gentle notifications and reminders when tasks are scheduled.
           </p>
-          <p className="text-sm font-bold text-ink">Status: {permissionLabel(permission)}</p>
+          <p className="text-sm font-medium text-ink">
+            Status: <span className="italic text-ink-soft">{permissionLabel(permission)}</span>
+          </p>
           {permission !== 'granted' && permission !== 'unsupported' && (
             <Button
               variant="soft"
               onClick={() => {
                 void request().then((result) => {
                   pushToast(
-                    result === 'granted' ? 'Reminders are on 🔔' : 'Reminders stay off',
+                    result === 'granted' ? 'Reminders are on' : 'Reminders stay off',
                     result === 'granted' ? 'success' : 'default',
                   );
                 });
               }}
-              icon={<Bell size={17} aria-hidden="true" />}
+              icon={<Bell size={15} aria-hidden="true" />}
             >
               Allow notifications
             </Button>
@@ -254,22 +266,24 @@ export function SettingsPage() {
 
         {/* Data Management */}
         <Card padding="lg" className="space-y-3">
-          <h2 className="text-lg">Workspace data</h2>
-          <p className="text-sm text-ink-soft">{counts.join(' · ')}</p>
+          <div className="border-b border-divider pb-2.5">
+            <h2 className="font-display text-xl font-semibold text-ink">Workspace archive</h2>
+          </div>
+          <p className="text-xs tabular-nums text-ink-soft">{counts.join(' · ')}</p>
           {storageBlocked && (
-            <p className="rounded-2xl bg-rose-100 px-3 py-2 text-sm text-ink">
+            <p className="rounded-[4px] border border-rose-200 bg-rose-100 px-3 py-2 text-sm text-rose-700">
               Storage permissions are currently restricted.
             </p>
           )}
 
           <div className="flex flex-wrap gap-2 pt-1">
-            <Button onClick={download} icon={<Download size={17} aria-hidden="true" />}>
+            <Button onClick={download} icon={<Download size={15} aria-hidden="true" />}>
               Export as JSON
             </Button>
             <Button
               variant="soft"
               onClick={() => fileInput.current?.click()}
-              icon={<Upload size={17} aria-hidden="true" />}
+              icon={<Upload size={15} aria-hidden="true" />}
             >
               Import a backup
             </Button>
@@ -292,47 +306,48 @@ export function SettingsPage() {
               role="status"
               className={
                 message.tone === 'success'
-                  ? 'rounded-2xl bg-mint-100 px-3 py-2 text-sm text-ink'
-                  : 'rounded-2xl bg-rose-100 px-3 py-2 text-sm text-ink'
+                  ? 'rounded-[4px] border border-mint-200 bg-mint-100 px-3 py-2 text-sm text-mint-700'
+                  : 'rounded-[4px] border border-rose-200 bg-rose-100 px-3 py-2 text-sm text-rose-700'
               }
             >
               {message.message}
             </p>
           )}
 
-          <p className="text-xs text-ink-soft">
+          <p className="text-xs italic text-ink-soft">
             Importing updates your current workspace, so export a backup first if you want to keep
             it.
           </p>
         </Card>
 
-        {/* Privacy Card */}
-        <Card padding="lg" className="space-y-3">
-          <div className="flex items-center gap-2">
-            <Shield size={18} className="text-accent" />
-            <h2 className="text-lg">Privacy policy</h2>
+        {/* Privacy Note */}
+        <Card variant="aged" padding="lg" className="space-y-3">
+          <div className="flex items-center gap-2 border-b border-divider pb-2.5">
+            <Shield size={17} className="text-lilac-700" aria-hidden="true" />
+            <h2 className="font-display text-xl font-semibold text-ink">Privacy pledge</h2>
           </div>
           <div className="flex items-start gap-4">
-            <Cat pose="curious" size={64} animated={false} className="shrink-0" />
-            <p className="text-sm text-ink-soft leading-relaxed">
-              We believe your thoughts, tasks, and journals are strictly your own. We do not share users&apos; data,
-              sell your information, or track your personal activity. Your workspace belongs completely to you.
+            <Cat pose="curious" size={60} animated={false} className="shrink-0" />
+            <p className="text-sm leading-relaxed text-ink-soft">
+              We believe your thoughts, tasks, and journals are strictly your own. We do not share
+              users&apos; data, sell your information, or track your personal activity. Your
+              workspace belongs completely to you.
             </p>
           </div>
         </Card>
       </div>
 
-      {/* Erase All Data */}
-      <Card padding="lg" className="space-y-3 border-rose-200">
-        <h2 className="text-lg text-ink">Reset workspace</h2>
+      {/* Reset Workspace */}
+      <Card padding="lg" className="space-y-3 border-rose-300/70">
+        <h2 className="font-display text-xl font-semibold text-ink">Reset workspace</h2>
         <p className="text-sm text-ink-soft">
-          This permanently resets your workspace and removes all tasks, projects, diary entries, moods, and habits.
-          It cannot be undone.
+          This permanently resets your workspace and removes all tasks, projects, diary entries,
+          moods, and habits. It cannot be undone.
         </p>
         <Button
           variant="danger"
           onClick={() => setConfirmErase(true)}
-          icon={<Trash2 size={17} aria-hidden="true" />}
+          icon={<Trash2 size={15} aria-hidden="true" />}
         >
           Erase all data
         </Button>
@@ -345,8 +360,8 @@ export function SettingsPage() {
         confirmLabel="Erase everything"
         body={
           <p>
-            You are about to delete {counts.join(', ')}. Export a backup first if
-            you might want any of it later.
+            You are about to delete {counts.join(', ')}. Export a backup first if you might want any
+            of it later.
           </p>
         }
         onCancel={() => setConfirmErase(false)}

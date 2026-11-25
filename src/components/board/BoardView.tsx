@@ -29,7 +29,7 @@ export interface BoardViewProps {
 }
 
 /**
- * Kanban board. Phones get horizontal scroll with snap plus a "Move to…" menu on
+ * Kanban index-card board. Phones get horizontal scroll with snap plus a "Move to…" menu on
  * every card; from tablet width up cards can also be dragged between columns.
  */
 export function BoardView({ project, tasks, columns, onOpenTask, onAddTask }: BoardViewProps) {
@@ -37,7 +37,6 @@ export function BoardView({ project, tasks, columns, onOpenTask, onAddTask }: Bo
   const [activeId, setActiveId] = useState<string | null>(null);
   const [adding, setAdding] = useState(false);
 
-  // Dragging needs a mouse-ish pointer; touch boards rely on the card menu.
   const dragEnabled = useMediaQuery('(min-width: 768px)');
 
   const sensors = useSensors(
@@ -68,7 +67,6 @@ export function BoardView({ project, tasks, columns, onOpenTask, onAddTask }: Bo
         : null;
     if (!targetColumnId) return;
 
-    // Dropping on a card inserts above it; dropping on the column puts it on top.
     const beforeTaskId =
       overTask && overTask.boardColumnId === targetColumnId ? overTask.id : null;
     actions.placeTaskOnBoard(taskId, targetColumnId, beforeTaskId);
@@ -98,7 +96,7 @@ export function BoardView({ project, tasks, columns, onOpenTask, onAddTask }: Bo
       onDragEnd={handleDragEnd}
       onDragCancel={() => setActiveId(null)}
     >
-      <div className="no-scrollbar -mx-1 flex snap-x snap-mandatory gap-3 overflow-x-auto px-1 pb-2 md:snap-none">
+      <div className="no-scrollbar -mx-1 flex snap-x snap-mandatory gap-4 overflow-x-auto px-1 pb-3 md:snap-none">
         {columns.map((column, index) => (
           <BoardColumnView
             key={column.id}
@@ -118,12 +116,12 @@ export function BoardView({ project, tasks, columns, onOpenTask, onAddTask }: Bo
             variant="outline"
             block
             onClick={() => setAdding(true)}
-            icon={<Plus size={17} aria-hidden="true" />}
+            icon={<Plus size={15} aria-hidden="true" />}
           >
             Add a column
           </Button>
           {!dragEnabled && (
-            <p className="mt-2 px-1 text-xs text-ink-soft">
+            <p className="mt-2 px-1 text-xs font-sans italic text-ink-soft">
               Swipe sideways to see every column. Use “Move to…” on a card to change its column.
             </p>
           )}
@@ -132,7 +130,7 @@ export function BoardView({ project, tasks, columns, onOpenTask, onAddTask }: Bo
 
       <DragOverlay>
         {activeTask ? (
-          <p className="rotate-2 rounded-2xl border-[1.5px] border-lilac-200 bg-cream px-4 py-3 font-title font-medium shadow-lift">
+          <p className="rotate-1 rounded-[4px] border border-lilac-200 bg-cream px-4 py-3 font-sans text-sm font-medium text-ink shadow-lift">
             {activeTask.title}
           </p>
         ) : null}

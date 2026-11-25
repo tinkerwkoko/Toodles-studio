@@ -34,7 +34,6 @@ export function ColumnDialog({
   const [name, setName] = useState(initialName);
   const [color, setColor] = useState<AccentColor>(initialColor);
 
-  // Reset the fields each time the dialog is opened.
   useEffect(() => {
     if (!open) return;
     setName(initialName);
@@ -50,7 +49,7 @@ export function ColumnDialog({
       title={title}
       footer={
         <div className="flex flex-col-reverse gap-2 sm:flex-row sm:justify-end">
-          <Button variant="outline" onClick={onClose}>
+          <Button variant="ghost" onClick={onClose}>
             Never mind
           </Button>
           <Button disabled={!canSubmit} onClick={() => onSave({ name: name.trim(), color })}>
@@ -71,19 +70,22 @@ export function ColumnDialog({
         </Field>
 
         <fieldset className="space-y-2">
-          <legend className="text-sm font-bold text-lilac-700">Column colour</legend>
+          <legend className="text-[13px] font-sans font-medium text-ink">Ink colour</legend>
           <div className="flex flex-wrap gap-2">
             {ACCENT_KEYS.map((key) => (
               <button
                 key={key}
                 type="button"
+                title={ACCENT_LABELS[key]}
                 aria-label={ACCENT_LABELS[key]}
                 aria-pressed={color === key}
                 onClick={() => setColor(key)}
                 className={cx(
-                  'h-10 w-10 rounded-full border-2 transition',
+                  'h-8 w-8 rounded-full border-2 transition cursor-pointer',
                   accent(key).mid,
-                  color === key ? 'scale-105 border-lilac-700' : 'border-transparent hover:scale-105',
+                  color === key
+                    ? 'scale-110 border-ink ring-2 ring-paper-2'
+                    : 'border-transparent opacity-80 hover:opacity-100 hover:scale-105',
                 )}
               />
             ))}

@@ -14,12 +14,12 @@ export function TodayHabitsCard() {
   const habits = data.habits.filter((h) => !h.archived).slice(0, 3);
 
   return (
-    <Card padding="md" className="space-y-3">
-      <div className="flex items-center justify-between gap-2 border-b border-divider pb-2">
-        <h2 className="font-display text-[18px] text-ink">Today's habits</h2>
+    <Card padding="md" className="space-y-3.5">
+      <div className="flex items-baseline justify-between gap-2 border-b border-divider pb-2.5">
+        <h2 className="font-display text-2xl font-semibold text-ink">Today&apos;s habits</h2>
         <Link
           to="/wellbeing"
-          className="text-xs font-title font-medium text-ink-soft hover:text-ink hover:underline"
+          className="text-xs font-sans text-ink-soft hover:text-accent underline underline-offset-4 transition"
         >
           All habits
         </Link>
@@ -27,13 +27,13 @@ export function TodayHabitsCard() {
 
       {habits.length === 0 ? (
         <div className="py-4 text-center">
-          <p className="text-xs font-sans text-ink-soft">
+          <p className="text-xs font-sans italic text-ink-soft">
             No habits yet. Start with one small daily rhythm.
           </p>
           <button
             type="button"
             onClick={() => openCreate('habit')}
-            className="mt-2 inline-flex items-center gap-1 text-xs font-title font-medium text-ink hover:underline"
+            className="mt-2.5 inline-flex items-center gap-1 text-xs font-sans font-medium text-accent hover:underline underline-offset-4 cursor-pointer"
           >
             <Plus size={13} aria-hidden="true" />
             <span>Add a habit</span>
@@ -48,24 +48,24 @@ export function TodayHabitsCard() {
             return (
               <li
                 key={habit.id}
-                className="flex items-center justify-between gap-2.5 py-2"
+                className="flex items-center justify-between gap-2.5 py-2.5"
               >
                 <div className="flex items-center gap-2.5 min-w-0">
                   <button
                     type="button"
                     onClick={() => actions.toggleHabitCheck(habit.id, today)}
                     aria-label={`Tick ${habit.name} for today`}
-                    className={`grid h-6 w-6 place-items-center rounded-[7px] border transition duration-150 ${
+                    className={`grid h-5 w-5 shrink-0 place-items-center rounded-[3px] border-[1.5px] transition duration-150 cursor-pointer ${
                       checked
-                        ? 'border-peach-300 bg-peach-300 text-ink'
+                        ? 'border-mint-500 bg-mint-500 text-primary-ink'
                         : 'border-lilac-200 bg-cream text-transparent hover:border-accent'
                     }`}
                   >
-                    <Check size={14} strokeWidth={2.5} />
+                    <Check size={13} strokeWidth={2.6} />
                   </button>
                   <span
-                    className={`font-title font-medium text-[15px] truncate ${
-                      checked ? 'text-ink-soft line-through' : 'text-ink'
+                    className={`font-sans text-sm truncate ${
+                      checked ? 'text-ink-soft line-through' : 'text-ink font-medium'
                     }`}
                   >
                     {habit.name}
@@ -73,7 +73,7 @@ export function TodayHabitsCard() {
                 </div>
 
                 {streak > 0 && (
-                  <span className="flex items-center gap-1 text-xs font-sans text-peach-700 bg-peach-100 rounded-full px-2 py-0.5 shrink-0">
+                  <span className="flex items-center gap-1 text-xs font-sans text-peach-700 tabular-nums shrink-0">
                     <Flame size={12} className="text-peach-500" aria-hidden="true" />
                     <span>{streak}</span>
                   </span>

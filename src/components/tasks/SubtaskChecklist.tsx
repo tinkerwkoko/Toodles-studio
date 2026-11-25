@@ -29,9 +29,9 @@ export function SubtaskChecklist({ task }: SubtaskChecklistProps) {
 
   return (
     <div className="space-y-3">
-      <div className="flex items-center gap-3">
-        <h3 className="text-base">Little steps</h3>
-        <span className="text-xs font-bold text-ink-soft">
+      <div className="flex items-baseline justify-between gap-3">
+        <h3 className="font-display text-xl font-semibold text-ink">Little steps</h3>
+        <span className="text-xs font-sans text-ink-soft tabular-nums">
           {progress.done} / {progress.total} completed
         </span>
       </div>
@@ -39,14 +39,14 @@ export function SubtaskChecklist({ task }: SubtaskChecklistProps) {
       {progress.total > 0 && <ProgressBar value={progress.percent} label="Subtask progress" />}
 
       {task.subtasks.length > 0 && (
-        <ul className="space-y-2">
+        <ul className="divide-y divide-divider border-t border-b border-divider">
           {task.subtasks.map((subtask) => (
             <SubtaskRow key={subtask.id} taskId={task.id} subtask={subtask} />
           ))}
         </ul>
       )}
 
-      <div className="flex items-center gap-2">
+      <div className="flex items-center gap-2 pt-1">
         <input
           value={draft}
           onChange={(event) => setDraft(event.target.value)}
@@ -58,13 +58,14 @@ export function SubtaskChecklist({ task }: SubtaskChecklistProps) {
           }}
           placeholder="Add another step..."
           aria-label="Add a subtask"
-          className="min-h-11 flex-1 rounded-2xl border border-lilac-200 bg-cream px-3 text-sm focus:border-lilac-400 focus:outline-none focus:ring-4 focus:ring-lilac-200/60"
+          className="h-9 flex-1 rounded-[4px] border border-lilac-200 bg-cream px-3 font-sans text-sm text-ink placeholder:text-text-faint placeholder:italic focus:border-accent focus:outline-none"
         />
         <Button
-          variant="soft"
+          variant="outline"
+          size="sm"
           onClick={add}
           disabled={draft.trim().length === 0}
-          icon={<Plus size={17} aria-hidden="true" />}
+          icon={<Plus size={14} aria-hidden="true" />}
         >
           Add
         </Button>
@@ -84,18 +85,18 @@ function SubtaskRow({ taskId, subtask }: SubtaskRowProps) {
 
   const items: MenuItem[] = ACCENT_KEYS.map((key: AccentColor) => ({
     label: ACCENT_LABELS[key],
-    icon: <span className={cx('h-3 w-3 rounded-full', accent(key).mid)} aria-hidden="true" />,
+    icon: <span className={cx('h-2.5 w-2.5 rounded-full', accent(key).mid)} aria-hidden="true" />,
     onSelect: () => actions.updateSubtask(taskId, subtask.id, { color: key }),
   }));
   items.push({
     label: 'Remove step',
-    icon: <Trash2 size={16} aria-hidden="true" />,
+    icon: <Trash2 size={14} aria-hidden="true" />,
     danger: true,
     onSelect: () => actions.deleteSubtask(taskId, subtask.id),
   });
 
   return (
-    <li className="flex items-center gap-3 rounded-2xl border border-lilac-200 bg-cream px-3 py-2">
+    <li className="flex items-center gap-3 py-2">
       <TaskCheckbox
         size="sm"
         color={subtask.color}
@@ -105,14 +106,14 @@ function SubtaskRow({ taskId, subtask }: SubtaskRowProps) {
       />
       <span
         className={cx(
-          'min-w-0 flex-1 truncate text-sm',
+          'min-w-0 flex-1 truncate text-sm font-sans',
           subtask.done ? 'text-ink-soft line-through' : 'text-ink',
         )}
       >
         {subtask.title}
       </span>
       <Menu label={`Options for ${subtask.title}`} header="Step colour" items={items}>
-        <Palette size={17} aria-hidden="true" />
+        <Palette size={15} aria-hidden="true" />
       </Menu>
       <span className={cx('sr-only', tone.text)}>{ACCENT_LABELS[subtask.color]}</span>
     </li>

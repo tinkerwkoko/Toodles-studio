@@ -55,11 +55,23 @@ export function DiaryForm({ initial, submitLabel, onSubmit, onDelete }: DiaryFor
 
   function handleAddPhoto(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0];
-    if (!file) return;
+    if (!file || (values.photos ?? []).length >= 4) return;
     const reader = new FileReader();
     reader.onload = () => {
-      const result = reader.result as string;
-      patch({ photos: [...(values.photos ?? []), result] });
+      const img = new Image();
+      img.onload = () => {
+        const maxDim = 900;
+        const scale = Math.min(1, maxDim / Math.max(img.width, img.height));
+        const canvas = document.createElement('canvas');
+        canvas.width = Math.max(1, Math.round(img.width * scale));
+        canvas.height = Math.max(1, Math.round(img.height * scale));
+        const ctx = canvas.getContext('2d');
+        if (!ctx) return;
+        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+        const compressed = canvas.toDataURL('image/jpeg', 0.72);
+        patch({ photos: [...(values.photos ?? []), compressed].slice(0, 4) });
+      };
+      img.src = reader.result as string;
     };
     reader.readAsDataURL(file);
     e.target.value = '';
@@ -119,7 +131,7 @@ export function DiaryForm({ initial, submitLabel, onSubmit, onDelete }: DiaryFor
       <Field
         label="Notes"
         htmlFor="diary-body"
-        hint="Nobody else can read this. It only lives in this browser."
+        hint="Private to your own account or device."
       >
         <Textarea
           id="diary-body"
@@ -127,17 +139,20 @@ export function DiaryForm({ initial, submitLabel, onSubmit, onDelete }: DiaryFor
           value={values.body}
           onChange={(event) => patch({ body: event.target.value })}
           placeholder="What happened today? What is on your mind?"
+          className="leading-relaxed"
         />
       </Field>
 
       {/* Photos Section */}
       <div className="space-y-2">
         <div className="flex items-center justify-between">
-          <span className="text-sm font-title font-medium text-ink">Pictures</span>
+          <span className="text-xs font-medium uppercase tracking-wider text-ink-soft">
+            Pictures
+          </span>
           <button
             type="button"
             onClick={() => fileInputRef.current?.click()}
-            className="inline-flex items-center gap-1.5 rounded-full bg-lilac-100 px-3 py-1 text-xs font-title font-medium text-ink hover:bg-lilac-200 transition"
+            className="inline-flex items-center gap-1.5 rounded-[4px] border border-lilac-200 bg-paper-2 px-3 py-1.5 text-xs font-medium text-ink transition hover:bg-lilac-100"
           >
             <ImagePlus size={14} aria-hidden="true" />
             <span>Add picture</span>
@@ -156,16 +171,16 @@ export function DiaryForm({ initial, submitLabel, onSubmit, onDelete }: DiaryFor
             {values.photos.map((photo, index) => (
               <div
                 key={index}
-                className="relative h-20 w-20 overflow-hidden rounded-2xl border border-lilac-200 group"
+                className="group relative h-20 w-20 overflow-hidden rounded-[3px] border border-lilac-200 bg-cream p-1 shadow-soft"
               >
-                <img src={photo} alt="" className="h-full w-full object-cover" />
+                <img src={photo} alt="" className="h-full w-full rounded-[2px] object-cover" />
                 <button
                   type="button"
                   onClick={() => handleRemovePhoto(index)}
                   aria-label="Remove picture"
-                  className="absolute right-1 top-1 grid h-5 w-5 place-items-center rounded-full bg-black/60 text-white hover:bg-black/80 transition"
+                  className="absolute right-1.5 top-1.5 grid h-5 w-5 place-items-center rounded-[3px] bg-ink/80 text-primary-ink transition hover:bg-ink"
                 >
-                  <X size={12} />
+                  <X size={11} />
                 </button>
               </div>
             ))}
@@ -188,7 +203,7 @@ export function DiaryForm({ initial, submitLabel, onSubmit, onDelete }: DiaryFor
         />
       </Field>
 
-      <div className="flex items-center justify-end gap-2 border-t border-lilac-200 pt-4">
+      <div className="flex items-center justify-end gap-2 border-t border-divider pt-4">
         {onDelete && (
           <Button variant="ghost" className="text-rose-700 hover:bg-rose-100" onClick={onDelete}>
             Delete entry

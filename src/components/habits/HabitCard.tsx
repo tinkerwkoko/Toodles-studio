@@ -1,4 +1,4 @@
-import { Flame, MoreVertical, Pencil, Trash2 } from 'lucide-react';
+import { Check, Flame, MoreVertical, Pencil, Trash2 } from 'lucide-react';
 import type { DateString, Habit, HabitCheck } from '../../types';
 import { accent } from '../../lib/color';
 import { WEEKDAY_MIN, todayString, weekStart } from '../../lib/date';
@@ -15,7 +15,7 @@ export interface HabitCardProps {
   onEdit: (habit: Habit) => void;
 }
 
-/** One habit with its current week of dots and a streak count. */
+/** One habit row with its current week of square archival ink checks and streak count. */
 export function HabitCard({ habit, checks, weekStartsOn, onEdit }: HabitCardProps) {
   const { actions } = useToodles();
   const { pushToast } = useUi();
@@ -33,13 +33,15 @@ export function HabitCard({ habit, checks, weekStartsOn, onEdit }: HabitCardProp
   });
 
   return (
-    <li className="rounded-3xl border border-lilac-200 bg-cream p-3.5">
-      <div className="flex items-center gap-2">
-        <span className={cx('h-3 w-3 shrink-0 rounded-full', tone.mid)} aria-hidden="true" />
-        <p className="min-w-0 flex-1 truncate text-base font-bold text-ink">{habit.name}</p>
-        <span className={cx('flex items-center gap-1 text-xs font-bold', tone.text)}>
+    <li className="py-4 first:pt-1 last:pb-0">
+      <div className="flex items-center gap-2.5">
+        <span className={cx('h-2.5 w-2.5 shrink-0 rounded-[2px]', tone.mid)} aria-hidden="true" />
+        <p className="min-w-0 flex-1 truncate font-title text-lg font-semibold text-ink">
+          {habit.name}
+        </p>
+        <span className={cx('flex items-center gap-1 text-xs font-medium tabular-nums', tone.text)}>
           <Flame size={13} aria-hidden="true" />
-          {streak.current > 0 ? `${streak.current} day streak` : 'No streak yet'}
+          {streak.current > 0 ? `${streak.current}d streak` : 'Starting out'}
         </span>
         <Menu
           label={`Options for ${habit.name}`}
@@ -47,12 +49,12 @@ export function HabitCard({ habit, checks, weekStartsOn, onEdit }: HabitCardProp
           items={[
             {
               label: 'Edit habit',
-              icon: <Pencil size={16} aria-hidden="true" />,
+              icon: <Pencil size={15} aria-hidden="true" />,
               onSelect: () => onEdit(habit),
             },
             {
               label: 'Delete habit',
-              icon: <Trash2 size={16} aria-hidden="true" />,
+              icon: <Trash2 size={15} aria-hidden="true" />,
               danger: true,
               onSelect: () => {
                 actions.deleteHabit(habit.id);
@@ -61,11 +63,11 @@ export function HabitCard({ habit, checks, weekStartsOn, onEdit }: HabitCardProp
             },
           ]}
         >
-          <MoreVertical size={17} aria-hidden="true" />
+          <MoreVertical size={16} aria-hidden="true" />
         </Menu>
       </div>
 
-      <div className="mt-3 flex items-center gap-1.5">
+      <div className="mt-3 grid grid-cols-7 gap-1.5">
         {days.map((day) => {
           const scheduled = isHabitScheduled(habit, day.date as DateString);
           const done = isHabitChecked(checks, habit.id, day.date);
@@ -79,20 +81,26 @@ export function HabitCard({ habit, checks, weekStartsOn, onEdit }: HabitCardProp
               aria-label={`${habit.name} on ${day.date}${done ? ': done' : ''}`}
               aria-pressed={done}
               className={cx(
-                'grid h-10 flex-1 place-items-center rounded-xl border text-xs font-bold transition',
-                done ? cx(tone.solid, 'border-transparent') : 'border-lilac-200 bg-cream text-ink-soft',
+                'flex h-10 flex-col items-center justify-center rounded-[4px] border text-[11px] font-medium transition',
+                done
+                  ? cx(tone.solid, 'border-transparent')
+                  : 'border-lilac-200 bg-cream text-ink-soft hover:border-lilac-300 hover:text-ink',
                 !scheduled && 'opacity-35',
-                isToday && !done && 'ring-2 ring-lilac-300',
+                isToday && !done && 'border-lilac-300 ring-1 ring-lilac-300/60',
               )}
             >
-              {day.label}
+              {done ? (
+                <Check size={14} strokeWidth={2.5} aria-hidden="true" />
+              ) : (
+                <span>{day.label}</span>
+              )}
             </button>
           );
         })}
       </div>
 
-      <p className="mt-2 text-xs text-ink-soft">
-        Best streak so far: {streak.best} day{streak.best === 1 ? '' : 's'}
+      <p className="mt-2 text-xs text-ink-soft tabular-nums">
+        Best streak: {streak.best} day{streak.best === 1 ? '' : 's'}
       </p>
     </li>
   );

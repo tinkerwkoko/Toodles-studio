@@ -2,7 +2,7 @@ import { BookOpenText, Folder, ListChecks, Repeat, Smile } from 'lucide-react';
 import { Dialog } from '../ui/Dialog';
 import { useUi } from '../../store/useUi';
 
-/** The chooser behind the big `+`: one tap to any creation flow. */
+/** The chooser behind the `+`: one tap to any creation flow. */
 export function QuickCreateSheet() {
   const { quickOpen, closeQuickCreate, openCreate } = useUi();
 
@@ -21,23 +21,25 @@ export function QuickCreateSheet() {
       title="What would you like to add?"
       description="Pick one and we will keep it quick."
     >
-      <ul className="grid gap-2 sm:grid-cols-2">
+      <ul className="divide-y divide-divider">
         {options.map((option) => (
           <li key={option.kind}>
             <button
               type="button"
               onClick={() => openCreate(option.kind)}
-              className="flex w-full items-center gap-3 rounded-2xl border border-lilac-200 bg-cream px-4 py-3 text-left transition hover:border-lilac-400 hover:bg-lilac-50"
+              className="flex w-full items-center gap-3.5 px-2 py-3 text-left transition hover:bg-paper-2/60 rounded-[4px] cursor-pointer"
             >
               <span
                 aria-hidden="true"
-                className="grid h-11 w-11 shrink-0 place-items-center rounded-2xl bg-lilac-100 text-lilac-700"
+                className="grid h-10 w-10 shrink-0 place-items-center rounded-[4px] border border-divider bg-cream text-accent"
               >
-                <option.icon size={20} />
+                <option.icon size={18} strokeWidth={1.8} />
               </span>
               <span className="min-w-0">
-                <span className="block font-bold text-ink">{option.label}</span>
-                <span className="block text-xs text-ink-soft">{option.hint}</span>
+                <span className="block font-display text-lg font-semibold text-ink leading-tight">
+                  {option.label}
+                </span>
+                <span className="block text-xs font-sans italic text-ink-soft">{option.hint}</span>
               </span>
             </button>
           </li>

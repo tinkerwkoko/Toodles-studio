@@ -24,7 +24,6 @@ export function DatePicker({
   const containerRef = useRef<HTMLDivElement>(null);
   const today = todayString();
 
-  // Current view month & year
   const initialDate = value && /^\d{4}-\d{2}-\d{2}$/.test(value) ? new Date(value + 'T12:00:00') : new Date();
   const [viewYear, setViewYear] = useState(initialDate.getFullYear());
   const [viewMonth, setViewMonth] = useState(initialDate.getMonth() + 1);
@@ -70,27 +69,26 @@ export function DatePicker({
   const cells = monthGrid(viewYear, viewMonth, 1);
   const monthNames = [
     'January', 'February', 'March', 'April', 'May', 'June',
-    'July', 'August', 'September', 'October', 'November', 'December'
+    'July', 'August', 'September', 'October', 'November', 'December',
   ];
 
   return (
     <div ref={containerRef} className="relative w-full">
-      {/* Trigger Button */}
       <button
         type="button"
         disabled={disabled}
         onClick={() => setOpen((prev) => !prev)}
         className={cx(
-          'w-full flex items-center justify-between gap-2 rounded-2xl border border-lilac-200 bg-cream px-3 py-2 text-sm text-ink transition',
-          'hover:border-accent focus:outline-none focus:border-accent disabled:opacity-50 cursor-pointer',
+          'w-full flex items-center justify-between gap-2 rounded-[4px] border border-lilac-200 bg-cream px-3 py-2 text-sm text-ink font-sans transition',
+          'hover:border-dusty-rose focus:outline-none focus:border-accent disabled:opacity-50 cursor-pointer',
           compact && 'px-2.5 py-1.5 text-xs',
-          open && 'border-accent ring-2 ring-accent/20',
+          open && 'border-accent ring-2 ring-accent/15',
           className,
         )}
       >
         <span className="flex items-center gap-2 truncate">
-          <CalendarIcon size={compact ? 13 : 15} className="text-accent shrink-0" aria-hidden="true" />
-          <span className={value ? 'text-ink font-title font-medium' : 'text-ink-soft/70 font-sans'}>
+          <CalendarIcon size={compact ? 13 : 15} className="text-ink-soft shrink-0" aria-hidden="true" />
+          <span className={value ? 'text-ink font-medium tabular-nums' : 'text-text-faint'}>
             {value ? formatDay(value) : placeholder}
           </span>
         </span>
@@ -103,75 +101,72 @@ export function DatePicker({
               e.stopPropagation();
               onChange('');
             }}
-            className="grid h-5 w-5 place-items-center rounded-full text-ink-soft hover:bg-lilac-100 hover:text-ink transition"
+            className="grid h-5 w-5 place-items-center rounded-[3px] text-ink-soft hover:bg-paper-2 hover:text-ink transition"
           >
             <X size={12} aria-hidden="true" />
           </span>
         )}
       </button>
 
-      {/* Whimsical Calendar Popover */}
+      {/* Desk Almanac Popover */}
       {open && (
-        <div className="absolute left-0 top-full mt-2 z-50 w-72 rounded-3xl border border-lilac-200 bg-cream p-3.5 shadow-lg motion-safe:animate-fade-in text-ink">
-          {/* Quick chips */}
-          <div className="flex flex-wrap items-center gap-1.5 pb-2.5 border-b border-divider">
+        <div className="absolute left-0 top-full mt-1.5 z-50 w-72 rounded-[5px] border border-lilac-200 bg-cream p-3.5 shadow-lift motion-safe:animate-fade-in text-ink">
+          <div className="flex flex-wrap items-center gap-2 pb-2.5 border-b border-divider text-xs font-sans">
             <button
               type="button"
               onClick={() => handleSelectDate(today)}
-              className="rounded-full bg-lilac-100 px-2.5 py-1 text-[11px] font-title font-medium text-ink hover:bg-lilac-200 transition"
+              className="rounded-[3px] bg-paper-2/80 px-2 py-0.5 text-ink hover:bg-paper-2 transition cursor-pointer"
             >
               Today
             </button>
             <button
               type="button"
               onClick={() => handleSelectDate(addDays(today, 1))}
-              className="rounded-full bg-lilac-100 px-2.5 py-1 text-[11px] font-title font-medium text-ink hover:bg-lilac-200 transition"
+              className="rounded-[3px] bg-paper-2/80 px-2 py-0.5 text-ink hover:bg-paper-2 transition cursor-pointer"
             >
               Tomorrow
             </button>
             <button
               type="button"
               onClick={() => handleSelectDate(addDays(today, 7))}
-              className="rounded-full bg-lilac-100 px-2.5 py-1 text-[11px] font-title font-medium text-ink hover:bg-lilac-200 transition"
+              className="rounded-[3px] bg-paper-2/80 px-2 py-0.5 text-ink hover:bg-paper-2 transition cursor-pointer"
             >
-              In 1 week
+              +1 week
             </button>
             {value && (
               <button
                 type="button"
                 onClick={() => handleSelectDate('')}
-                className="ml-auto text-[11px] font-sans text-ink-soft hover:text-ink underline transition"
+                className="ml-auto text-ink-soft hover:text-accent underline underline-offset-2 transition cursor-pointer"
               >
                 Clear
               </button>
             )}
           </div>
 
-          {/* Month & Year Navigation */}
-          <div className="flex items-center justify-between py-2">
+          <div className="flex items-center justify-between py-2.5">
             <button
               type="button"
               onClick={() => stepMonth(-1)}
-              className="grid h-7 w-7 place-items-center rounded-full hover:bg-lilac-100 transition text-ink"
+              className="grid h-7 w-7 place-items-center rounded-[3px] hover:bg-paper-2 transition text-ink cursor-pointer"
               aria-label="Previous month"
             >
-              <ChevronLeft size={16} />
+              <ChevronLeft size={15} />
             </button>
-            <span className="font-display text-sm text-ink">
+            <span className="font-display text-base font-semibold tracking-wide text-ink tabular-nums">
               {monthNames[viewMonth - 1]} {viewYear}
             </span>
             <button
               type="button"
               onClick={() => stepMonth(1)}
-              className="grid h-7 w-7 place-items-center rounded-full hover:bg-lilac-100 transition text-ink"
+              className="grid h-7 w-7 place-items-center rounded-[3px] hover:bg-paper-2 transition text-ink cursor-pointer"
               aria-label="Next month"
             >
-              <ChevronRight size={16} />
+              <ChevronRight size={15} />
             </button>
           </div>
 
-          {/* Weekday headers */}
-          <div className="grid grid-cols-7 gap-1 text-center font-title text-[11px] font-medium text-ink-soft pb-1">
+          <div className="grid grid-cols-7 gap-1 text-center font-sans text-[11px] font-medium text-text-faint pb-1.5 border-b border-divider/60 mb-1.5">
             <span>M</span>
             <span>T</span>
             <span>W</span>
@@ -181,8 +176,7 @@ export function DatePicker({
             <span>S</span>
           </div>
 
-          {/* Days Grid */}
-          <div className="grid grid-cols-7 gap-1">
+          <div className="grid grid-cols-7 gap-0.5 tabular-nums">
             {cells.map((cell) => {
               const isSelected = cell.date === value;
               const isCurrentDay = cell.date === today;
@@ -192,13 +186,13 @@ export function DatePicker({
                   type="button"
                   onClick={() => handleSelectDate(cell.date)}
                   className={cx(
-                    'grid h-8 w-8 place-items-center rounded-xl text-xs font-title transition',
+                    'grid h-8 w-8 place-items-center rounded-[3px] text-xs font-sans transition cursor-pointer',
                     !cell.inMonth && 'opacity-30',
                     isSelected
-                      ? 'bg-accent text-ink font-bold shadow-sm'
+                      ? 'bg-lilac-300 text-primary-ink font-semibold'
                       : isCurrentDay
-                        ? 'border border-accent text-accent font-semibold hover:bg-lilac-100'
-                        : 'hover:bg-lilac-100 text-ink',
+                        ? 'border border-accent text-accent font-semibold hover:bg-paper-2/70'
+                        : 'hover:bg-paper-2/70 text-ink',
                   )}
                 >
                   {cell.day}

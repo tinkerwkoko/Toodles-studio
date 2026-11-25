@@ -16,7 +16,7 @@ export interface TaskCardProps {
   className?: string;
 }
 
-/** One friendly row for a single task: used in every task list. */
+/** Clean journal ledger row for a single task — no redundant boxed borders per item. */
 export function TaskCard({
   task,
   onOpen,
@@ -44,14 +44,19 @@ export function TaskCard({
   return (
     <article
       className={cx(
-        'group relative flex gap-3 rounded-2xl border-[1.5px] bg-cream p-3.5 shadow-soft transition sm:p-4',
-        selected
-          ? 'border-lilac-300 ring-2 ring-lilac-200'
-          : 'border-lilac-200 hover:-translate-y-0.5 hover:shadow-lift',
+        'group relative flex items-start gap-3.5 px-4 py-3.5 transition duration-150 sm:px-5',
+        selected ? 'bg-paper-2/65' : 'hover:bg-lilac-50/60',
         celebrating && 'motion-safe:animate-pop',
         className,
       )}
     >
+      {selected && (
+        <span
+          aria-hidden="true"
+          className="absolute left-0 top-2 bottom-2 w-[3px] rounded-r-[2px] bg-lilac-300"
+        />
+      )}
+
       <TaskCheckbox
         checked={done}
         onChange={complete}
@@ -64,13 +69,13 @@ export function TaskCard({
         <button
           type="button"
           onClick={() => onOpen(task)}
-          className="block w-full text-left"
+          className="block w-full text-left cursor-pointer"
           aria-label={`Open ${task.title}`}
         >
           <h3
             className={cx(
-              'font-title text-[17px] font-medium leading-snug',
-              done ? 'text-ink-soft line-through' : 'text-ink',
+              'font-sans text-[15px] font-medium leading-snug',
+              done ? 'text-ink-soft/80 line-through' : 'text-ink group-hover:text-accent transition-colors',
             )}
           >
             {task.title}
@@ -78,7 +83,9 @@ export function TaskCard({
         </button>
 
         {task.description && (
-          <p className="mt-1 line-clamp-2 text-sm text-ink-soft">{task.description}</p>
+          <p className="mt-0.5 line-clamp-2 text-xs font-sans italic text-ink-soft leading-relaxed">
+            {task.description}
+          </p>
         )}
 
         <TaskCardMeta task={task} showProject={showProject} />
@@ -90,17 +97,17 @@ export function TaskCard({
         items={[
           {
             label: done ? 'Reopen task' : 'Mark as done',
-            icon: done ? <RotateCcw size={16} aria-hidden="true" /> : undefined,
+            icon: done ? <RotateCcw size={15} aria-hidden="true" /> : undefined,
             onSelect: complete,
           },
           {
             label: 'Open details',
-            icon: <Pencil size={16} aria-hidden="true" />,
+            icon: <Pencil size={15} aria-hidden="true" />,
             onSelect: () => onOpen(task),
           },
           {
             label: 'Move to today',
-            icon: <CalendarDays size={16} aria-hidden="true" />,
+            icon: <CalendarDays size={15} aria-hidden="true" />,
             disabled: task.dueDate === todayString(),
             onSelect: () => {
               actions.updateTask(task.id, { dueDate: todayString() });
@@ -109,7 +116,7 @@ export function TaskCard({
           },
           {
             label: 'Delete task',
-            icon: <Trash2 size={16} aria-hidden="true" />,
+            icon: <Trash2 size={15} aria-hidden="true" />,
             danger: true,
             onSelect: () => {
               actions.deleteTask(task.id);
@@ -118,7 +125,7 @@ export function TaskCard({
           },
         ]}
       >
-        <MoreVertical size={18} aria-hidden="true" />
+        <MoreVertical size={16} aria-hidden="true" />
       </Menu>
     </article>
   );

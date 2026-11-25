@@ -7,51 +7,79 @@ import { Card } from '../ui/Card';
 
 export interface DiaryEntryCardProps {
   entry: DiaryEntry;
+  featured?: boolean;
   onEdit: (entry: DiaryEntry) => void;
   onDelete: (entry: DiaryEntry) => void;
 }
 
-/** A notebook page: date, title, body and the little details around it. */
-export function DiaryEntryCard({ entry, onEdit, onDelete }: DiaryEntryCardProps) {
+/** A notebook page: handwritten date, serif heading, ruled journal body, and paper-framed keepsakes. */
+export function DiaryEntryCard({ entry, featured = false, onEdit, onDelete }: DiaryEntryCardProps) {
   return (
-    <Card padding="lg" className="space-y-2">
-      <div className="flex flex-wrap items-center gap-2">
-        <p className="text-xs font-bold tracking-wide text-lilac-700 uppercase">
-          {formatLongDay(entry.date)}
-        </p>
-        {entry.mood && <MoodBadge mood={entry.mood} />}
-        {entry.tags.map((tag) => (
-          <span
-            key={tag}
-            className="rounded-full border border-lilac-200 bg-lilac-50 px-2.5 py-0.5 text-xs font-bold text-lilac-700"
+    <Card
+      variant={featured ? 'stack' : 'paper'}
+      padding="lg"
+      className="space-y-4"
+    >
+      {/* Dateline & Marginalia */}
+      <div className="flex flex-wrap items-center justify-between gap-2 border-b border-divider/80 pb-3">
+        <div className="flex flex-wrap items-center gap-3">
+          <time
+            dateTime={entry.date}
+            className="font-hand text-[1.15rem] leading-none text-ink-soft"
           >
-            #{tag}
-          </span>
-        ))}
+            {formatLongDay(entry.date)}
+          </time>
+          {entry.mood && <MoodBadge mood={entry.mood} />}
+        </div>
+
+        {entry.tags.length > 0 && (
+          <div className="flex flex-wrap items-center gap-2 text-xs italic text-ink-soft">
+            {entry.tags.map((tag) => (
+              <span key={tag}>#{tag}</span>
+            ))}
+          </div>
+        )}
       </div>
 
-      <h2 className="text-lg text-ink">{entry.title || 'An untitled page'}</h2>
-      {entry.body && <p className="text-[0.95rem] leading-relaxed whitespace-pre-wrap text-ink-soft">{entry.body}</p>}
+      {/* Entry Title */}
+      <h2 className="font-display text-2xl font-semibold leading-snug text-ink">
+        {entry.title || 'An untitled page'}
+      </h2>
 
+      {/* Ruled Journal Body */}
+      {entry.body && (
+        <div className="ruled-paper rounded-[3px] border-l-2 border-dusty-rose/40 pl-4 pr-2 py-1">
+          <p className="whitespace-pre-wrap font-sans text-[0.96rem] leading-[1.85rem] text-ink">
+            {entry.body}
+          </p>
+        </div>
+      )}
+
+      {/* Paper-Framed Photographs */}
       {entry.photos && entry.photos.length > 0 && (
-        <div className="flex flex-wrap gap-2 pt-1.5">
+        <div className="flex flex-wrap gap-3 pt-1">
           {entry.photos.map((photo, i) => (
-            <img
+            <figure
               key={i}
-              src={photo}
-              alt=""
-              className="h-28 w-28 rounded-2xl object-cover border border-lilac-200 shadow-sm"
-            />
+              className="rounded-[3px] border border-lilac-200 bg-cream p-1.5 shadow-soft"
+            >
+              <img
+                src={photo}
+                alt=""
+                className="h-28 w-28 rounded-[2px] object-cover"
+              />
+            </figure>
           ))}
         </div>
       )}
 
-      <div className="flex items-center gap-2 pt-1">
+      {/* Quiet Footer Actions */}
+      <div className="flex items-center justify-end gap-1 border-t border-divider/60 pt-3">
         <Button
           size="sm"
-          variant="soft"
+          variant="ghost"
           onClick={() => onEdit(entry)}
-          icon={<Pencil size={15} aria-hidden="true" />}
+          icon={<Pencil size={14} aria-hidden="true" />}
         >
           Edit
         </Button>
@@ -60,7 +88,7 @@ export function DiaryEntryCard({ entry, onEdit, onDelete }: DiaryEntryCardProps)
           variant="ghost"
           className="text-rose-700 hover:bg-rose-100"
           onClick={() => onDelete(entry)}
-          icon={<Trash2 size={15} aria-hidden="true" />}
+          icon={<Trash2 size={14} aria-hidden="true" />}
         >
           Delete
         </Button>

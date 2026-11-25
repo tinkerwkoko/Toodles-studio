@@ -1,211 +1,248 @@
 @import 'tailwindcss';
 
 /* ------------------------------------------------------------------
-   Toodles CSS variables - soothing light and calm dark palettes.
+   Toodles — Vintage Personal Diary & Old Library Design System
+   Light mode: warm parchment, cream stationery, dusty rose, burgundy, forest
+   Dark mode:  old library at night — deep mahogany, warm walnut, aged vellum
    ------------------------------------------------------------------ */
 :root {
-  --bg: #f8f2ef;
-  --sidebar: #f1e7e6;
-  --card: #fffcfa;
-  --primary: #d9bfcc;
-  --primary-hover: #cfafbf;
-  --border: #e4d0d9;
-  --divider: #efe3e1;
-  --text: #4a3540;
-  --text-2: #85697a;
-  --text-faint: #a58c99;
-  --accent: #b592a4;
+  --bg: #f4ebdd;
+  --sidebar: #ece0ce;
+  --card: #fbf7ef;
+  --paper-2: #e9ddcb;
+  --primary: #713f46;
+  --primary-hover: #5c3037;
+  --primary-ink: #fbf7ef;
+  --border: #d8c8b3;
+  --divider: #e4d7c4;
+  --text: #45382f;
+  --text-2: #76675b;
+  --text-faint: #8f8072;
+  --accent: #713f46;
+  --dusty-rose: #b88f89;
+  --forest: #465747;
 
-  --peach-100: #fff6ef;
-  --peach-200: #ebd3c4;
-  --peach-300: #f4c3a8;
-  --peach-500: #e59f7c;
-  --peach-700: #5a4238;
+  /* Muted archival stationery palette (preserving semantic scale keys) */
+  /* Peach -> Terracotta / Burnt Clay */
+  --peach-100: #f4e6dc;
+  --peach-200: #dec3b2;
+  --peach-300: #c79a82;
+  --peach-500: #a4664b;
+  --peach-700: #5c3322;
 
-  --mint-100: #edf4eb;
-  --mint-200: #cce0c9;
-  --mint-300: #a8cfab;
-  --mint-500: #7eb883;
-  --mint-700: #345237;
+  /* Mint -> Forest Green / Pressed Olive */
+  --mint-100: #e5ece3;
+  --mint-200: #c3d0c0;
+  --mint-300: #8da18c;
+  --mint-500: #465747;
+  --mint-700: #2c3a2d;
 
-  --butter-100: #fdf8e8;
-  --butter-200: #faeec1;
-  --butter-300: #f5de8e;
-  --butter-500: #e5c557;
-  --butter-700: #57461c;
+  /* Butter -> Antique Ochre / Warm Parchment Gold */
+  --butter-100: #f4ecd8;
+  --butter-200: #dfd0aa;
+  --butter-300: #c5ac72;
+  --butter-500: #9b7c39;
+  --butter-700: #51401a;
 
-  --sky-100: #edf5fa;
-  --sky-200: #cde4f4;
-  --sky-300: #a7cfed;
-  --sky-500: #74aee2;
-  --sky-700: #294c6d;
+  /* Sky -> Slate Ink / Archival Blue-Grey */
+  --sky-100: #e4eaee;
+  --sky-200: #c0ced7;
+  --sky-300: #8ba0b0;
+  --sky-500: #526a7c;
+  --sky-700: #2b3c49;
 
-  --rose-100: #faf0f4;
-  --rose-200: #f3d4e3;
-  --rose-300: #e8b3cf;
-  --rose-500: #d689b4;
-  --rose-700: #5c2f49;
+  /* Rose -> Dusty Rose / Burgundy Wash */
+  --rose-100: #f2e4e2;
+  --rose-200: #dabeba;
+  --rose-300: #b88f89;
+  --rose-500: #713f46;
+  --rose-700: #572b32;
 
-  --stat-focused: #f4c3a8;
-  --stat-upcoming: #d3e2ec;
-  --stat-overdue: #f0d5d5;
-  --stat-projects: #dce6d3;
-  --stat-completed: #eadfea;
+  /* Quiet paper stat washes */
+  --stat-focused: #efe1d5;
+  --stat-upcoming: #e4eaee;
+  --stat-overdue: #f1e0de;
+  --stat-projects: #e5ece3;
+  --stat-completed: #efe8d8;
 
-  --mood-difficult: #eadfea;
-  --mood-low: #d3e2ec;
-  --mood-okay: #f6eac2;
-  --mood-good: #dce6d3;
-  --mood-happy: #f4d5c4;
+  /* Botanical mood washes */
+  --mood-difficult: #ead8d7;
+  --mood-low: #dfe7eb;
+  --mood-okay: #efe6cf;
+  --mood-good: #dfe8dd;
+  --mood-happy: #f2e2d4;
 
-  --cat-body: #fffbf7;
-  --cat-outline: #b592a4;
-  --cat-whisker: #b592a4;
-  --cat-face: #4a3540;
-  --cat-blush: #f4c3a8;
-  --cat-nose: #f4c3a8;
-  --cat-stripes: #d9bfcc;
+  /* Bookplate ink-and-wash cat mascot */
+  --cat-body: #fbf7ef;
+  --cat-outline: #6c5447;
+  --cat-whisker: #8b7365;
+  --cat-face: #45382f;
+  --cat-blush: #d4a69d;
+  --cat-nose: #b88f89;
+  --cat-stripes: #a58a7a;
+
+  --shadow-paper-color: rgba(69, 56, 47, 0.14);
+  --shadow-sheet-color: rgba(45, 34, 27, 0.18);
+  --grain-opacity: 0.035;
 }
 
 [data-theme='dark'] {
-  --bg: #18141f;
-  --sidebar: #1e1927;
-  --card: #262031;
-  --primary: #cca3ba;
-  --primary-hover: #dbaec7;
-  --border: #3b3149;
-  --divider: #31273e;
-  --text: #f5eff6;
-  --text-2: #c8bdce;
-  --text-faint: #9c8e9f;
-  --accent: #d2a4bc;
+  --bg: #1b1511;
+  --sidebar: #221b16;
+  --card: #29211b;
+  --paper-2: #332922;
+  --primary: #9e5962;
+  --primary-hover: #b26872;
+  --primary-ink: #fbf6ec;
+  --border: #43362c;
+  --divider: #372c24;
+  --text: #efe6d5;
+  --text-2: #bcae9a;
+  --text-faint: #91806f;
+  --accent: #c48e87;
+  --dusty-rose: #b88f89;
+  --forest: #6e8770;
 
-  /* Cozy, softly luminous dark-mode pastels */
-  --peach-100: #33211f;
-  --peach-200: #543430;
-  --peach-300: #f0ac96;
-  --peach-500: #df886f;
-  --peach-700: #fde8e1;
+  /* Candlelit dark-library archival tones */
+  --peach-100: #35251e;
+  --peach-200: #543a2f;
+  --peach-300: #b98268;
+  --peach-500: #c88b6f;
+  --peach-700: #f3dfd3;
 
-  --mint-100: #1b2a20;
-  --mint-200: #294232;
-  --mint-300: #a5d2b3;
-  --mint-500: #7eb38f;
-  --mint-700: #e5f5ea;
+  --mint-100: #222c23;
+  --mint-200: #354537;
+  --mint-300: #7c957d;
+  --mint-500: #6c876e;
+  --mint-700: #dfe9e0;
 
-  --butter-100: #302818;
-  --butter-200: #4c3f22;
-  --butter-300: #ebd688;
-  --butter-500: #d6bb58;
-  --butter-700: #fdf5d6;
+  --butter-100: #322a1b;
+  --butter-200: #4f4229;
+  --butter-300: #c2a66c;
+  --butter-500: #bfa05f;
+  --butter-700: #f5ebd4;
 
-  --sky-100: #192736;
-  --sky-200: #273d54;
-  --sky-300: #a0cae9;
-  --sky-500: #6aa3cf;
-  --sky-700: #e2f1fd;
+  --sky-100: #202a31;
+  --sky-200: #33424d;
+  --sky-300: #87a0b2;
+  --sky-500: #7893a6;
+  --sky-700: #e0ebf2;
 
-  --rose-100: #311d2a;
-  --rose-200: #4e2e42;
-  --rose-300: #e4aec9;
-  --rose-500: #c982a7;
-  --rose-700: #fbeef2;
+  --rose-100: #352124;
+  --rose-200: #56343a;
+  --rose-300: #b88589;
+  --rose-500: #a8646d;
+  --rose-700: #f5e1e3;
 
-  --stat-focused: #33211f;
-  --stat-upcoming: #192736;
-  --stat-overdue: #311d2a;
-  --stat-projects: #1b2a20;
-  --stat-completed: #2d1e34;
+  --stat-focused: #34251e;
+  --stat-upcoming: #212a30;
+  --stat-overdue: #352124;
+  --stat-projects: #222c23;
+  --stat-completed: #31291d;
 
-  --mood-difficult: #2d1e34;
-  --mood-low: #192736;
-  --mood-okay: #302818;
-  --mood-good: #1b2a20;
-  --mood-happy: #33211f;
+  --mood-difficult: #352124;
+  --mood-low: #212a30;
+  --mood-okay: #322a1b;
+  --mood-good: #222c23;
+  --mood-happy: #35251e;
 
-  /* Cat in dark mode: warm cream body, clear cute facial contours, visible whiskers */
-  --cat-body: #f8efe8;
-  --cat-outline: #6b5163;
-  --cat-whisker: #bfa3b8;
-  --cat-face: #361f30;
-  --cat-blush: #e59388;
-  --cat-nose: #e2887d;
-  --cat-stripes: #be8fa7;
+  /* Warm parchment cat in candlelit library */
+  --cat-body: #efe6d5;
+  --cat-outline: #705c4e;
+  --cat-whisker: #b6a392;
+  --cat-face: #2c211b;
+  --cat-blush: #c78b82;
+  --cat-nose: #b87b73;
+  --cat-stripes: #a98f7c;
+
+  --shadow-paper-color: rgba(8, 5, 3, 0.35);
+  --shadow-sheet-color: rgba(6, 4, 2, 0.55);
+  --grain-opacity: 0.045;
 }
 
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme='light']) {
-    --bg: #18141f;
-    --sidebar: #1e1927;
-    --card: #262031;
-    --primary: #cca3ba;
-    --primary-hover: #dbaec7;
-    --border: #3b3149;
-    --divider: #31273e;
-    --text: #f5eff6;
-    --text-2: #c8bdce;
-    --text-faint: #9c8e9f;
-    --accent: #d2a4bc;
+    --bg: #1b1511;
+    --sidebar: #221b16;
+    --card: #29211b;
+    --paper-2: #332922;
+    --primary: #9e5962;
+    --primary-hover: #b26872;
+    --primary-ink: #fbf6ec;
+    --border: #43362c;
+    --divider: #372c24;
+    --text: #efe6d5;
+    --text-2: #bcae9a;
+    --text-faint: #91806f;
+    --accent: #c48e87;
+    --dusty-rose: #b88f89;
+    --forest: #6e8770;
 
-    --peach-100: #33211f;
-    --peach-200: #543430;
-    --peach-300: #f0ac96;
-    --peach-500: #df886f;
-    --peach-700: #fde8e1;
+    --peach-100: #35251e;
+    --peach-200: #543a2f;
+    --peach-300: #b98268;
+    --peach-500: #c88b6f;
+    --peach-700: #f3dfd3;
 
-    --mint-100: #1b2a20;
-    --mint-200: #294232;
-    --mint-300: #a5d2b3;
-    --mint-500: #7eb38f;
-    --mint-700: #e5f5ea;
+    --mint-100: #222c23;
+    --mint-200: #354537;
+    --mint-300: #7c957d;
+    --mint-500: #6c876e;
+    --mint-700: #dfe9e0;
 
-    --butter-100: #302818;
-    --butter-200: #4c3f22;
-    --butter-300: #ebd688;
-    --butter-500: #d6bb58;
-    --butter-700: #fdf5d6;
+    --butter-100: #322a1b;
+    --butter-200: #4f4229;
+    --butter-300: #c2a66c;
+    --butter-500: #bfa05f;
+    --butter-700: #f5ebd4;
 
-    --sky-100: #192736;
-    --sky-200: #273d54;
-    --sky-300: #a0cae9;
-    --sky-500: #6aa3cf;
-    --sky-700: #e2f1fd;
+    --sky-100: #202a31;
+    --sky-200: #33424d;
+    --sky-300: #87a0b2;
+    --sky-500: #7893a6;
+    --sky-700: #e0ebf2;
 
-    --rose-100: #311d2a;
-    --rose-200: #4e2e42;
-    --rose-300: #e4aec9;
-    --rose-500: #c982a7;
-    --rose-700: #fbeef2;
+    --rose-100: #352124;
+    --rose-200: #56343a;
+    --rose-300: #b88589;
+    --rose-500: #a8646d;
+    --rose-700: #f5e1e3;
 
-    --stat-focused: #33211f;
-    --stat-upcoming: #192736;
-    --stat-overdue: #311d2a;
-    --stat-projects: #1b2a20;
-    --stat-completed: #2d1e34;
+    --stat-focused: #34251e;
+    --stat-upcoming: #212a30;
+    --stat-overdue: #352124;
+    --stat-projects: #222c23;
+    --stat-completed: #31291d;
 
-    --mood-difficult: #2d1e34;
-    --mood-low: #192736;
-    --mood-okay: #302818;
-    --mood-good: #1b2a20;
-    --mood-happy: #33211f;
+    --mood-difficult: #352124;
+    --mood-low: #212a30;
+    --mood-okay: #322a1b;
+    --mood-good: #222c23;
+    --mood-happy: #35251e;
 
-    --cat-body: #f8efe8;
-    --cat-outline: #6b5163;
-    --cat-whisker: #bfa3b8;
-    --cat-face: #361f30;
-    --cat-blush: #e59388;
-    --cat-nose: #e2887d;
-    --cat-stripes: #be8fa7;
+    --cat-body: #efe6d5;
+    --cat-outline: #705c4e;
+    --cat-whisker: #b6a392;
+    --cat-face: #2c211b;
+    --cat-blush: #c78b82;
+    --cat-nose: #b87b73;
+    --cat-stripes: #a98f7c;
+
+    --shadow-paper-color: rgba(8, 5, 3, 0.35);
+    --shadow-sheet-color: rgba(6, 4, 2, 0.55);
+    --grain-opacity: 0.045;
   }
 }
 
 @theme {
-  --font-display: 'Chewy', cursive;
-  --font-title: 'Fredoka', sans-serif;
-  --font-sans: 'Handlee', cursive;
+  --font-display: 'Cormorant Garamond', Georgia, serif;
+  --font-title: 'Cormorant Garamond', Georgia, serif;
+  --font-sans: 'Lora', Georgia, serif;
+  --font-hand: 'Caveat', cursive;
 
+  /* Core surface & ink aliases (maintaining backwards compatibility across components) */
   --color-lilac-50: var(--bg);
-  --color-lilac-100: var(--sidebar);
+  --color-lilac-100: var(--paper-2);
   --color-lilac-200: var(--border);
   --color-lilac-300: var(--primary);
   --color-lilac-400: var(--primary-hover);
@@ -213,9 +250,16 @@
   --color-lilac-600: var(--primary-hover);
   --color-lilac-700: var(--text);
 
+  --color-sidebar: var(--sidebar);
+  --color-paper-2: var(--paper-2);
+  --color-primary-ink: var(--primary-ink);
+  --color-dusty-rose: var(--dusty-rose);
+  --color-forest: var(--forest);
+
   --color-ink: var(--text);
   --color-ink-soft: var(--text-2);
   --color-cream: var(--card);
+  --color-card: var(--card);
 
   --color-peach-100: var(--peach-100);
   --color-peach-200: var(--peach-200);
@@ -277,24 +321,25 @@
   --color-cat-nose: var(--cat-nose);
   --color-cat-stripes: var(--cat-stripes);
 
-  --shadow-soft: none;
-  --shadow-lift: none;
-  --shadow-pop: none;
+  --shadow-soft: 0 1px 2px var(--shadow-paper-color), 0 6px 18px -12px var(--shadow-paper-color);
+  --shadow-lift: 0 2px 6px var(--shadow-paper-color), 0 14px 32px -16px var(--shadow-sheet-color);
+  --shadow-pop: 0 4px 16px -4px var(--shadow-sheet-color);
 
-  --radius-card: 20px;
-  --radius-field: 12px;
-  --radius-button: 9999px;
+  --radius-card: 6px;
+  --radius-field: 4px;
+  --radius-button: 4px;
 
   --text-xs: 12px;
   --text-sm: 14px;
   --text-base: 15px;
 
-  --animate-fade-in: fade-in 250ms ease-out both;
-  --animate-slide-up: slide-up 250ms cubic-bezier(0.22, 1, 0.36, 1) both;
-  --animate-pop: pop 300ms cubic-bezier(0.22, 1, 0.36, 1) both;
+  --animate-fade-in: fade-in 240ms ease-out both;
+  --animate-slide-up: slide-up 240ms cubic-bezier(0.22, 1, 0.36, 1) both;
+  --animate-pop: pop 280ms cubic-bezier(0.22, 1, 0.36, 1) both;
   --animate-blink: blink 5.5s ease-in-out infinite;
   --animate-float: float 4.5s ease-in-out infinite;
   --animate-snooze: snooze 3.4s ease-in-out infinite;
+  --animate-grow: grow 1.85s ease-out both;
 }
 
 @keyframes fade-in {
@@ -309,7 +354,7 @@
 @keyframes slide-up {
   from {
     opacity: 0;
-    transform: translateY(12px);
+    transform: translateY(10px);
   }
   to {
     opacity: 1;
@@ -319,13 +364,22 @@
 
 @keyframes pop {
   0% {
-    transform: scale(0.95);
+    transform: scale(0.94);
   }
   50% {
     transform: scale(1.04);
   }
   100% {
     transform: scale(1);
+  }
+}
+
+@keyframes grow {
+  from {
+    width: 0%;
+  }
+  to {
+    width: 100%;
   }
 }
 
@@ -346,7 +400,7 @@
     transform: translateY(0);
   }
   50% {
-    transform: translateY(-4px);
+    transform: translateY(-3px);
   }
 }
 
@@ -372,12 +426,29 @@ body {
   color: var(--text);
   font-family: var(--font-sans);
   font-size: 15px;
+  line-height: 1.6;
   min-height: 100%;
   overflow-y: auto;
   overflow-x: hidden;
   -webkit-overflow-scrolling: touch;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  position: relative;
+}
+
+/* Subtle, tactile parchment paper grain across the whole desk */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 9999;
+  opacity: var(--grain-opacity);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180' viewBox='0 0 180 180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
+}
+
+[data-theme='dark'] body {
+  letter-spacing: 0.01em;
 }
 
 h1,
@@ -386,24 +457,120 @@ h3,
 h4,
 h5,
 h6 {
-  font-family: var(--font-title);
+  font-family: var(--font-display);
   color: var(--text);
   margin: 0;
-  font-weight: 500;
+  font-weight: 600;
+  letter-spacing: -0.01em;
 }
 
-/* Custom scrollbars that feel cozy and unobtrusive */
+::selection {
+  background-color: var(--rose-200);
+  color: var(--text);
+}
+
+/* ------------------------------------------------------------------
+   Stationery & Editorial Utility Classes (used with restraint)
+   ------------------------------------------------------------------ */
+
+.font-hand {
+  font-family: var(--font-hand);
+}
+
+/* Clean tactile paper sheet without heavy boxes */
+.paper-sheet {
+  background-color: var(--card);
+  box-shadow:
+    0 1px 0 var(--border),
+    0 8px 22px -16px var(--shadow-paper-color);
+}
+
+/* Subtle stacked stationery pages effect for select feature sheets */
+.paper-stack {
+  position: relative;
+  background-color: var(--card);
+  box-shadow:
+    0 1px 0 var(--border),
+    0 4px 0 -1px var(--paper-2),
+    0 5px 0 -1px var(--border),
+    0 12px 26px -18px var(--shadow-sheet-color);
+}
+
+/* Delicate journal ruling for diary & writing sheets */
+.ruled-paper {
+  background-image: repeating-linear-gradient(
+    to bottom,
+    transparent 0px,
+    transparent 31px,
+    var(--divider) 31px,
+    var(--divider) 32px
+  );
+  background-position-y: 8px;
+}
+
+/* Double-line vintage book chapter rule */
+.editorial-rule {
+  border: 0;
+  height: 4px;
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--divider);
+}
+
+/* Restrained archival stamp frame for select dates or empty bookplates */
+.vintage-stamp {
+  border: 1px dashed var(--border);
+  outline: 1px solid var(--divider);
+  outline-offset: 3px;
+}
+
+/* Subtle torn/deckled bottom edge for select hero/diary paper clippings */
+.deckled-bottom {
+  position: relative;
+}
+.deckled-bottom::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -6px;
+  height: 7px;
+  pointer-events: none;
+  background:
+    radial-gradient(circle at 6px 6px, transparent 5px, var(--card) 5.5px) 0 0 / 12px 7px repeat-x;
+  filter: drop-shadow(0 1px 0 var(--border));
+}
+
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+/* Custom slim stationery scrollbars */
 ::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
+  width: 7px;
+  height: 7px;
 }
 ::-webkit-scrollbar-track {
   background: transparent;
 }
 ::-webkit-scrollbar-thumb {
   background: var(--border);
-  border-radius: 9999px;
+  border-radius: 3px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: var(--primary);
+  background: var(--dusty-rose);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }

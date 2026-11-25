@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { BrowserRouter, Link, Navigate, Route, Routes } from 'react-router-dom';
 import { Cat } from './components/Cat';
+import { ErrorBoundary } from './components/ErrorBoundary';
 import { AppShell } from './components/layout/AppShell';
 import { WelcomeScreen } from './components/WelcomeScreen';
 import { AuthPage } from './components/auth/AuthPage';
@@ -19,32 +20,43 @@ import { UiProvider } from './store/UiProvider';
 import { useToodles } from './store/useToodles';
 
 /**
- * Toodles: a private, local-first planner.
- * Flow: Welcome splash -> Sign in / Sign up page -> Full product.
+ * Toodles: a cozy cross-device planner powered by Firebase Auth (Google OAuth) and Firestore.
+ * Flow: Welcome splash -> Google OAuth / Guest gate -> Full product.
  */
 export default function App() {
   const [splash, setSplash] = useState(true);
 
   return (
-    <BrowserRouter>
-      <ToodlesProvider>
-        <UiProvider>
-          <MainFlow splash={splash} onSplashDone={() => setSplash(false)} />
-        </UiProvider>
-      </ToodlesProvider>
-    </BrowserRouter>
+    <ErrorBoundary>
+      <BrowserRouter>
+        <ToodlesProvider>
+          <UiProvider>
+            <MainFlow splash={splash} onSplashDone={() => setSplash(false)} />
+          </UiProvider>
+        </ToodlesProvider>
+      </BrowserRouter>
+    </ErrorBoundary>
   );
 }
 
 function MainFlow({ splash, onSplashDone }: { splash: boolean; onSplashDone: () => void }) {
-  const { data, actions } = useToodles();
-  const hasAuth = Boolean(data.settings.account || data.settings.guestMode);
+  const { data, actions, isReady, isCloudConnected } = useToodles();
+  const hasAccess = Boolean(isCloudConnected || data.settings.guestMode);
 
   if (splash) {
     return <WelcomeScreen onDone={onSplashDone} />;
   }
 
-  if (!hasAuth) {
+  if (!isReady) {
+    return (
+      <div className="min-h-dvh flex flex-col items-center justify-center gap-3 bg-lilac-50 text-ink">
+        <Cat pose="sleepy" size={96} animated />
+        <p className="font-hand text-xl text-ink-soft">Opening your desk…</p>
+      </div>
+    );
+  }
+
+  if (!hasAccess) {
     return (
       <AuthPage
         onSuccess={() => {}}
@@ -81,15 +93,15 @@ function MainFlow({ splash, onSplashDone }: { splash: boolean; onSplashDone: () 
 function NotFound() {
   return (
     <div className="flex flex-col items-center gap-4 py-16 text-center">
-      <Cat pose="curious" size={132} />
-      <h1 className="text-2xl">This corner is still being built</h1>
-      <p className="max-w-md text-ink-soft">
+      <Cat pose="curious" size={124} />
+      <h1 className="font-display text-3xl font-semibold text-ink">This corner is still being built</h1>
+      <p className="max-w-md font-sans italic text-sm text-ink-soft">
         The section you are looking for is not part of this build yet. The overview and all task
         views are ready to use.
       </p>
       <Link
         to="/"
-        className="inline-flex min-h-11 items-center rounded-full bg-lilac-300 px-5 font-display text-ink transition hover:bg-lilac-200"
+        className="mt-1 inline-flex min-h-10 items-center rounded-[4px] bg-lilac-300 px-5 font-sans text-sm font-medium text-primary-ink transition hover:bg-lilac-400"
       >
         Back to the overview
       </Link>

@@ -40,16 +40,16 @@ export function DiaryPage() {
   }, [entries, query, month]);
 
   return (
-    <div className="pb-4">
+    <div className="mx-auto max-w-4xl pb-6">
       <PageHeader
         title="Diary"
-        subtitle="Private pages that only ever live in this browser."
+        subtitle="Private pages kept quietly for your eyes alone."
         pose={entries.length === 0 ? 'curious' : undefined}
         actions={
           <Button
             className="hidden sm:inline-flex"
             onClick={() => openCreate('diary')}
-            icon={<PenLine size={18} aria-hidden="true" />}
+            icon={<PenLine size={16} aria-hidden="true" />}
           >
             New entry
           </Button>
@@ -59,35 +59,35 @@ export function DiaryPage() {
       {entries.length === 0 ? (
         <EmptyState
           title="Your thoughts are welcome here"
-          sentence="Write about a day, a feeling, an idea. Nobody else can read it, and it is never uploaded."
+          sentence="Write about a day, a feeling, an idea. Your diary is a quiet desk to return to whenever you need it."
           actionLabel="Write your first entry"
           onAction={() => openCreate('diary')}
         />
       ) : (
         <>
-          <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+          <div className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
             <div className="relative w-full sm:max-w-xs">
               <Search
-                size={17}
+                size={15}
                 aria-hidden="true"
-                className="pointer-events-none absolute top-1/2 left-3 -translate-y-1/2 text-lilac-500"
+                className="pointer-events-none absolute top-1/2 left-3 -translate-y-1/2 text-ink-soft"
               />
               <input
                 type="search"
                 value={query}
                 onChange={(event) => setQuery(event.target.value)}
-                placeholder="Search your pages"
+                placeholder="Search your pages…"
                 aria-label="Search diary entries"
-                className="w-full rounded-2xl border border-lilac-200 bg-cream py-2.5 pr-10 pl-10 text-sm focus:border-lilac-400 focus:outline-none focus:ring-4 focus:ring-lilac-200/60"
+                className="w-full rounded-[4px] border border-lilac-200 bg-cream py-2 pr-9 pl-9 text-sm text-ink placeholder:text-ink-soft/75 transition focus:border-lilac-400 focus:outline-none focus:ring-2 focus:ring-lilac-200/70"
               />
               {query.length > 0 && (
                 <button
                   type="button"
                   onClick={() => setQuery('')}
                   aria-label="Clear search"
-                  className="absolute top-1/2 right-2 grid h-8 w-8 -translate-y-1/2 place-items-center rounded-full text-lilac-700 hover:bg-lilac-100"
+                  className="absolute top-1/2 right-1.5 grid h-7 w-7 -translate-y-1/2 place-items-center rounded-[3px] text-ink-soft transition hover:bg-lilac-100 hover:text-ink"
                 >
-                  <X size={15} aria-hidden="true" />
+                  <X size={14} aria-hidden="true" />
                 </button>
               )}
             </div>
@@ -104,11 +104,12 @@ export function DiaryPage() {
               onAction={() => openCreate('diary')}
             />
           ) : (
-            <div className="space-y-3">
-              {visible.map((entry) => (
+            <div className="space-y-6">
+              {visible.map((entry, idx) => (
                 <DiaryEntryCard
                   key={entry.id}
                   entry={entry}
+                  featured={idx === 0}
                   onEdit={setEditing}
                   onDelete={setRemoving}
                 />

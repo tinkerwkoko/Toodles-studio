@@ -1,0 +1,528 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Pillar 4.1: Global default-deny safety net
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // ------------------------------------------------------------------
+    // Global Primitives (Phase 3)
+    // ------------------------------------------------------------------
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isVerified() {
+      return isSignedIn() && request.auth.token.email_verified == true;
+    }
+
+    function isOwner(userId) {
+      return isSignedIn() && request.auth.uid == userId;
+    }
+
+    function isVerifiedOwner(userId) {
+      return isVerified() && request.auth.uid == userId;
+    }
+
+    function isValidId(id) {
+      return id is string && id.size() >= 1 && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$');
+    }
+
+    function isValidDateStr(d) {
+      return d is string && d.size() == 10 && d.matches('^\\d{4}-\\d{2}-\\d{2}$');
+    }
+
+    function isValidAccent(c) {
+      return c is string && c in ['lilac', 'peach', 'mint', 'butter', 'sky', 'rose'];
+    }
+
+    function isValidMood(m) {
+      return m is string && m in ['happy', 'good', 'okay', 'low', 'difficult'];
+    }
+
+    function isValidStringList(list, maxSize) {
+      return list is list &&
+        list.size() <= maxSize &&
+        (list.size() == 0 || (list[0] is string && list[0].size() <= 100));
+    }
+
+    function isValidPhotoList(list, maxSize) {
+      return list is list &&
+        list.size() <= maxSize &&
+        (list.size() == 0 || (list[0] is string && list[0].size() <= 200000));
+    }
+
+    function isValidSubtaskList(list) {
+      return list is list &&
+        list.size() <= 50 &&
+        (list.size() == 0 || (
+          list[0] is map &&
+          list[0].keys().hasAll(['id', 'title', 'done', 'color']) &&
+          list[0].keys().hasOnly(['id', 'title', 'done', 'color']) &&
+          isValidId(list[0].id) &&
+          list[0].title is string && list[0].title.size() <= 200 &&
+          list[0].done is bool &&
+          isValidAccent(list[0].color)
+        ));
+    }
+
+    function isValidWeekdaysList(list) {
+      return list is list &&
+        list.size() <= 7 &&
+        (list.size() == 0 || (list[0] is number && list[0] >= 0 && list[0] <= 6));
+    }
+
+    function incoming() {
+      return request.resource.data;
+    }
+
+    function existing() {
+      return resource.data;
+    }
+
+    function userRootExists(userId) {
+      return exists(/databases/$(database)/documents/users/$(userId));
+    }
+
+    function userRootExistsAfter(userId) {
+      return existsAfter(/databases/$(database)/documents/users/$(userId));
+    }
+
+    function projectExistsAfter(userId, projectId) {
+      return existsAfter(/databases/$(database)/documents/users/$(userId)/projects/$(projectId));
+    }
+
+    function habitExistsAfter(userId, habitId) {
+      return existsAfter(/databases/$(database)/documents/users/$(userId)/habits/$(habitId));
+    }
+
+    function taskExistsAfter(userId, taskId) {
+      return existsAfter(/databases/$(database)/documents/users/$(userId)/tasks/$(taskId));
+    }
+
+    // ------------------------------------------------------------------
+    // Validation Blueprints (Pillar 2: Anti-Update-Gap)
+    // ------------------------------------------------------------------
+    function isValidPomodoro(p) {
+      return p == null || (
+        p is map &&
+        p.keys().hasAll(['focus', 'shortBreak', 'longBreak', 'rounds']) &&
+        p.keys().hasOnly(['focus', 'shortBreak', 'longBreak', 'rounds']) &&
+        p.focus is number && p.focus >= 1 && p.focus <= 180 &&
+        p.shortBreak is number && p.shortBreak >= 1 && p.shortBreak <= 60 &&
+        p.longBreak is number && p.longBreak >= 1 && p.longBreak <= 90 &&
+        p.rounds is number && p.rounds >= 1 && p.rounds <= 12
+      );
+    }
+
+    function isValidUserProfile(data, userId) {
+      return data.keys().hasAll([
+          'uid', 'displayName', 'email', 'weekStartsOn', 'theme', 'sidebarOpen', 'createdAt', 'updatedAt'
+        ]) &&
+        data.keys().hasOnly([
+          'uid', 'displayName', 'email', 'photoURL', 'weekStartsOn', 'theme',
+          'sidebarOpen', 'dailyFocusGoalMinutes', 'pomodoro', 'tagsSeeded', 'createdAt', 'updatedAt'
+        ]) &&
+        isValidId(data.uid) &&
+        data.uid == userId &&
+        data.uid == request.auth.uid &&
+        data.displayName is string && data.displayName.size() <= 100 &&
+        data.email is string && data.email.size() <= 254 && data.email == request.auth.token.email &&
+        (!('photoURL' in data) || data.photoURL == null || (data.photoURL is string && data.photoURL.size() <= 1000)) &&
+        data.weekStartsOn is number && (data.weekStartsOn == 0 || data.weekStartsOn == 1) &&
+        data.theme is string && data.theme in ['system', 'light', 'dark'] &&
+        data.sidebarOpen is bool &&
+        (!('dailyFocusGoalMinutes' in data) || data.dailyFocusGoalMinutes == null || (data.dailyFocusGoalMinutes is number && data.dailyFocusGoalMinutes >= 0 && data.dailyFocusGoalMinutes <= 1440)) &&
+        (!('pomodoro' in data) || isValidPomodoro(data.pomodoro)) &&
+        (!('tagsSeeded' in data) || data.tagsSeeded is bool) &&
+        data.createdAt is timestamp &&
+        data.updatedAt is timestamp;
+    }
+
+    function isValidProject(data, userId, projectId) {
+      return data.keys().hasAll([
+          'id', 'ownerId', 'name', 'description', 'color', 'emoji', 'archived', 'createdAt', 'updatedAt'
+        ]) &&
+        data.keys().hasOnly([
+          'id', 'ownerId', 'name', 'description', 'color', 'emoji', 'icon', 'cover',
+          'coverPosition', 'archived', 'createdAt', 'updatedAt'
+        ]) &&
+        isValidId(data.id) && data.id == projectId &&
+        isValidId(data.ownerId) && data.ownerId == userId && data.ownerId == request.auth.uid &&
+        data.name is string && data.name.size() >= 1 && data.name.size() <= 120 &&
+        data.description is string && data.description.size() <= 1000 &&
+        isValidAccent(data.color) &&
+        data.emoji is string && data.emoji.size() <= 16 &&
+        (!('icon' in data) || data.icon == null || (data.icon is string && data.icon.size() <= 120000)) &&
+        (!('cover' in data) || data.cover == null || (data.cover is string && data.cover.size() <= 250000)) &&
+        (!('coverPosition' in data) || data.coverPosition == null || (data.coverPosition is number && data.coverPosition >= 0 && data.coverPosition <= 100)) &&
+        data.archived is bool &&
+        data.createdAt is timestamp &&
+        data.updatedAt is timestamp;
+    }
+
+    function isValidBoardColumn(data, userId, columnId) {
+      return data.keys().hasAll([
+          'id', 'ownerId', 'projectId', 'name', 'color', 'order', 'createdAt', 'updatedAt'
+        ]) &&
+        data.keys().hasOnly([
+          'id', 'ownerId', 'projectId', 'name', 'color', 'order', 'createdAt', 'updatedAt'
+        ]) &&
+        isValidId(data.id) && data.id == columnId &&
+        isValidId(data.ownerId) && data.ownerId == userId && data.ownerId == request.auth.uid &&
+        isValidId(data.projectId) &&
+        data.name is string && data.name.size() >= 1 && data.name.size() <= 80 &&
+        isValidAccent(data.color) &&
+        data.order is number && data.order >= 0 && data.order <= 500 &&
+        data.createdAt is timestamp &&
+        data.updatedAt is timestamp;
+    }
+
+    function isValidTask(data, userId, taskId) {
+      return data.keys().hasAll([
+          'id', 'ownerId', 'title', 'description', 'priority', 'repeat', 'reminder',
+          'tags', 'status', 'color', 'subtasks', 'createdAt', 'updatedAt'
+        ]) &&
+        data.keys().hasOnly([
+          'id', 'ownerId', 'title', 'description', 'projectId', 'priority',
+          'startDate', 'dueDate', 'dueTime', 'estimate', 'repeat', 'reminder',
+          'tags', 'status', 'boardColumnId', 'color', 'completedAt', 'subtasks',
+          'type', 'targetMinutes', 'studyMinutes', 'sortOrder', 'createdAt', 'updatedAt'
+        ]) &&
+        isValidId(data.id) && data.id == taskId &&
+        isValidId(data.ownerId) && data.ownerId == userId && data.ownerId == request.auth.uid &&
+        data.title is string && data.title.size() >= 1 && data.title.size() <= 300 &&
+        data.description is string && data.description.size() <= 5000 &&
+        (!('projectId' in data) || data.projectId == null || isValidId(data.projectId)) &&
+        data.priority is string && data.priority in ['none', 'low', 'medium', 'high'] &&
+        (!('startDate' in data) || data.startDate == null || isValidDateStr(data.startDate)) &&
+        (!('dueDate' in data) || data.dueDate == null || isValidDateStr(data.dueDate)) &&
+        (!('dueTime' in data) || data.dueTime == null || (data.dueTime is string && data.dueTime.size() <= 40)) &&
+        (!('estimate' in data) || data.estimate == null || (data.estimate is number && data.estimate >= 0 && data.estimate <= 10080)) &&
+        data.repeat is string && data.repeat in ['none', 'daily', 'weekdays', 'weekly', 'monthly'] &&
+        data.reminder is bool &&
+        isValidStringList(data.tags, 20) &&
+        data.status is string && data.status in ['todo', 'done'] &&
+        (!('boardColumnId' in data) || data.boardColumnId == null || isValidId(data.boardColumnId)) &&
+        isValidAccent(data.color) &&
+        (!('completedAt' in data) || data.completedAt == null || (data.completedAt is string && data.completedAt.size() <= 64)) &&
+        isValidSubtaskList(data.subtasks) &&
+        (!('type' in data) || data.type == null || (data.type is string && data.type in ['task', 'study'])) &&
+        (!('targetMinutes' in data) || data.targetMinutes == null || (data.targetMinutes is number && data.targetMinutes >= 0 && data.targetMinutes <= 10080)) &&
+        (!('studyMinutes' in data) || data.studyMinutes == null || (data.studyMinutes is number && data.studyMinutes >= 0 && data.studyMinutes <= 100000)) &&
+        (!('sortOrder' in data) || data.sortOrder == null || (data.sortOrder is number && data.sortOrder >= -1000000000000 && data.sortOrder <= 100000000000000)) &&
+        data.createdAt is timestamp &&
+        data.updatedAt is timestamp;
+    }
+
+    function isValidDiaryEntry(data, userId, entryId) {
+      return data.keys().hasAll([
+          'id', 'ownerId', 'date', 'title', 'body', 'tags', 'createdAt', 'updatedAt'
+        ]) &&
+        data.keys().hasOnly([
+          'id', 'ownerId', 'date', 'title', 'body', 'mood', 'projectId', 'tags', 'photos', 'createdAt', 'updatedAt'
+        ]) &&
+        isValidId(data.id) && data.id == entryId &&
+        isValidId(data.ownerId) && data.ownerId == userId && data.ownerId == request.auth.uid &&
+        isValidDateStr(data.date) &&
+        data.title is string && data.title.size() <= 200 &&
+        data.body is string && data.body.size() <= 20000 &&
+        (!('mood' in data) || data.mood == null || isValidMood(data.mood)) &&
+        (!('projectId' in data) || data.projectId == null || isValidId(data.projectId)) &&
+        isValidStringList(data.tags, 20) &&
+        (!('photos' in data) || isValidPhotoList(data.photos, 4)) &&
+        data.createdAt is timestamp &&
+        data.updatedAt is timestamp;
+    }
+
+    function isValidMoodLog(data, userId, moodDate) {
+      return data.keys().hasAll(['date', 'ownerId', 'mood', 'note', 'createdAt', 'updatedAt']) &&
+        data.keys().hasOnly(['date', 'ownerId', 'mood', 'note', 'createdAt', 'updatedAt']) &&
+        isValidDateStr(data.date) && data.date == moodDate &&
+        isValidId(data.ownerId) && data.ownerId == userId && data.ownerId == request.auth.uid &&
+        isValidMood(data.mood) &&
+        data.note is string && data.note.size() <= 1000 &&
+        data.createdAt is timestamp &&
+        data.updatedAt is timestamp;
+    }
+
+    function isValidHabit(data, userId, habitId) {
+      return data.keys().hasAll([
+          'id', 'ownerId', 'name', 'color', 'frequency', 'weekdays', 'archived', 'createdAt', 'updatedAt'
+        ]) &&
+        data.keys().hasOnly([
+          'id', 'ownerId', 'name', 'color', 'frequency', 'weekdays', 'archived', 'createdAt', 'updatedAt'
+        ]) &&
+        isValidId(data.id) && data.id == habitId &&
+        isValidId(data.ownerId) && data.ownerId == userId && data.ownerId == request.auth.uid &&
+        data.name is string && data.name.size() >= 1 && data.name.size() <= 120 &&
+        isValidAccent(data.color) &&
+        data.frequency is string && data.frequency in ['daily', 'weekly'] &&
+        isValidWeekdaysList(data.weekdays) &&
+        data.archived is bool &&
+        data.createdAt is timestamp &&
+        data.updatedAt is timestamp;
+    }
+
+    function isValidHabitCheck(data, userId, checkId) {
+      return data.keys().hasAll(['id', 'ownerId', 'habitId', 'date', 'createdAt']) &&
+        data.keys().hasOnly(['id', 'ownerId', 'habitId', 'date', 'createdAt']) &&
+        isValidId(data.id) && data.id == checkId &&
+        isValidId(data.ownerId) && data.ownerId == userId && data.ownerId == request.auth.uid &&
+        isValidId(data.habitId) &&
+        isValidDateStr(data.date) &&
+        data.createdAt is timestamp;
+    }
+
+    function isValidFocusSession(data, userId, sessionId) {
+      return data.keys().hasAll([
+          'id', 'ownerId', 'type', 'plannedMinutes', 'actualMinutes',
+          'startedAt', 'endedAt', 'completed', 'createdAt'
+        ]) &&
+        data.keys().hasOnly([
+          'id', 'ownerId', 'taskId', 'projectId', 'type', 'plannedMinutes',
+          'actualMinutes', 'startedAt', 'endedAt', 'completed', 'createdAt'
+        ]) &&
+        isValidId(data.id) && data.id == sessionId &&
+        isValidId(data.ownerId) && data.ownerId == userId && data.ownerId == request.auth.uid &&
+        (!('taskId' in data) || data.taskId == null || isValidId(data.taskId)) &&
+        (!('projectId' in data) || data.projectId == null || isValidId(data.projectId)) &&
+        data.type is string && data.type in ['focus', 'break'] &&
+        data.plannedMinutes is number && data.plannedMinutes >= 0 && data.plannedMinutes <= 1440 &&
+        data.actualMinutes is number && data.actualMinutes >= 0 && data.actualMinutes <= 1440 &&
+        data.startedAt is string && data.startedAt.size() <= 64 &&
+        data.endedAt is string && data.endedAt.size() <= 64 &&
+        data.completed is bool &&
+        data.createdAt is timestamp;
+    }
+
+    // ------------------------------------------------------------------
+    // Collection Match Blocks (Master Gate + Action-Based Updates)
+    // ------------------------------------------------------------------
+    match /users/{userId} {
+      // PII-protected user profile: strictly verified owner-only, never listable
+      allow get: if isVerifiedOwner(userId) && isValidId(userId);
+      allow list: if false;
+      allow create: if isVerifiedOwner(userId) &&
+        isValidId(userId) &&
+        isValidUserProfile(incoming(), userId) &&
+        incoming().createdAt == request.time &&
+        incoming().updatedAt == request.time;
+      allow update: if isVerifiedOwner(userId) &&
+        isValidId(userId) &&
+        isValidUserProfile(incoming(), userId) &&
+        incoming().uid == existing().uid &&
+        incoming().createdAt == existing().createdAt &&
+        incoming().updatedAt == request.time &&
+        incoming().diff(existing()).affectedKeys().hasOnly([
+          'displayName', 'email', 'photoURL', 'weekStartsOn', 'theme',
+          'sidebarOpen', 'dailyFocusGoalMinutes', 'pomodoro', 'tagsSeeded', 'updatedAt'
+        ]);
+      allow delete: if isVerifiedOwner(userId) && isValidId(userId);
+
+      // Projects subcollection
+      match /projects/{projectId} {
+        allow get: if isVerifiedOwner(userId) && isValidId(projectId) && userRootExists(userId);
+        allow list: if isVerifiedOwner(userId) && existing().ownerId == request.auth.uid;
+        allow create: if isVerifiedOwner(userId) &&
+          isValidId(projectId) &&
+          isValidProject(incoming(), userId, projectId) &&
+          incoming().createdAt == request.time &&
+          incoming().updatedAt == request.time &&
+          userRootExistsAfter(userId);
+        allow update: if isVerifiedOwner(userId) &&
+          isValidId(projectId) &&
+          isValidProject(incoming(), userId, projectId) &&
+          incoming().id == existing().id &&
+          incoming().ownerId == existing().ownerId &&
+          incoming().createdAt == existing().createdAt &&
+          incoming().updatedAt == request.time &&
+          userRootExists(userId) &&
+          (
+            // Action: Edit project details or appearance
+            incoming().diff(existing()).affectedKeys().hasOnly([
+              'name', 'description', 'color', 'emoji', 'icon', 'cover', 'coverPosition', 'updatedAt'
+            ]) ||
+            // Action: Archive / unarchive project
+            incoming().diff(existing()).affectedKeys().hasOnly(['archived', 'updatedAt'])
+          );
+        allow delete: if isVerifiedOwner(userId) && isValidId(projectId) && userRootExists(userId);
+      }
+
+      // BoardColumns subcollection
+      match /boardColumns/{columnId} {
+        allow get: if isVerifiedOwner(userId) && isValidId(columnId) && userRootExists(userId);
+        allow list: if isVerifiedOwner(userId) && existing().ownerId == request.auth.uid;
+        allow create: if isVerifiedOwner(userId) &&
+          isValidId(columnId) &&
+          isValidBoardColumn(incoming(), userId, columnId) &&
+          incoming().createdAt == request.time &&
+          incoming().updatedAt == request.time &&
+          userRootExistsAfter(userId) &&
+          projectExistsAfter(userId, incoming().projectId);
+        allow update: if isVerifiedOwner(userId) &&
+          isValidId(columnId) &&
+          isValidBoardColumn(incoming(), userId, columnId) &&
+          incoming().id == existing().id &&
+          incoming().ownerId == existing().ownerId &&
+          incoming().projectId == existing().projectId &&
+          incoming().createdAt == existing().createdAt &&
+          incoming().updatedAt == request.time &&
+          userRootExists(userId) &&
+          (
+            // Action: Rename or recolor column
+            incoming().diff(existing()).affectedKeys().hasOnly(['name', 'color', 'updatedAt']) ||
+            // Action: Reorder column
+            incoming().diff(existing()).affectedKeys().hasOnly(['order', 'updatedAt'])
+          );
+        allow delete: if isVerifiedOwner(userId) && isValidId(columnId) && userRootExists(userId);
+      }
+
+      // Tasks subcollection
+      match /tasks/{taskId} {
+        allow get: if isVerifiedOwner(userId) && isValidId(taskId) && userRootExists(userId);
+        allow list: if isVerifiedOwner(userId) && existing().ownerId == request.auth.uid;
+        allow create: if isVerifiedOwner(userId) &&
+          isValidId(taskId) &&
+          isValidTask(incoming(), userId, taskId) &&
+          incoming().createdAt == request.time &&
+          incoming().updatedAt == request.time &&
+          userRootExistsAfter(userId) &&
+          (!('projectId' in incoming()) || incoming().projectId == null || projectExistsAfter(userId, incoming().projectId));
+        allow update: if isVerifiedOwner(userId) &&
+          isValidId(taskId) &&
+          isValidTask(incoming(), userId, taskId) &&
+          incoming().id == existing().id &&
+          incoming().ownerId == existing().ownerId &&
+          incoming().createdAt == existing().createdAt &&
+          incoming().updatedAt == request.time &&
+          userRootExists(userId) &&
+          (!('projectId' in incoming()) || incoming().projectId == null || projectExistsAfter(userId, incoming().projectId)) &&
+          (
+            // Action: Toggle completion status (with optional subtasks sync)
+            incoming().diff(existing()).affectedKeys().hasOnly(['status', 'completedAt', 'subtasks', 'updatedAt']) ||
+            // Action: Move task across kanban board / reorder
+            incoming().diff(existing()).affectedKeys().hasOnly(['projectId', 'boardColumnId', 'status', 'completedAt', 'sortOrder', 'updatedAt']) ||
+            // Action: Update subtasks checklist
+            incoming().diff(existing()).affectedKeys().hasOnly(['subtasks', 'updatedAt']) ||
+            // Action: Update study session minutes
+            incoming().diff(existing()).affectedKeys().hasOnly(['studyMinutes', 'targetMinutes', 'type', 'updatedAt']) ||
+            // Action: Full task edit
+            incoming().diff(existing()).affectedKeys().hasOnly([
+              'title', 'description', 'projectId', 'priority', 'startDate', 'dueDate',
+              'dueTime', 'estimate', 'repeat', 'reminder', 'tags', 'status',
+              'boardColumnId', 'color', 'completedAt', 'subtasks', 'type',
+              'targetMinutes', 'studyMinutes', 'sortOrder', 'updatedAt'
+            ])
+          );
+        allow delete: if isVerifiedOwner(userId) && isValidId(taskId) && userRootExists(userId);
+      }
+
+      // DiaryEntries subcollection
+      match /diaryEntries/{entryId} {
+        allow get: if isVerifiedOwner(userId) && isValidId(entryId) && userRootExists(userId);
+        allow list: if isVerifiedOwner(userId) && existing().ownerId == request.auth.uid;
+        allow create: if isVerifiedOwner(userId) &&
+          isValidId(entryId) &&
+          isValidDiaryEntry(incoming(), userId, entryId) &&
+          incoming().createdAt == request.time &&
+          incoming().updatedAt == request.time &&
+          userRootExistsAfter(userId) &&
+          (!('projectId' in incoming()) || incoming().projectId == null || projectExistsAfter(userId, incoming().projectId));
+        allow update: if isVerifiedOwner(userId) &&
+          isValidId(entryId) &&
+          isValidDiaryEntry(incoming(), userId, entryId) &&
+          incoming().id == existing().id &&
+          incoming().ownerId == existing().ownerId &&
+          incoming().createdAt == existing().createdAt &&
+          incoming().updatedAt == request.time &&
+          userRootExists(userId) &&
+          (!('projectId' in incoming()) || incoming().projectId == null || projectExistsAfter(userId, incoming().projectId)) &&
+          incoming().diff(existing()).affectedKeys().hasOnly([
+            'date', 'title', 'body', 'mood', 'projectId', 'tags', 'photos', 'updatedAt'
+          ]);
+        allow delete: if isVerifiedOwner(userId) && isValidId(entryId) && userRootExists(userId);
+      }
+
+      // MoodLogs subcollection (doc ID is YYYY-MM-DD)
+      match /moods/{moodDate} {
+        allow get: if isVerifiedOwner(userId) && isValidDateStr(moodDate) && userRootExists(userId);
+        allow list: if isVerifiedOwner(userId) && existing().ownerId == request.auth.uid;
+        allow create: if isVerifiedOwner(userId) &&
+          isValidDateStr(moodDate) &&
+          isValidMoodLog(incoming(), userId, moodDate) &&
+          incoming().createdAt == request.time &&
+          incoming().updatedAt == request.time &&
+          userRootExistsAfter(userId);
+        allow update: if isVerifiedOwner(userId) &&
+          isValidDateStr(moodDate) &&
+          isValidMoodLog(incoming(), userId, moodDate) &&
+          incoming().date == existing().date &&
+          incoming().ownerId == existing().ownerId &&
+          incoming().createdAt == existing().createdAt &&
+          incoming().updatedAt == request.time &&
+          userRootExists(userId) &&
+          incoming().diff(existing()).affectedKeys().hasOnly(['mood', 'note', 'updatedAt']);
+        allow delete: if isVerifiedOwner(userId) && isValidDateStr(moodDate) && userRootExists(userId);
+      }
+
+      // Habits subcollection
+      match /habits/{habitId} {
+        allow get: if isVerifiedOwner(userId) && isValidId(habitId) && userRootExists(userId);
+        allow list: if isVerifiedOwner(userId) && existing().ownerId == request.auth.uid;
+        allow create: if isVerifiedOwner(userId) &&
+          isValidId(habitId) &&
+          isValidHabit(incoming(), userId, habitId) &&
+          incoming().createdAt == request.time &&
+          incoming().updatedAt == request.time &&
+          userRootExistsAfter(userId);
+        allow update: if isVerifiedOwner(userId) &&
+          isValidId(habitId) &&
+          isValidHabit(incoming(), userId, habitId) &&
+          incoming().id == existing().id &&
+          incoming().ownerId == existing().ownerId &&
+          incoming().createdAt == existing().createdAt &&
+          incoming().updatedAt == request.time &&
+          userRootExists(userId) &&
+          (
+            // Action: Edit habit configuration
+            incoming().diff(existing()).affectedKeys().hasOnly(['name', 'color', 'frequency', 'weekdays', 'updatedAt']) ||
+            // Action: Archive / unarchive habit
+            incoming().diff(existing()).affectedKeys().hasOnly(['archived', 'updatedAt'])
+          );
+        allow delete: if isVerifiedOwner(userId) && isValidId(habitId) && userRootExists(userId);
+      }
+
+      // HabitChecks subcollection (immutable toggle: create / delete only)
+      match /habitChecks/{checkId} {
+        allow get: if isVerifiedOwner(userId) && isValidId(checkId) && userRootExists(userId);
+        allow list: if isVerifiedOwner(userId) && existing().ownerId == request.auth.uid;
+        allow create: if isVerifiedOwner(userId) &&
+          isValidId(checkId) &&
+          isValidHabitCheck(incoming(), userId, checkId) &&
+          incoming().createdAt == request.time &&
+          userRootExistsAfter(userId) &&
+          habitExistsAfter(userId, incoming().habitId);
+        allow update: if false;
+        allow delete: if isVerifiedOwner(userId) && isValidId(checkId) && userRootExists(userId);
+      }
+
+      // FocusSessions subcollection (terminal immutable log: create / delete only)
+      match /focusSessions/{sessionId} {
+        allow get: if isVerifiedOwner(userId) && isValidId(sessionId) && userRootExists(userId);
+        allow list: if isVerifiedOwner(userId) && existing().ownerId == request.auth.uid;
+        allow create: if isVerifiedOwner(userId) &&
+          isValidId(sessionId) &&
+          isValidFocusSession(incoming(), userId, sessionId) &&
+          incoming().createdAt == request.time &&
+          userRootExistsAfter(userId) &&
+          (!('projectId' in incoming()) || incoming().projectId == null || projectExistsAfter(userId, incoming().projectId)) &&
+          (!('taskId' in incoming()) || incoming().taskId == null || taskExistsAfter(userId, incoming().taskId));
+        allow update: if false;
+        allow delete: if isVerifiedOwner(userId) && isValidId(sessionId) && userRootExists(userId);
+      }
+    }
+  }
+}
