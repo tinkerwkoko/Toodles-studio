@@ -9,7 +9,7 @@ export interface NookStatsProps {
 }
 
 /**
- * Editorial ledger index strip replacing generic dashboard stat boxes:
+ * Quiet botanical overview strip:
  * Focused today, Upcoming, Overdue, Projects, Completed.
  */
 export function NookStats({
@@ -23,7 +23,7 @@ export function NookStats({
       label: 'Focused today',
       value: '0m',
       icon: Target,
-      accentClass: 'text-peach-500',
+      accentClass: 'text-fern',
       to: null,
     },
     {
@@ -57,23 +57,23 @@ export function NookStats({
   ];
 
   return (
-    <div className="border-y border-lilac-200/80 bg-paper-2/35">
-      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 divide-y sm:divide-y-0 sm:divide-x divide-divider">
+    <div className="rounded-[10px] bg-paper-2/45 overflow-hidden">
+      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 divide-y sm:divide-y-0 sm:divide-x divide-divider/60">
         {tiles.map((tile) => {
           const Icon = tile.icon;
           const content = (
             <div
               className={`flex flex-col justify-between px-4 py-3.5 transition duration-150 ${
-                tile.to ? 'hover:bg-cream/70' : ''
+                tile.to ? 'hover:bg-cream/65' : ''
               }`}
             >
               <div className="flex items-center justify-between gap-2 text-ink-soft">
-                <span className="font-sans text-[11px] uppercase tracking-[0.06em]">
+                <span className="font-typewriter text-[11px] tracking-wide">
                   {tile.label}
                 </span>
                 <Icon size={14} className={tile.accentClass} aria-hidden="true" />
               </div>
-              <div className="mt-1.5 font-display text-3xl font-semibold text-ink leading-none tabular-nums">
+              <div className="mt-2 font-display text-3xl text-ink leading-none tabular-nums">
                 {tile.value}
               </div>
             </div>

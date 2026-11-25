@@ -21,7 +21,7 @@ export function MoodPicker({
 }: MoodPickerProps) {
   return (
     <fieldset className="space-y-2">
-      <legend className="text-xs font-medium uppercase tracking-wider text-ink-soft">
+      <legend className="font-typewriter text-[11px] uppercase tracking-[0.06em] text-ink-soft">
         {label}
       </legend>
       <div role="radiogroup" aria-label={label} className="flex flex-wrap gap-1.5">
@@ -36,11 +36,11 @@ export function MoodPicker({
               aria-checked={active}
               onClick={() => onChange(mood.level)}
               className={cx(
-                'flex min-h-11 flex-1 items-center justify-center gap-2 rounded-[4px] border px-2.5 py-2 transition',
-                compact ? 'flex-col gap-1 text-[0.7rem]' : 'text-xs',
+                'flex min-h-11 flex-1 items-center justify-center gap-2 rounded-[8px] px-2.5 py-2 font-typewriter transition cursor-pointer',
+                compact ? 'flex-col gap-1 text-[0.68rem]' : 'text-xs',
                 active
-                  ? cx(tone.soft, tone.border, tone.text, 'font-semibold ring-1 ring-inset ring-current/20')
-                  : 'border-lilac-200 bg-cream text-ink-soft hover:bg-lilac-100/60 hover:text-ink',
+                  ? cx(tone.soft, tone.text, 'ring-1 ring-inset ring-current/30')
+                  : 'bg-paper-2/50 text-ink-soft hover:bg-paper-2 hover:text-ink',
               )}
               title={mood.hint}
             >
@@ -66,9 +66,8 @@ export function MoodBadge({ mood, withLabel = true, className }: MoodBadgeProps)
   return (
     <span
       className={cx(
-        'inline-flex items-center gap-1.5 rounded-[3px] border px-2 py-0.5 text-xs font-medium',
+        'inline-flex items-center gap-1.5 rounded-[6px] px-2 py-0.5 font-typewriter text-[11px]',
         tone.soft,
-        tone.border,
         tone.text,
         className,
       )}

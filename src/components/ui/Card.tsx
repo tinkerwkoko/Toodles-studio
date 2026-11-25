@@ -5,25 +5,25 @@ export interface CardProps extends HTMLAttributes<HTMLDivElement> {
   children: ReactNode;
   /** Tighter padding for dense lists like board cards. */
   padding?: 'none' | 'sm' | 'md' | 'lg';
-  /** Surface treatment: paper sheet, aged secondary parchment, stacked pages, or flush. */
+  /** Soft organic surface treatments without heavy boxed borders. */
   variant?: 'paper' | 'aged' | 'stack' | 'flush';
 }
 
 const PADDING = {
   none: '',
-  sm: 'p-3.5',
-  md: 'p-5',
-  lg: 'p-6 sm:p-7',
+  sm: 'p-4',
+  md: 'p-5 sm:p-6',
+  lg: 'p-6 sm:p-8',
 } as const;
 
 const VARIANTS = {
-  paper: 'paper-sheet rounded-[5px] border border-divider/80',
-  aged: 'rounded-[5px] bg-paper-2/65 border border-divider/70',
-  stack: 'paper-stack rounded-[5px] border border-divider/80',
+  paper: 'paper-sheet rounded-[10px]',
+  aged: 'rounded-[10px] bg-paper-2/55',
+  stack: 'paper-stack rounded-[10px]',
   flush: 'bg-transparent',
 } as const;
 
-/** Layered archival paper container with restrained depth and warm edges. */
+/** Open botanical surface container — separates sections via gentle tone and layering instead of boxed borders. */
 export function Card({
   children,
   padding = 'md',
@@ -32,10 +32,7 @@ export function Card({
   ...rest
 }: CardProps) {
   return (
-    <div
-      className={cx(VARIANTS[variant], PADDING[padding], className)}
-      {...rest}
-    >
+    <div className={cx(VARIANTS[variant], PADDING[padding], className)} {...rest}>
       {children}
     </div>
   );

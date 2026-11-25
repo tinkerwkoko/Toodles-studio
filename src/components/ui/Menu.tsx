@@ -15,13 +15,11 @@ export interface MenuProps {
   children: ReactNode;
   align?: 'left' | 'right';
   buttonClassName?: string;
-  /** Optional heading shown at the top of the popover. */
   header?: string;
 }
 
 /**
- * Accessible archival popover menu. Used for task actions and the mobile
- * "Move to…" alternative to dragging kanban cards.
+ * Accessible popover menu for task actions and board movement.
  */
 export function Menu({
   label,
@@ -37,7 +35,6 @@ export function Menu({
   useEffect(() => {
     if (!open) return;
 
-    // Elevate parent card and parent list item stacking context so pop-up never hides behind subsequent tasks
     const parentCard = containerRef.current?.closest('article');
     const parentLi = containerRef.current?.closest('li');
     let prevCardZ = '';
@@ -97,7 +94,7 @@ export function Menu({
           setOpen((current) => !current);
         }}
         className={cx(
-          'grid h-9 w-9 place-items-center rounded-[4px] text-ink-soft transition hover:bg-paper-2/80 hover:text-ink cursor-pointer',
+          'grid h-9 w-9 cursor-pointer place-items-center rounded-[6px] text-ink-soft transition hover:bg-paper-2/80 hover:text-ink',
           buttonClassName,
         )}
       >
@@ -109,12 +106,12 @@ export function Menu({
           role="menu"
           aria-label={header ?? label}
           className={cx(
-            'absolute z-[100] mt-1 min-w-48 overflow-hidden rounded-[4px] border border-lilac-200 bg-cream shadow-lift motion-safe:animate-fade-in',
+            'absolute z-[100] mt-1 min-w-48 overflow-hidden rounded-[8px] border border-divider bg-cream shadow-lift motion-safe:animate-fade-in',
             align === 'right' ? 'right-0' : 'left-0',
           )}
         >
           {header && (
-            <p className="border-b border-divider px-3.5 py-2 text-[11px] font-sans font-medium tracking-[0.08em] text-text-faint uppercase">
+            <p className="border-b border-divider/70 px-3.5 py-2 font-typewriter text-[11px] text-text-faint">
               {header}
             </p>
           )}
@@ -131,7 +128,7 @@ export function Menu({
                   setOpen(false);
                 }}
                 className={cx(
-                  'flex w-full items-center gap-2.5 px-3.5 py-2 text-left font-sans text-sm transition cursor-pointer',
+                  'flex w-full cursor-pointer items-center gap-2.5 px-3.5 py-2 text-left font-sans text-sm transition',
                   item.disabled && 'pointer-events-none opacity-40',
                   item.danger
                     ? 'text-rose-700 hover:bg-rose-100'

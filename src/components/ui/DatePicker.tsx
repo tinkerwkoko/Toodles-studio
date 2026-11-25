@@ -79,16 +79,16 @@ export function DatePicker({
         disabled={disabled}
         onClick={() => setOpen((prev) => !prev)}
         className={cx(
-          'w-full flex items-center justify-between gap-2 rounded-[4px] border border-lilac-200 bg-cream px-3 py-2 text-sm text-ink font-sans transition',
-          'hover:border-dusty-rose focus:outline-none focus:border-accent disabled:opacity-50 cursor-pointer',
-          compact && 'px-2.5 py-1.5 text-xs',
+          'w-full flex items-center justify-between gap-2 rounded-[8px] border border-divider/80 bg-cream px-3 py-2 font-typewriter text-xs text-ink transition',
+          'hover:border-accent/50 focus:outline-none focus:border-accent disabled:opacity-50 cursor-pointer',
+          compact && 'px-2.5 py-1.5 text-[11px]',
           open && 'border-accent ring-2 ring-accent/15',
           className,
         )}
       >
         <span className="flex items-center gap-2 truncate">
-          <CalendarIcon size={compact ? 13 : 15} className="text-ink-soft shrink-0" aria-hidden="true" />
-          <span className={value ? 'text-ink font-medium tabular-nums' : 'text-text-faint'}>
+          <CalendarIcon size={compact ? 13 : 14} className="text-ink-soft shrink-0" aria-hidden="true" />
+          <span className={value ? 'text-ink tabular-nums' : 'text-text-faint'}>
             {value ? formatDay(value) : placeholder}
           </span>
         </span>
@@ -101,35 +101,34 @@ export function DatePicker({
               e.stopPropagation();
               onChange('');
             }}
-            className="grid h-5 w-5 place-items-center rounded-[3px] text-ink-soft hover:bg-paper-2 hover:text-ink transition"
+            className="grid h-5 w-5 place-items-center rounded-[5px] text-ink-soft hover:bg-paper-2 hover:text-ink transition"
           >
             <X size={12} aria-hidden="true" />
           </span>
         )}
       </button>
 
-      {/* Desk Almanac Popover */}
       {open && (
-        <div className="absolute left-0 top-full mt-1.5 z-50 w-72 rounded-[5px] border border-lilac-200 bg-cream p-3.5 shadow-lift motion-safe:animate-fade-in text-ink">
-          <div className="flex flex-wrap items-center gap-2 pb-2.5 border-b border-divider text-xs font-sans">
+        <div className="absolute left-0 top-full mt-1.5 z-50 w-72 rounded-[10px] border border-divider/70 bg-cream p-3.5 shadow-lift motion-safe:animate-fade-in text-ink">
+          <div className="flex flex-wrap items-center gap-1.5 pb-2.5 border-b border-divider/60 font-typewriter text-[11px]">
             <button
               type="button"
               onClick={() => handleSelectDate(today)}
-              className="rounded-[3px] bg-paper-2/80 px-2 py-0.5 text-ink hover:bg-paper-2 transition cursor-pointer"
+              className="rounded-[6px] bg-paper-2/80 px-2 py-0.5 text-ink hover:bg-paper-2 transition cursor-pointer"
             >
               Today
             </button>
             <button
               type="button"
               onClick={() => handleSelectDate(addDays(today, 1))}
-              className="rounded-[3px] bg-paper-2/80 px-2 py-0.5 text-ink hover:bg-paper-2 transition cursor-pointer"
+              className="rounded-[6px] bg-paper-2/80 px-2 py-0.5 text-ink hover:bg-paper-2 transition cursor-pointer"
             >
               Tomorrow
             </button>
             <button
               type="button"
               onClick={() => handleSelectDate(addDays(today, 7))}
-              className="rounded-[3px] bg-paper-2/80 px-2 py-0.5 text-ink hover:bg-paper-2 transition cursor-pointer"
+              className="rounded-[6px] bg-paper-2/80 px-2 py-0.5 text-ink hover:bg-paper-2 transition cursor-pointer"
             >
               +1 week
             </button>
@@ -148,25 +147,25 @@ export function DatePicker({
             <button
               type="button"
               onClick={() => stepMonth(-1)}
-              className="grid h-7 w-7 place-items-center rounded-[3px] hover:bg-paper-2 transition text-ink cursor-pointer"
+              className="grid h-7 w-7 place-items-center rounded-[6px] hover:bg-paper-2 transition text-ink cursor-pointer"
               aria-label="Previous month"
             >
               <ChevronLeft size={15} />
             </button>
-            <span className="font-display text-base font-semibold tracking-wide text-ink tabular-nums">
+            <span className="font-display text-base tracking-wide text-ink tabular-nums">
               {monthNames[viewMonth - 1]} {viewYear}
             </span>
             <button
               type="button"
               onClick={() => stepMonth(1)}
-              className="grid h-7 w-7 place-items-center rounded-[3px] hover:bg-paper-2 transition text-ink cursor-pointer"
+              className="grid h-7 w-7 place-items-center rounded-[6px] hover:bg-paper-2 transition text-ink cursor-pointer"
               aria-label="Next month"
             >
               <ChevronRight size={15} />
             </button>
           </div>
 
-          <div className="grid grid-cols-7 gap-1 text-center font-sans text-[11px] font-medium text-text-faint pb-1.5 border-b border-divider/60 mb-1.5">
+          <div className="grid grid-cols-7 gap-1 text-center font-typewriter text-[10px] text-text-faint pb-1.5 border-b border-divider/60 mb-1.5">
             <span>M</span>
             <span>T</span>
             <span>W</span>
@@ -186,12 +185,12 @@ export function DatePicker({
                   type="button"
                   onClick={() => handleSelectDate(cell.date)}
                   className={cx(
-                    'grid h-8 w-8 place-items-center rounded-[3px] text-xs font-sans transition cursor-pointer',
+                    'grid h-8 w-8 place-items-center rounded-[6px] font-typewriter text-xs transition cursor-pointer',
                     !cell.inMonth && 'opacity-30',
                     isSelected
-                      ? 'bg-lilac-300 text-primary-ink font-semibold'
+                      ? 'bg-lilac-300 text-primary-ink'
                       : isCurrentDay
-                        ? 'border border-accent text-accent font-semibold hover:bg-paper-2/70'
+                        ? 'ring-1 ring-accent text-accent hover:bg-paper-2/70'
                         : 'hover:bg-paper-2/70 text-ink',
                   )}
                 >

@@ -9,12 +9,12 @@ export interface ChipProps {
   size?: 'sm' | 'md';
 }
 
-/** Understated archival index label — never a loud glossy pill. */
+/** Understated botanical index tag — never a loud glossy pill. */
 export function Chip({ children, className, tone, size = 'sm' }: ChipProps) {
   return (
     <span
       className={cx(
-        'inline-flex max-w-full items-center gap-1.5 rounded-[3px] border border-divider bg-paper-2/65 font-sans font-medium text-ink-soft',
+        'inline-flex max-w-full items-center gap-1.5 rounded-[6px] bg-paper-2/70 font-typewriter text-ink-soft',
         size === 'sm' ? 'px-2 py-0.5 text-[11px] leading-tight' : 'px-2.5 py-1 text-xs leading-tight',
         tone,
         className,

@@ -80,25 +80,26 @@ growing a mega-component.
 
 ## 5. Design tokens
 
-Defined once in `src/index.css` under `@theme` (backed by `:root` and `[data-theme='dark']` CSS custom properties). Use the Tailwind utilities, never raw hex in JSX.
+Defined once in `src/index.css` under `@theme` (backed by `:root`, `[data-theme='dark']`, and `.antique-library` CSS custom properties). Use the Tailwind utilities, never raw hex in JSX.
 
-| Token | Light Mode (Parchment) | Dark Mode (Old Library at Night) | Use |
+| Token | Light Mode (Enchanted Botanical) | Dark Mode (Forest at Night) | Use |
 | --- | --- | --- | --- |
-| `lilac-50` | `#F4EBDD` | `#1B1511` | page background |
-| `cream` / `card` | `#FBF7EF` | `#241C17` | primary paper surface |
-| `paper-2` | `#E9DDCB` | `#2E241E` | secondary aged-paper surface |
-| `lilac-200` | `#D7C7B2` | `#44362C` | hairline borders & dividers |
-| `lilac-300` | `#713F46` | `#9E5962` | deep burgundy primary actions & bookmark edge (pair with `text-primary-ink`) |
-| `dusty-rose` | `#B88F89` | `#B2837C` | muted rose accents & decorative rules |
-| `forest` | `#465747` | `#6F876F` | supporting botanical green |
-| `ink` | `#45382F` | `#ECE1CF` | primary warm charcoal / parchment ink |
-| `ink-soft` | `#817365` | `#AE9D8B` | secondary sepia ink |
+| `lilac-50` | `#F3F5EE` | `#131B16` | page background |
+| `cream` / `card` | `#F9F6EE` | `#1D2A22` | primary warm ivory / forest card surface |
+| `paper-2` | `#E6ECDF` | `#24342A` | secondary soft sage / dark moss surface |
+| `lilac-200` | `#CAD5C2` | `#32473A` | subtle botanical dividers |
+| `lilac-300` | `#344B3C` | `#4B6B52` | deep forest green primary actions (pair with `text-primary-ink`) |
+| `dusty-rose` | `#BC9995` | `#C7A39E` | muted wildflower blush accents |
+| `forest` | `#344B3C` | `#7A9E7E` | botanical canopy & progress tone |
+| `ink` | `#2E352D` | `#EDE8DC` | primary botanical charcoal / warm cream ink |
+| `ink-soft` | `#646D60` | `#B0BBA9` | secondary moss-stone ink |
 
-Archival ink-wash accents (each has `100 / 200 / 300 / 500 / 700`): `peach` (terracotta), `mint` (forest), `butter` (ochre), `sky` (slate), `rose` (dusty rose), `lilac` (burgundy).
+Botanical ink-wash accents (each has `100 / 200 / 300 / 500 / 700`): `lilac` (deep forest), `mint` (fern moss), `rose` (dusty rose), `sky` (soft mauve), `butter` (champagne), `peach` (warm blossom).
 Text contrast must stay AA in both light and dark modes: pair `bg-lilac-300` with `text-primary-ink`.
+Pre-entry screens (`AuthPage`, `WelcomeScreen`) use the `.antique-library` parchment scope (`#F5EFE2` aged parchment + `.antique-frame`).
 
-- Fonts: **Cormorant Garamond** for editorial display headings (`font-display`, `font-title`), **Lora** for readable book-serif body & controls (`font-sans`), **Caveat** (`font-hand`) strictly for handwritten dates, annotations, and small marginalia.
-- Shape: crisp stationery corners (`rounded-[4px]` to `rounded-[6px]`), hairline dividers (`border-divider`), layered paper surfaces (`.paper-sheet`, `.paper-stack`, `.ruled-paper`, `.deckled-bottom`), and subtle parchment grain. Avoid pill-badge clutter and excessive nested card borders.
+- Fonts: **Young Serif** for expressive display headings (`font-display`, `font-title`), **Special Elite** (`font-typewriter`) prominently for diary entries, notes, task descriptions, dates, timestamps, metadata, labels, and empty states, **Lora** (`font-sans`) for readable functional UI controls & task titles, and **Sacramento** (`font-hand`) sparingly for delicate handwritten flourishes.
+- Shape: soft organic paper surfaces (`rounded-[8px]` to `rounded-[12px]`), borderless layered depth (`.paper-sheet`, `.paper-stack`, `.ruled-paper`), and fine-line botanical SVG ornaments (`BotanicalDivider`, `FernSprig`, `WildflowerSprig`, `LeafMark` in `src/components/ui/BotanicalOrnaments.tsx`).
 - Light and dark modes supported via `applyTheme` (`system | light | dark`).
 - Animations: small and soft (blink, check pop, slide-up sheet, fade). All motion must sit behind `prefers-reduced-motion` guards — the global CSS reset kills animation/transition durations.
 - Touch targets ≥ 44px on mobile; no horizontal page scroll from 320px up.

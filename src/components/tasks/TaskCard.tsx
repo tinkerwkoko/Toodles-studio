@@ -16,7 +16,7 @@ export interface TaskCardProps {
   className?: string;
 }
 
-/** Clean journal ledger row for a single task — no redundant boxed borders per item. */
+/** Clean journal row for a single task with typewritten notes & metadata. */
 export function TaskCard({
   task,
   onOpen,
@@ -38,25 +38,18 @@ export function TaskCard({
       return;
     }
     celebrate(task.id);
-    pushToast(`“${task.title}” done ✨`, 'success');
+    pushToast(`“${task.title}” done`, 'success');
   }
 
   return (
     <article
       className={cx(
-        'group relative flex items-start gap-3.5 px-4 py-3.5 transition duration-150 sm:px-5',
-        selected ? 'bg-paper-2/65' : 'hover:bg-lilac-50/60',
+        'group relative flex items-start gap-3.5 px-4 py-3.5 transition duration-150 sm:px-5 first:rounded-t-[10px] last:rounded-b-[10px]',
+        selected ? 'bg-paper-2/70' : 'hover:bg-lilac-50/65',
         celebrating && 'motion-safe:animate-pop',
         className,
       )}
     >
-      {selected && (
-        <span
-          aria-hidden="true"
-          className="absolute left-0 top-2 bottom-2 w-[3px] rounded-r-[2px] bg-lilac-300"
-        />
-      )}
-
       <TaskCheckbox
         checked={done}
         onChange={complete}
@@ -83,7 +76,7 @@ export function TaskCard({
         </button>
 
         {task.description && (
-          <p className="mt-0.5 line-clamp-2 text-xs font-sans italic text-ink-soft leading-relaxed">
+          <p className="mt-1 line-clamp-2 font-typewriter text-xs text-ink-soft leading-relaxed">
             {task.description}
           </p>
         )}
@@ -111,7 +104,7 @@ export function TaskCard({
             disabled: task.dueDate === todayString(),
             onSelect: () => {
               actions.updateTask(task.id, { dueDate: todayString() });
-              pushToast('Moved to today 🌤️');
+              pushToast('Moved to today');
             },
           },
           {

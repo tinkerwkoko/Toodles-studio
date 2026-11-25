@@ -139,20 +139,20 @@ export function DiaryForm({ initial, submitLabel, onSubmit, onDelete }: DiaryFor
           value={values.body}
           onChange={(event) => patch({ body: event.target.value })}
           placeholder="What happened today? What is on your mind?"
-          className="leading-relaxed"
+          className="font-typewriter text-[14px] leading-relaxed"
         />
       </Field>
 
       {/* Photos Section */}
       <div className="space-y-2">
         <div className="flex items-center justify-between">
-          <span className="text-xs font-medium uppercase tracking-wider text-ink-soft">
+          <span className="font-typewriter text-[11px] uppercase tracking-[0.06em] text-ink-soft">
             Pictures
           </span>
           <button
             type="button"
             onClick={() => fileInputRef.current?.click()}
-            className="inline-flex items-center gap-1.5 rounded-[4px] border border-lilac-200 bg-paper-2 px-3 py-1.5 text-xs font-medium text-ink transition hover:bg-lilac-100"
+            className="inline-flex items-center gap-1.5 rounded-[7px] bg-paper-2/75 px-3 py-1.5 font-typewriter text-xs text-ink transition hover:bg-paper-2 cursor-pointer"
           >
             <ImagePlus size={14} aria-hidden="true" />
             <span>Add picture</span>
@@ -171,14 +171,14 @@ export function DiaryForm({ initial, submitLabel, onSubmit, onDelete }: DiaryFor
             {values.photos.map((photo, index) => (
               <div
                 key={index}
-                className="group relative h-20 w-20 overflow-hidden rounded-[3px] border border-lilac-200 bg-cream p-1 shadow-soft"
+                className="group relative h-20 w-20 overflow-hidden rounded-[8px] bg-paper-2/60 p-1 shadow-soft"
               >
-                <img src={photo} alt="" className="h-full w-full rounded-[2px] object-cover" />
+                <img src={photo} alt="" className="h-full w-full rounded-[5px] object-cover" />
                 <button
                   type="button"
                   onClick={() => handleRemovePhoto(index)}
                   aria-label="Remove picture"
-                  className="absolute right-1.5 top-1.5 grid h-5 w-5 place-items-center rounded-[3px] bg-ink/80 text-primary-ink transition hover:bg-ink"
+                  className="absolute right-1.5 top-1.5 grid h-5 w-5 place-items-center rounded-[5px] bg-ink/80 text-primary-ink transition hover:bg-ink cursor-pointer"
                 >
                   <X size={11} />
                 </button>
@@ -200,10 +200,11 @@ export function DiaryForm({ initial, submitLabel, onSubmit, onDelete }: DiaryFor
           value={tagDraft}
           onChange={(event) => setTagDraft(event.target.value)}
           placeholder="study, family, ideas"
+          className="font-typewriter text-xs"
         />
       </Field>
 
-      <div className="flex items-center justify-end gap-2 border-t border-divider pt-4">
+      <div className="flex items-center justify-end gap-2 border-t border-divider/65 pt-4">
         {onDelete && (
           <Button variant="ghost" className="text-rose-700 hover:bg-rose-100" onClick={onDelete}>
             Delete entry

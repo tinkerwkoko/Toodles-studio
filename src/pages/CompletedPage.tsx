@@ -54,7 +54,7 @@ export function CompletedPage() {
                 { value: 'date', label: 'By date' },
               ]}
             />
-            <p className="text-xs tabular-nums text-ink-soft">
+            <p className="font-typewriter text-xs tabular-nums text-ink-soft">
               {finished.length} finished task{finished.length === 1 ? '' : 's'}
             </p>
           </div>
@@ -76,10 +76,10 @@ export function CompletedPage() {
                       aria-pressed={selectedYear === option}
                       onClick={() => setYear(option)}
                       className={cx(
-                        'min-h-9 rounded-[4px] border px-3.5 text-xs font-medium tabular-nums transition',
+                        'min-h-9 rounded-[8px] px-3.5 font-typewriter text-xs tabular-nums transition cursor-pointer',
                         selectedYear === option
-                          ? 'border-lilac-300 bg-lilac-300 text-primary-ink'
-                          : 'border-lilac-200 bg-cream text-ink hover:bg-lilac-100',
+                          ? 'bg-lilac-300 text-primary-ink'
+                          : 'bg-paper-2/65 text-ink hover:bg-paper-2',
                       )}
                     >
                       {option}

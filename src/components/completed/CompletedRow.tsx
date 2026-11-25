@@ -15,7 +15,7 @@ export interface CompletedRowProps {
   onOpen: (task: Task) => void;
 }
 
-/** One finished task in the archive: struck-through title, project and date. */
+/** One finished task in the archive: struck-through title, project and typewritten date. */
 export function CompletedRow({ task, project, onOpen }: CompletedRowProps) {
   const { actions } = useToodles();
   const { pushToast, celebrate } = useUi();
@@ -24,19 +24,19 @@ export function CompletedRow({ task, project, onOpen }: CompletedRowProps) {
   const tone = accent(task.color);
 
   return (
-    <li className="flex items-center gap-3 px-4 py-3 transition hover:bg-lilac-100/35">
-      <span className={cx('h-2 w-2 shrink-0 rounded-[2px]', tone.mid)} aria-hidden="true" />
+    <li className="flex items-center gap-3 px-4 py-3 transition hover:bg-paper-2/35">
+      <span className={cx('h-2 w-2 shrink-0 rounded-full', tone.mid)} aria-hidden="true" />
 
       <button
         type="button"
         onClick={() => onOpen(task)}
-        className="min-w-0 flex-1 text-left"
+        className="min-w-0 flex-1 text-left cursor-pointer"
         aria-label={`Open ${task.title}`}
       >
         <span className="block truncate text-[0.94rem] text-ink-soft line-through">
           {task.title}
         </span>
-        <span className="mt-0.5 flex flex-wrap items-center gap-x-2.5 gap-y-0.5 text-xs text-ink-soft">
+        <span className="mt-0.5 flex flex-wrap items-center gap-x-2.5 gap-y-0.5 font-typewriter text-[11px] text-ink-soft">
           {date && <span className="tabular-nums">Finished {formatDay(date)}</span>}
           {project && (
             <span className="truncate">

@@ -15,11 +15,11 @@ export function TodayHabitsCard() {
 
   return (
     <Card padding="md" className="space-y-3.5">
-      <div className="flex items-baseline justify-between gap-2 border-b border-divider pb-2.5">
-        <h2 className="font-display text-2xl font-semibold text-ink">Today&apos;s habits</h2>
+      <div className="flex items-baseline justify-between gap-2 border-b border-divider/70 pb-2.5">
+        <h2 className="font-display text-2xl text-ink">Today&apos;s habits</h2>
         <Link
           to="/wellbeing"
-          className="text-xs font-sans text-ink-soft hover:text-accent underline underline-offset-4 transition"
+          className="font-typewriter text-xs text-ink-soft hover:text-accent underline underline-offset-4 transition"
         >
           All habits
         </Link>
@@ -27,20 +27,20 @@ export function TodayHabitsCard() {
 
       {habits.length === 0 ? (
         <div className="py-4 text-center">
-          <p className="text-xs font-sans italic text-ink-soft">
+          <p className="font-typewriter text-xs text-ink-soft leading-relaxed">
             No habits yet. Start with one small daily rhythm.
           </p>
           <button
             type="button"
             onClick={() => openCreate('habit')}
-            className="mt-2.5 inline-flex items-center gap-1 text-xs font-sans font-medium text-accent hover:underline underline-offset-4 cursor-pointer"
+            className="mt-3 inline-flex items-center gap-1 font-typewriter text-xs text-accent hover:underline underline-offset-4 cursor-pointer"
           >
             <Plus size={13} aria-hidden="true" />
             <span>Add a habit</span>
           </button>
         </div>
       ) : (
-        <ul className="divide-y divide-divider">
+        <ul className="divide-y divide-divider/60">
           {habits.map((habit) => {
             const checked = isHabitChecked(data.habitChecks, habit.id, today);
             const streak = habitStreak(habit, data.habitChecks, today).current;
@@ -55,13 +55,13 @@ export function TodayHabitsCard() {
                     type="button"
                     onClick={() => actions.toggleHabitCheck(habit.id, today)}
                     aria-label={`Tick ${habit.name} for today`}
-                    className={`grid h-5 w-5 shrink-0 place-items-center rounded-[3px] border-[1.5px] transition duration-150 cursor-pointer ${
+                    className={`grid h-5 w-5 shrink-0 place-items-center rounded-[5px] border-[1.5px] transition duration-150 cursor-pointer ${
                       checked
-                        ? 'border-mint-500 bg-mint-500 text-primary-ink'
+                        ? 'border-lilac-300 bg-lilac-300 text-primary-ink'
                         : 'border-lilac-200 bg-cream text-transparent hover:border-accent'
                     }`}
                   >
-                    <Check size={13} strokeWidth={2.6} />
+                    <Check size={13} strokeWidth={2.5} />
                   </button>
                   <span
                     className={`font-sans text-sm truncate ${
@@ -73,7 +73,7 @@ export function TodayHabitsCard() {
                 </div>
 
                 {streak > 0 && (
-                  <span className="flex items-center gap-1 text-xs font-sans text-peach-700 tabular-nums shrink-0">
+                  <span className="flex items-center gap-1 font-typewriter text-xs text-peach-700 tabular-nums shrink-0">
                     <Flame size={12} className="text-peach-500" aria-hidden="true" />
                     <span>{streak}</span>
                   </span>

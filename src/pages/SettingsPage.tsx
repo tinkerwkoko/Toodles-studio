@@ -98,22 +98,22 @@ export function SettingsPage() {
     <div className="mx-auto max-w-4xl space-y-6 pb-6">
       <PageHeader
         title="Settings"
-        subtitle="Customize your workspace, Google sync, reading light, reminders, and archive."
+        subtitle="Customize your workspace, Google sync, appearance, reminders, and archive."
         pose="curious"
       />
 
       <div className="grid gap-5 lg:grid-cols-2 lg:items-start">
         {/* Account & Cloud Sync */}
         <Card padding="lg" className="space-y-4">
-          <div className="flex items-center justify-between border-b border-divider pb-2.5">
+          <div className="flex items-center justify-between border-b border-divider/65 pb-2.5">
             <div className="flex items-center gap-2">
-              <Cloud size={17} className="text-lilac-700" aria-hidden="true" />
-              <h2 className="font-display text-xl font-semibold text-ink">
+              <Cloud size={17} className="text-accent" aria-hidden="true" />
+              <h2 className="font-display text-xl text-ink">
                 Account &amp; Cloud Sync
               </h2>
             </div>
             {account && (
-              <span className="inline-flex items-center gap-1 rounded-[3px] border border-mint-200 bg-mint-100 px-2 py-0.5 text-[11px] font-medium text-mint-700">
+              <span className="inline-flex items-center gap-1 rounded-[6px] bg-mint-100 px-2 py-0.5 font-typewriter text-[11px] text-mint-700">
                 <Cloud size={11} aria-hidden="true" />
                 <span>{cloudSyncing ? 'Syncing…' : 'Synced'}</span>
               </span>
@@ -122,12 +122,12 @@ export function SettingsPage() {
 
           {account ? (
             <div className="space-y-3">
-              <p className="text-sm text-ink-soft">
-                Signed in with Google as <strong className="text-ink">{account.name}</strong> (
+              <p className="font-typewriter text-xs text-ink-soft leading-relaxed">
+                Signed in with Google as <strong className="font-normal text-ink">{account.name}</strong> (
                 {account.email}).
               </p>
-              <div className="space-y-1 rounded-[4px] border border-lilac-200/80 bg-paper-2/65 p-3 text-xs text-ink-soft">
-                <p className="font-semibold text-ink">Real-time cross-device sync active</p>
+              <div className="space-y-1 rounded-[8px] bg-paper-2/60 p-3 font-typewriter text-xs text-ink-soft">
+                <p className="text-ink">Real-time cross-device sync active</p>
                 <p className="leading-relaxed">
                   Your tasks, projects, kanban boards, diary pages, moods, habits, and focus
                   sessions persist in your private cloud database and stay in sync automatically
@@ -147,7 +147,7 @@ export function SettingsPage() {
             </div>
           ) : (
             <div className="space-y-3">
-              <p className="text-sm text-ink-soft">
+              <p className="font-typewriter text-xs text-ink-soft leading-relaxed">
                 You are currently using guest mode on this device only. Sign in with Google to sync
                 your workspace automatically across phone, tablet, and desktop.
               </p>
@@ -167,12 +167,12 @@ export function SettingsPage() {
 
         {/* Profile & Nickname */}
         <Card padding="lg" className="space-y-4">
-          <div className="flex items-center gap-2 border-b border-divider pb-2.5">
-            <User size={17} className="text-lilac-700" aria-hidden="true" />
-            <h2 className="font-display text-xl font-semibold text-ink">Your nickname</h2>
+          <div className="flex items-center gap-2 border-b border-divider/65 pb-2.5">
+            <User size={17} className="text-accent" aria-hidden="true" />
+            <h2 className="font-display text-xl text-ink">Your nickname</h2>
           </div>
-          <p className="text-sm text-ink-soft">
-            How Toodles addresses you on your desk header and opening page.
+          <p className="font-typewriter text-xs text-ink-soft leading-relaxed">
+            How Toodles addresses you on your header and opening page.
           </p>
 
           <div className="flex items-center gap-2">
@@ -200,18 +200,18 @@ export function SettingsPage() {
 
         {/* Theme & Appearance */}
         <Card padding="lg" className="space-y-4">
-          <div className="border-b border-divider pb-2.5">
-            <h2 className="font-display text-xl font-semibold text-ink">Reading light</h2>
+          <div className="border-b border-divider/65 pb-2.5">
+            <h2 className="font-display text-xl text-ink">Appearance</h2>
           </div>
-          <p className="text-sm text-ink-soft">
-            Choose warm daylight parchment, an old library at night, or follow your system.
+          <p className="font-typewriter text-xs text-ink-soft leading-relaxed">
+            Switch between sunlit light mode, forest night mode, or follow your system.
           </p>
           <div className="grid grid-cols-3 gap-2">
             {(
               [
                 ['system', 'System', Monitor],
-                ['light', 'Parchment', Sun],
-                ['dark', 'Night Library', Moon],
+                ['light', 'Light', Sun],
+                ['dark', 'Dark', Moon],
               ] as const
             ).map(([value, label, Icon]) => {
               const active = data.settings.theme === value;
@@ -221,10 +221,10 @@ export function SettingsPage() {
                   type="button"
                   onClick={() => handleThemeChange(value)}
                   className={cx(
-                    'flex cursor-pointer flex-col items-center gap-1.5 rounded-[4px] border p-3 text-xs font-medium transition',
+                    'flex cursor-pointer flex-col items-center gap-1.5 rounded-[8px] p-3 font-typewriter text-xs transition',
                     active
-                      ? 'border-lilac-300 bg-lilac-300 text-primary-ink'
-                      : 'border-lilac-200 bg-cream text-ink-soft hover:bg-lilac-100/60 hover:text-ink',
+                      ? 'bg-lilac-300 text-primary-ink shadow-soft'
+                      : 'bg-paper-2/60 text-ink-soft hover:bg-paper-2 hover:text-ink',
                   )}
                 >
                   <Icon size={17} aria-hidden="true" />
@@ -237,14 +237,14 @@ export function SettingsPage() {
 
         {/* Reminders */}
         <Card padding="lg" className="space-y-3">
-          <div className="border-b border-divider pb-2.5">
-            <h2 className="font-display text-xl font-semibold text-ink">Reminders</h2>
+          <div className="border-b border-divider/65 pb-2.5">
+            <h2 className="font-display text-xl text-ink">Reminders</h2>
           </div>
-          <p className="text-sm text-ink-soft">
+          <p className="font-typewriter text-xs text-ink-soft leading-relaxed">
             Receive gentle notifications and reminders when tasks are scheduled.
           </p>
-          <p className="text-sm font-medium text-ink">
-            Status: <span className="italic text-ink-soft">{permissionLabel(permission)}</span>
+          <p className="font-typewriter text-xs text-ink">
+            Status: <span className="text-ink-soft">{permissionLabel(permission)}</span>
           </p>
           {permission !== 'granted' && permission !== 'unsupported' && (
             <Button
@@ -266,12 +266,12 @@ export function SettingsPage() {
 
         {/* Data Management */}
         <Card padding="lg" className="space-y-3">
-          <div className="border-b border-divider pb-2.5">
-            <h2 className="font-display text-xl font-semibold text-ink">Workspace archive</h2>
+          <div className="border-b border-divider/65 pb-2.5">
+            <h2 className="font-display text-xl text-ink">Workspace archive</h2>
           </div>
-          <p className="text-xs tabular-nums text-ink-soft">{counts.join(' · ')}</p>
+          <p className="font-typewriter text-xs tabular-nums text-ink-soft">{counts.join(' · ')}</p>
           {storageBlocked && (
-            <p className="rounded-[4px] border border-rose-200 bg-rose-100 px-3 py-2 text-sm text-rose-700">
+            <p className="rounded-[8px] bg-rose-100 px-3 py-2 font-typewriter text-xs text-rose-700">
               Storage permissions are currently restricted.
             </p>
           )}
@@ -306,15 +306,15 @@ export function SettingsPage() {
               role="status"
               className={
                 message.tone === 'success'
-                  ? 'rounded-[4px] border border-mint-200 bg-mint-100 px-3 py-2 text-sm text-mint-700'
-                  : 'rounded-[4px] border border-rose-200 bg-rose-100 px-3 py-2 text-sm text-rose-700'
+                  ? 'rounded-[8px] bg-mint-100 px-3 py-2 font-typewriter text-xs text-mint-700'
+                  : 'rounded-[8px] bg-rose-100 px-3 py-2 font-typewriter text-xs text-rose-700'
               }
             >
               {message.message}
             </p>
           )}
 
-          <p className="text-xs italic text-ink-soft">
+          <p className="font-typewriter text-[11px] text-ink-soft leading-relaxed">
             Importing updates your current workspace, so export a backup first if you want to keep
             it.
           </p>
@@ -322,13 +322,13 @@ export function SettingsPage() {
 
         {/* Privacy Note */}
         <Card variant="aged" padding="lg" className="space-y-3">
-          <div className="flex items-center gap-2 border-b border-divider pb-2.5">
-            <Shield size={17} className="text-lilac-700" aria-hidden="true" />
-            <h2 className="font-display text-xl font-semibold text-ink">Privacy pledge</h2>
+          <div className="flex items-center gap-2 border-b border-divider/65 pb-2.5">
+            <Shield size={17} className="text-accent" aria-hidden="true" />
+            <h2 className="font-display text-xl text-ink">Privacy pledge</h2>
           </div>
           <div className="flex items-start gap-4">
             <Cat pose="curious" size={60} animated={false} className="shrink-0" />
-            <p className="text-sm leading-relaxed text-ink-soft">
+            <p className="font-typewriter text-xs leading-relaxed text-ink-soft">
               We believe your thoughts, tasks, and journals are strictly your own. We do not share
               users&apos; data, sell your information, or track your personal activity. Your
               workspace belongs completely to you.
@@ -338,9 +338,9 @@ export function SettingsPage() {
       </div>
 
       {/* Reset Workspace */}
-      <Card padding="lg" className="space-y-3 border-rose-300/70">
-        <h2 className="font-display text-xl font-semibold text-ink">Reset workspace</h2>
-        <p className="text-sm text-ink-soft">
+      <Card padding="lg" className="space-y-3 ring-1 ring-rose-300/60">
+        <h2 className="font-display text-xl text-ink">Reset workspace</h2>
+        <p className="font-typewriter text-xs text-ink-soft leading-relaxed">
           This permanently resets your workspace and removes all tasks, projects, diary entries,
           moods, and habits. It cannot be undone.
         </p>

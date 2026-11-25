@@ -132,10 +132,9 @@ export function TasksPage({ scope: initialScope = 'all' }: { scope?: TaskScope }
               {detailTask ? (
                 <TaskDetail task={detailTask} onDeleted={() => setDetailTaskId(null)} />
               ) : (
-                <div className="py-8 text-center space-y-1.5">
-                  <p className="font-hand text-xl text-accent">Notes &amp; details</p>
-                  <p className="font-display text-2xl font-semibold text-ink">Pick a task</p>
-                  <p className="text-sm font-sans italic text-ink-soft leading-relaxed max-w-xs mx-auto">
+                <div className="py-8 text-center space-y-2">
+                  <p className="font-display text-2xl text-ink">Pick a task</p>
+                  <p className="font-typewriter text-xs text-ink-soft leading-relaxed max-w-xs mx-auto">
                     Choose an entry on the left to read its notes, tick off little steps, or adjust
                     the details.
                   </p>

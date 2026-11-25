@@ -22,12 +22,9 @@ export function TodayFeelingCard() {
 
   return (
     <Card variant="aged" padding="md" className="space-y-3.5">
-      <div>
-        <p className="font-hand text-base text-ink-soft leading-none">Daily reflection</p>
-        <h2 className="mt-0.5 font-display text-2xl font-semibold text-ink">
-          How is today feeling
-        </h2>
-      </div>
+      <h2 className="font-display text-2xl text-ink">
+        How is today feeling
+      </h2>
 
       <div className="flex items-center justify-between gap-1 pt-0.5">
         {MOODS.map((mood) => {
@@ -40,10 +37,10 @@ export function TodayFeelingCard() {
               aria-label={`Log mood as ${mood.label}`}
               aria-pressed={isSelected}
               title={mood.label}
-              className={`flex flex-col items-center justify-center p-1.5 rounded-[4px] transition cursor-pointer ${
+              className={`flex flex-col items-center justify-center p-1.5 rounded-[8px] transition cursor-pointer ${
                 isSelected
-                  ? 'bg-cream ring-1 ring-accent shadow-[0_1px_2px_rgba(69,56,47,0.16)] scale-105'
-                  : 'hover:bg-cream/65 opacity-80 hover:opacity-100'
+                  ? 'bg-cream ring-1 ring-lilac-300/60 shadow-soft scale-105'
+                  : 'hover:bg-cream/70 opacity-80 hover:opacity-100'
               }`}
             >
               <CatFace mood={mood.level} size={36} decorative />
@@ -52,12 +49,12 @@ export function TodayFeelingCard() {
         })}
       </div>
 
-      <div className="flex items-center justify-between text-xs font-sans text-ink-soft pt-2.5 border-t border-divider">
+      <div className="flex items-center justify-between font-typewriter text-xs text-ink-soft pt-3 border-t border-divider/60">
         {currentMood ? (
           <>
             <span>
-              Today: <strong className="font-semibold text-ink">{moodMeta(currentMood).label}</strong>
-              <span className="italic"> — {moodMeta(currentMood).phrase}</span>
+              Today: <strong className="font-normal text-ink">{moodMeta(currentMood).label}</strong>
+              <span> — {moodMeta(currentMood).phrase}</span>
             </span>
             <button
               type="button"
@@ -68,7 +65,7 @@ export function TodayFeelingCard() {
             </button>
           </>
         ) : (
-          <span className="italic text-text-faint">Tap an expression to log today.</span>
+          <span className="text-text-faint">Tap an expression to log today.</span>
         )}
       </div>
     </Card>

@@ -12,7 +12,7 @@ export interface TaskCardMetaProps {
   showProject?: boolean;
 }
 
-/** Quiet inline archival metadata — no pill capsules cluttering every task row. */
+/** Quiet inline typewritten metadata — no pill capsules cluttering every task row. */
 export function TaskCardMeta({ task, showProject = true }: TaskCardMetaProps) {
   const { data } = useToodles();
   const done = task.status === 'done';
@@ -35,15 +35,15 @@ export function TaskCardMeta({ task, showProject = true }: TaskCardMetaProps) {
   return (
     <>
       {hasMeta && (
-        <div className="mt-1.5 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs font-sans text-ink-soft tabular-nums">
+        <div className="mt-1.5 flex flex-wrap items-center gap-x-3 gap-y-1 font-typewriter text-[11px] text-ink-soft tabular-nums">
           {task.dueDate && (
             <span
               className={cx(
                 'inline-flex items-center gap-1',
                 overdue
-                  ? 'font-medium text-rose-700'
+                  ? 'text-rose-700'
                   : isToday(task.dueDate)
-                    ? 'font-medium text-accent'
+                    ? 'text-accent'
                     : 'text-ink-soft',
               )}
             >
@@ -75,7 +75,7 @@ export function TaskCardMeta({ task, showProject = true }: TaskCardMetaProps) {
           )}
 
           {task.priority !== 'none' && (
-            <span className={cx('inline-flex items-center gap-1 font-medium', PRIORITY_STYLES[task.priority].icon)}>
+            <span className={cx('inline-flex items-center gap-1', PRIORITY_STYLES[task.priority].icon)}>
               <span className={cx('h-1.5 w-1.5 rounded-full', PRIORITY_STYLES[task.priority].dot)} aria-hidden="true" />
               <span>{PRIORITY_STYLES[task.priority].label}</span>
             </span>
@@ -103,7 +103,7 @@ export function TaskCardMeta({ task, showProject = true }: TaskCardMetaProps) {
           )}
 
           {task.tags.map((tag) => (
-            <span key={tag} className="italic text-text-faint">
+            <span key={tag} className="text-text-faint">
               #{tag}
             </span>
           ))}
@@ -124,7 +124,7 @@ export function TaskCardMeta({ task, showProject = true }: TaskCardMetaProps) {
             tone={progress.done === progress.total ? 'bg-mint-500' : 'bg-lilac-300'}
             className="max-w-36"
           />
-          <span className="text-[11px] font-sans text-text-faint tabular-nums">
+          <span className="font-typewriter text-[11px] text-text-faint tabular-nums">
             {progress.done}/{progress.total} steps
           </span>
         </div>

@@ -15,7 +15,7 @@ export interface HabitCardProps {
   onEdit: (habit: Habit) => void;
 }
 
-/** One habit row with its current week of square archival ink checks and streak count. */
+/** One habit row with its current week of botanical check tiles and streak count. */
 export function HabitCard({ habit, checks, weekStartsOn, onEdit }: HabitCardProps) {
   const { actions } = useToodles();
   const { pushToast } = useUi();
@@ -35,11 +35,11 @@ export function HabitCard({ habit, checks, weekStartsOn, onEdit }: HabitCardProp
   return (
     <li className="py-4 first:pt-1 last:pb-0">
       <div className="flex items-center gap-2.5">
-        <span className={cx('h-2.5 w-2.5 shrink-0 rounded-[2px]', tone.mid)} aria-hidden="true" />
-        <p className="min-w-0 flex-1 truncate font-title text-lg font-semibold text-ink">
+        <span className={cx('h-2.5 w-2.5 shrink-0 rounded-full', tone.mid)} aria-hidden="true" />
+        <p className="min-w-0 flex-1 truncate font-title text-lg text-ink">
           {habit.name}
         </p>
-        <span className={cx('flex items-center gap-1 text-xs font-medium tabular-nums', tone.text)}>
+        <span className={cx('flex items-center gap-1 font-typewriter text-xs tabular-nums', tone.text)}>
           <Flame size={13} aria-hidden="true" />
           {streak.current > 0 ? `${streak.current}d streak` : 'Starting out'}
         </span>
@@ -81,12 +81,12 @@ export function HabitCard({ habit, checks, weekStartsOn, onEdit }: HabitCardProp
               aria-label={`${habit.name} on ${day.date}${done ? ': done' : ''}`}
               aria-pressed={done}
               className={cx(
-                'flex h-10 flex-col items-center justify-center rounded-[4px] border text-[11px] font-medium transition',
+                'flex h-10 flex-col items-center justify-center rounded-[7px] font-typewriter text-[11px] transition cursor-pointer',
                 done
-                  ? cx(tone.solid, 'border-transparent')
-                  : 'border-lilac-200 bg-cream text-ink-soft hover:border-lilac-300 hover:text-ink',
+                  ? cx(tone.solid)
+                  : 'bg-cream text-ink-soft hover:bg-lilac-50 hover:text-ink',
                 !scheduled && 'opacity-35',
-                isToday && !done && 'border-lilac-300 ring-1 ring-lilac-300/60',
+                isToday && !done && 'ring-1 ring-lilac-300/70',
               )}
             >
               {done ? (
@@ -99,7 +99,7 @@ export function HabitCard({ habit, checks, weekStartsOn, onEdit }: HabitCardProp
         })}
       </div>
 
-      <p className="mt-2 text-xs text-ink-soft tabular-nums">
+      <p className="mt-2 font-typewriter text-[11px] text-ink-soft tabular-nums">
         Best streak: {streak.best} day{streak.best === 1 ? '' : 's'}
       </p>
     </li>

@@ -91,14 +91,14 @@ export function TaskFilters({
             onChange={(event) => onQueryChange(event.target.value)}
             placeholder="Search your tasks..."
             aria-label="Search your tasks"
-            className="w-full rounded-[4px] border border-lilac-200 bg-cream py-2 pr-8 pl-8.5 text-sm font-sans text-ink placeholder:text-text-faint placeholder:italic focus:border-accent focus:outline-none"
+            className="w-full rounded-[8px] border border-divider/65 bg-cream py-2 pr-8 pl-8.5 font-typewriter text-xs text-ink placeholder:text-text-faint focus:border-accent focus:outline-none shadow-soft"
           />
           {query.length > 0 && (
             <button
               type="button"
               onClick={() => onQueryChange('')}
               aria-label="Clear search"
-              className="absolute top-1/2 right-1.5 grid h-6 w-6 -translate-y-1/2 place-items-center rounded-[3px] text-ink-soft hover:text-ink"
+              className="absolute top-1/2 right-1.5 grid h-6 w-6 -translate-y-1/2 place-items-center rounded-[5px] text-ink-soft hover:text-ink"
             >
               <X size={13} aria-hidden="true" />
             </button>
@@ -106,10 +106,10 @@ export function TaskFilters({
         </div>
       )}
 
-      <div className="flex flex-wrap items-center gap-x-3.5 gap-y-1.5 text-xs font-sans text-ink-soft">
+      <div className="flex flex-wrap items-center gap-x-3 gap-y-1.5 font-typewriter text-xs text-ink-soft">
         <div className="flex items-center gap-1.5 text-text-faint">
           <SlidersHorizontal size={12} className="text-accent" />
-          <span>Index:</span>
+          <span>Filter:</span>
         </div>
 
         {/* Project Menu */}
@@ -118,9 +118,9 @@ export function TaskFilters({
             type="button"
             onClick={() => setOpenMenu(openMenu === 'project' ? null : 'project')}
             className={cx(
-              'inline-flex items-center gap-1 transition cursor-pointer py-1 px-2 rounded-[3px]',
+              'inline-flex items-center gap-1 transition cursor-pointer py-1 px-2.5 rounded-[7px]',
               filters.projectId !== 'all'
-                ? 'bg-paper-2 text-ink font-medium'
+                ? 'bg-paper-2 text-ink'
                 : 'hover:text-ink hover:bg-paper-2/60',
             )}
           >
@@ -129,7 +129,7 @@ export function TaskFilters({
           </button>
 
           {openMenu === 'project' && (
-            <div className="absolute left-0 top-full z-50 mt-1 min-w-[180px] rounded-[4px] border border-lilac-200 bg-cream p-1 shadow-lift motion-safe:animate-fade-in">
+            <div className="absolute left-0 top-full z-50 mt-1 min-w-[180px] rounded-[9px] border border-divider/70 bg-cream p-1 shadow-lift motion-safe:animate-fade-in">
               <button
                 type="button"
                 onClick={() => {
@@ -181,9 +181,9 @@ export function TaskFilters({
             type="button"
             onClick={() => setOpenMenu(openMenu === 'priority' ? null : 'priority')}
             className={cx(
-              'inline-flex items-center gap-1 transition cursor-pointer py-1 px-2 rounded-[3px]',
+              'inline-flex items-center gap-1 transition cursor-pointer py-1 px-2.5 rounded-[7px]',
               filters.priority !== 'all'
-                ? 'bg-paper-2 text-ink font-medium'
+                ? 'bg-paper-2 text-ink'
                 : 'hover:text-ink hover:bg-paper-2/60',
             )}
           >
@@ -192,7 +192,7 @@ export function TaskFilters({
           </button>
 
           {openMenu === 'priority' && (
-            <div className="absolute left-0 top-full z-50 mt-1 min-w-[155px] rounded-[4px] border border-lilac-200 bg-cream p-1 shadow-lift motion-safe:animate-fade-in">
+            <div className="absolute left-0 top-full z-50 mt-1 min-w-[155px] rounded-[9px] border border-divider/70 bg-cream p-1 shadow-lift motion-safe:animate-fade-in">
               <button
                 type="button"
                 onClick={() => {
@@ -229,9 +229,9 @@ export function TaskFilters({
               type="button"
               onClick={() => setOpenMenu(openMenu === 'tag' ? null : 'tag')}
               className={cx(
-                'inline-flex items-center gap-1 transition cursor-pointer py-1 px-2 rounded-[3px]',
+                'inline-flex items-center gap-1 transition cursor-pointer py-1 px-2.5 rounded-[7px]',
                 filters.tag !== 'all'
-                  ? 'bg-paper-2 text-ink font-medium'
+                  ? 'bg-paper-2 text-ink'
                   : 'hover:text-ink hover:bg-paper-2/60',
               )}
             >
@@ -240,7 +240,7 @@ export function TaskFilters({
             </button>
 
             {openMenu === 'tag' && (
-              <div className="absolute left-0 top-full z-50 mt-1 max-h-52 overflow-y-auto min-w-[145px] rounded-[4px] border border-lilac-200 bg-cream p-1 shadow-lift motion-safe:animate-fade-in">
+              <div className="absolute left-0 top-full z-50 mt-1 max-h-52 overflow-y-auto min-w-[145px] rounded-[9px] border border-divider/70 bg-cream p-1 shadow-lift motion-safe:animate-fade-in">
                 <button
                   type="button"
                   onClick={() => {
@@ -277,9 +277,9 @@ export function TaskFilters({
             type="button"
             onClick={() => setOpenMenu(openMenu === 'sort' ? null : 'sort')}
             className={cx(
-              'inline-flex items-center gap-1 transition cursor-pointer py-1 px-2 rounded-[3px]',
+              'inline-flex items-center gap-1 transition cursor-pointer py-1 px-2.5 rounded-[7px]',
               filters.sort !== 'smart'
-                ? 'bg-paper-2 text-ink font-medium'
+                ? 'bg-paper-2 text-ink'
                 : 'hover:text-ink hover:bg-paper-2/60',
             )}
           >
@@ -289,7 +289,7 @@ export function TaskFilters({
           </button>
 
           {openMenu === 'sort' && (
-            <div className="absolute right-0 top-full z-50 mt-1 min-w-[165px] rounded-[4px] border border-lilac-200 bg-cream p-1 shadow-lift motion-safe:animate-fade-in">
+            <div className="absolute right-0 top-full z-50 mt-1 min-w-[165px] rounded-[9px] border border-divider/70 bg-cream p-1 shadow-lift motion-safe:animate-fade-in">
               {(Object.keys(TASK_SORT_LABELS) as TaskSort[]).map((key) => (
                 <button
                   key={key}

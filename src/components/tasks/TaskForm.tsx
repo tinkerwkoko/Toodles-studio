@@ -84,7 +84,7 @@ export function TaskForm({
           value={values.title}
           onChange={(event) => patch({ title: event.target.value })}
           placeholder="What needs to get done?"
-          className="w-full rounded-[4px] border border-lilac-200 bg-cream px-3.5 py-2.5 font-display text-2xl font-semibold text-ink placeholder:text-text-faint placeholder:italic focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/15"
+          className="w-full rounded-[8px] border border-divider/80 bg-cream px-3.5 py-2.5 font-display text-2xl text-ink placeholder:text-text-faint focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/15"
         />
         <label htmlFor="task-notes" className="sr-only">
           Notes
@@ -95,6 +95,7 @@ export function TaskForm({
           value={values.description}
           onChange={(event) => patch({ description: event.target.value })}
           placeholder="Add a little context..."
+          className="font-typewriter text-[13px]"
         />
       </div>
 
@@ -133,8 +134,8 @@ export function TaskForm({
 
       {children}
 
-      <div className="flex flex-col gap-3 border-t border-divider pt-4 sm:flex-row sm:items-center sm:justify-between">
-        <p className="text-xs font-sans italic text-ink-soft">
+      <div className="flex flex-col gap-3 border-t border-divider/65 pt-4 sm:flex-row sm:items-center sm:justify-between">
+        <p className="font-typewriter text-xs text-ink-soft">
           {hint ?? 'A title is all you need. Everything else can wait until later.'}
         </p>
         <div className="flex items-center gap-2">

@@ -30,8 +30,8 @@ export function SubtaskChecklist({ task }: SubtaskChecklistProps) {
   return (
     <div className="space-y-3">
       <div className="flex items-baseline justify-between gap-3">
-        <h3 className="font-display text-xl font-semibold text-ink">Little steps</h3>
-        <span className="text-xs font-sans text-ink-soft tabular-nums">
+        <h3 className="font-display text-xl text-ink">Little steps</h3>
+        <span className="font-typewriter text-xs text-ink-soft tabular-nums">
           {progress.done} / {progress.total} completed
         </span>
       </div>
@@ -39,7 +39,7 @@ export function SubtaskChecklist({ task }: SubtaskChecklistProps) {
       {progress.total > 0 && <ProgressBar value={progress.percent} label="Subtask progress" />}
 
       {task.subtasks.length > 0 && (
-        <ul className="divide-y divide-divider border-t border-b border-divider">
+        <ul className="divide-y divide-divider/65 border-t border-b border-divider/65">
           {task.subtasks.map((subtask) => (
             <SubtaskRow key={subtask.id} taskId={task.id} subtask={subtask} />
           ))}
@@ -58,7 +58,7 @@ export function SubtaskChecklist({ task }: SubtaskChecklistProps) {
           }}
           placeholder="Add another step..."
           aria-label="Add a subtask"
-          className="h-9 flex-1 rounded-[4px] border border-lilac-200 bg-cream px-3 font-sans text-sm text-ink placeholder:text-text-faint placeholder:italic focus:border-accent focus:outline-none"
+          className="h-9 flex-1 rounded-[8px] border border-divider/80 bg-cream px-3 font-sans text-sm text-ink placeholder:text-text-faint focus:border-accent focus:outline-none"
         />
         <Button
           variant="outline"

@@ -16,6 +16,7 @@ import { Button } from '../components/ui/Button';
 import { Card } from '../components/ui/Card';
 import { Select } from '../components/ui/Field';
 import { TaskCheckbox } from '../components/ui/TaskCheckbox';
+import { BotanicalDivider, FernSprig } from '../components/ui/BotanicalOrnaments';
 import { cx } from '../lib/cx';
 import { nowTimestamp } from '../lib/date';
 import { useToodles } from '../store/useToodles';
@@ -39,16 +40,13 @@ export function StudyPage() {
   const [selectedTaskId, setSelectedTaskId] = useState<string>('');
   const [running, setRunning] = useState(false);
 
-  // Stopwatch state
   const [elapsedSeconds, setElapsedSeconds] = useState(0);
   const stopwatchStartRef = useRef<number | null>(null);
 
-  // Pomodoro countdown state
   const [pomoRemaining, setPomoRemaining] = useState(POMODORO_DURATIONS.pomodoro * 60);
   const pomoEndRef = useRef<number | null>(null);
   const sessionStartedAtRef = useRef<string | null>(null);
 
-  // Filter study-related tasks
   const studyTasks = useMemo(() => {
     return data.tasks.filter(
       (t) =>
@@ -66,13 +64,11 @@ export function StudyPage() {
   const openStudyTasks = useMemo(() => studyTasks.filter((t) => t.status === 'todo'), [studyTasks]);
   const doneStudyTasks = useMemo(() => studyTasks.filter((t) => t.status === 'done'), [studyTasks]);
 
-  // Selected task object
   const selectedTask = useMemo(
     () => data.tasks.find((t) => t.id === selectedTaskId) ?? null,
     [data.tasks, selectedTaskId],
   );
 
-  // Calculate hours studied for a specific task
   function getTaskStudiedMinutes(taskId: string): number {
     return (data.focusSessions ?? [])
       .filter((s) => s.taskId === taskId)
@@ -87,12 +83,10 @@ export function StudyPage() {
     return `${mins}m`;
   }
 
-  // Total study time across all sessions
   const totalStudyMinutes = useMemo(() => {
     return (data.focusSessions ?? []).reduce((acc, s) => acc + (s.actualMinutes || 0), 0);
   }, [data.focusSessions]);
 
-  // Handle mode switches
   function switchMode(newMode: TimerMode) {
     setRunning(false);
     stopwatchStartRef.current = null;
@@ -106,7 +100,6 @@ export function StudyPage() {
     }
   }
 
-  // Stopwatch timer loop
   useEffect(() => {
     if (!running || mode !== 'stopwatch') return;
 
@@ -126,7 +119,6 @@ export function StudyPage() {
     return () => clearInterval(interval);
   }, [running, elapsedSeconds, mode]);
 
-  // Pomodoro / Break timer loop
   useEffect(() => {
     if (!running || (mode !== 'pomodoro' && mode !== 'break')) return;
 
@@ -233,7 +225,6 @@ export function StudyPage() {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
-  // Formatting strings
   const stopwatchHours = Math.floor(elapsedSeconds / 3600);
   const stopwatchMins = Math.floor((elapsedSeconds % 3600) / 60);
   const stopwatchSecs = elapsedSeconds % 60;
@@ -248,38 +239,43 @@ export function StudyPage() {
 
   return (
     <div className="mx-auto max-w-3xl space-y-8 pb-6">
-      {/* Editorial Reading Room Header */}
-      <header className="flex flex-col items-start justify-between gap-3 border-b border-divider pb-5 sm:flex-row sm:items-end">
-        <div className="space-y-1">
-          <p className="font-hand text-[1.1rem] leading-none text-ink-soft">Reading desk</p>
-          <h1 className="font-display text-3xl font-semibold tracking-tight text-ink sm:text-[2.15rem]">
-            Study &amp; Focus Corner
-          </h1>
-          <p className="text-sm text-ink-soft">
-            A quiet sanctuary for revisions, deep reading, and tracking hours studied per task.
-          </p>
-        </div>
+      <header className="space-y-3">
+        <div className="flex flex-col items-start justify-between gap-3 sm:flex-row sm:items-end">
+          <div className="space-y-1">
+            <h1 className="font-display text-3xl tracking-tight text-ink sm:text-[2.2rem]">
+              Study &amp; Focus Corner
+            </h1>
+            <p className="font-typewriter text-xs text-ink-soft leading-relaxed">
+              A quiet sanctuary for revisions, deep reading, and tracking hours studied per task.
+            </p>
+          </div>
 
-        <div className="flex items-center gap-2 text-xs text-ink-soft">
-          <Clock size={14} className="text-lilac-700" aria-hidden="true" />
-          <span>
-            Total studied:{' '}
-            <strong className="font-semibold tabular-nums text-ink">
-              {formatMinutes(totalStudyMinutes)}
-            </strong>
-          </span>
+          <div className="flex items-center gap-2 font-typewriter text-xs text-ink-soft">
+            <Clock size={14} className="text-accent" aria-hidden="true" />
+            <span>
+              Total studied:{' '}
+              <strong className="font-normal tabular-nums text-ink">
+                {formatMinutes(totalStudyMinutes)}
+              </strong>
+            </span>
+          </div>
         </div>
+        <BotanicalDivider />
       </header>
 
-      {/* Main Study Timer Folio */}
-      <Card variant="stack" padding="lg" className="flex flex-col items-center gap-6 text-center">
-        {/* Stationery mode strip */}
-        <div className="inline-flex flex-wrap items-center justify-center rounded-[4px] border border-lilac-200 bg-paper-2 p-0.5">
+      <Card
+        variant="stack"
+        padding="lg"
+        className="relative overflow-hidden flex flex-col items-center gap-6 text-center"
+      >
+        <FernSprig className="absolute -top-2 -right-3 w-32 text-fern/20" />
+
+        <div className="relative inline-flex flex-wrap items-center justify-center rounded-[8px] bg-paper-2/75 p-1">
           <button
             type="button"
             onClick={() => switchMode('stopwatch')}
             className={cx(
-              'flex cursor-pointer items-center gap-1.5 rounded-[3px] px-3.5 py-1.5 text-xs font-medium transition',
+              'flex cursor-pointer items-center gap-1.5 rounded-[6px] px-3.5 py-1.5 font-typewriter text-xs transition',
               mode === 'stopwatch'
                 ? 'bg-cream text-ink shadow-soft'
                 : 'text-ink-soft hover:text-ink',
@@ -292,7 +288,7 @@ export function StudyPage() {
             type="button"
             onClick={() => switchMode('pomodoro')}
             className={cx(
-              'flex cursor-pointer items-center gap-1.5 rounded-[3px] px-3.5 py-1.5 text-xs font-medium transition',
+              'flex cursor-pointer items-center gap-1.5 rounded-[6px] px-3.5 py-1.5 font-typewriter text-xs transition',
               mode === 'pomodoro'
                 ? 'bg-cream text-ink shadow-soft'
                 : 'text-ink-soft hover:text-ink',
@@ -305,7 +301,7 @@ export function StudyPage() {
             type="button"
             onClick={() => switchMode('break')}
             className={cx(
-              'flex cursor-pointer items-center gap-1.5 rounded-[3px] px-3.5 py-1.5 text-xs font-medium transition',
+              'flex cursor-pointer items-center gap-1.5 rounded-[6px] px-3.5 py-1.5 font-typewriter text-xs transition',
               mode === 'break'
                 ? 'bg-cream text-ink shadow-soft'
                 : 'text-ink-soft hover:text-ink',
@@ -316,19 +312,17 @@ export function StudyPage() {
           </button>
         </div>
 
-        {/* Mascot */}
         <Cat
           pose={running ? (mode === 'break' ? 'sleepy' : 'happy') : 'curious'}
           size={98}
           animated
         />
 
-        {/* Monumental Almanac Digits */}
         <div className="space-y-1.5">
-          <div className="font-display text-6xl font-semibold tracking-wider tabular-nums text-ink sm:text-7xl">
+          <div className="font-display text-6xl tracking-wider tabular-nums text-ink sm:text-7xl">
             {mode === 'stopwatch' ? stopwatchFormatted : pomoFormatted}
           </div>
-          <p className="text-xs italic text-ink-soft">
+          <p className="font-typewriter text-xs text-ink-soft">
             {mode === 'stopwatch'
               ? 'Stopwatch running quietly · Save whenever you are ready'
               : mode === 'pomodoro'
@@ -337,15 +331,16 @@ export function StudyPage() {
           </p>
         </div>
 
-        {/* Task Linkage Inset */}
-        <div className="w-full max-w-md rounded-[4px] border border-lilac-200/85 bg-paper-2/65 p-3 text-left">
+        <div className="w-full max-w-md rounded-[10px] bg-paper-2/60 p-3.5 text-left">
           <div className="mb-1.5 flex items-center justify-between text-xs">
-            <span className="uppercase tracking-wider text-[11px] text-ink-soft">Studying for</span>
+            <span className="font-typewriter text-[11px] uppercase tracking-[0.06em] text-ink-soft">
+              Studying for
+            </span>
             {selectedTask && (
               <button
                 type="button"
                 onClick={() => setSelectedTaskId('')}
-                className="cursor-pointer text-xs text-lilac-700 hover:underline"
+                className="cursor-pointer font-typewriter text-xs text-accent hover:underline"
               >
                 Unlink
               </button>
@@ -368,16 +363,15 @@ export function StudyPage() {
           </Select>
 
           {selectedTask && (
-            <div className="mt-2 flex items-center justify-between border-t border-divider/70 pt-2 text-xs text-ink-soft">
+            <div className="mt-2.5 flex items-center justify-between border-t border-divider/60 pt-2 font-typewriter text-xs text-ink-soft">
               <span className="truncate pr-2">{selectedTask.title}</span>
-              <span className="shrink-0 font-medium tabular-nums text-lilac-700">
+              <span className="shrink-0 tabular-nums text-accent">
                 {formatMinutes(getTaskStudiedMinutes(selectedTask.id))} studied
               </span>
             </div>
           )}
         </div>
 
-        {/* Timer Actions */}
         <div className="flex flex-wrap items-center justify-center gap-2.5">
           {running ? (
             <Button variant="soft" size="lg" icon={<Pause size={16} />} onClick={handlePause}>
@@ -426,14 +420,13 @@ export function StudyPage() {
         </div>
       </Card>
 
-      {/* Study Tasks & Reading Goals Ledger */}
       <section className="space-y-3">
-        <div className="flex items-end justify-between gap-3 border-b border-divider pb-2.5">
+        <div className="flex items-end justify-between gap-3 border-b border-divider/65 pb-2.5">
           <div className="flex items-baseline gap-2.5">
-            <h2 className="font-display text-2xl font-semibold text-ink">
+            <h2 className="font-display text-2xl text-ink">
               Study tasks &amp; reading goals
             </h2>
-            <span className="text-xs tabular-nums text-ink-soft">
+            <span className="font-typewriter text-xs tabular-nums text-ink-soft">
               {openStudyTasks.length} open
             </span>
           </div>
@@ -457,7 +450,7 @@ export function StudyPage() {
         <Card padding="md">
           {studyTasks.length === 0 ? (
             <div className="space-y-3 py-6 text-center text-ink-soft">
-              <p className="text-sm italic">
+              <p className="font-typewriter text-xs leading-relaxed">
                 No study tasks yet. Add a study goal (like &ldquo;Study DBMS&rdquo; or &ldquo;Read
                 Chapter 4&rdquo;) to track hours studied.
               </p>
@@ -480,7 +473,7 @@ export function StudyPage() {
           ) : (
             <div className="space-y-4">
               {openStudyTasks.length > 0 && (
-                <ul className="divide-y divide-divider/70">
+                <ul className="divide-y divide-divider/60">
                   {openStudyTasks.map((task) => {
                     const taskMins = getTaskStudiedMinutes(task.id);
                     const isCurrent = selectedTaskId === task.id;
@@ -489,8 +482,8 @@ export function StudyPage() {
                       <li
                         key={task.id}
                         className={cx(
-                          'flex items-center justify-between gap-3 px-2 py-3 transition',
-                          isCurrent ? 'bg-paper-2/75' : 'hover:bg-lilac-100/35',
+                          'flex items-center justify-between gap-3 rounded-[8px] px-2.5 py-3 transition',
+                          isCurrent ? 'bg-paper-2/75' : 'hover:bg-paper-2/35',
                         )}
                       >
                         <div className="flex min-w-0 flex-1 items-center gap-3">
@@ -506,22 +499,22 @@ export function StudyPage() {
                             <div className="flex flex-wrap items-center gap-2">
                               <p className="truncate font-medium text-sm text-ink">{task.title}</p>
                               {isCurrent && (
-                                <span className="text-[11px] italic text-lilac-700">
+                                <span className="font-typewriter text-[11px] text-accent">
                                   · Active in timer
                                 </span>
                               )}
                             </div>
-                            <div className="mt-0.5 flex flex-wrap items-center gap-2 text-xs text-ink-soft">
+                            <div className="mt-0.5 flex flex-wrap items-center gap-2 font-typewriter text-[11px] text-ink-soft">
                               {task.dueDate && (
                                 <span className="tabular-nums">Due {task.dueDate}</span>
                               )}
                               {taskMins > 0 ? (
-                                <span className="inline-flex items-center gap-1 font-medium tabular-nums text-lilac-700">
+                                <span className="inline-flex items-center gap-1 tabular-nums text-accent">
                                   <Clock size={11} aria-hidden="true" />
                                   {formatMinutes(taskMins)} studied
                                 </span>
                               ) : (
-                                <span className="italic">No time logged yet</span>
+                                <span>No time logged yet</span>
                               )}
                             </div>
                           </div>
@@ -532,10 +525,10 @@ export function StudyPage() {
                           onClick={() => selectTaskForStudy(task)}
                           title={`Study "${task.title}" with timer`}
                           className={cx(
-                            'inline-flex shrink-0 cursor-pointer items-center gap-1.5 rounded-[4px] px-3 py-1.5 text-xs font-medium transition',
+                            'inline-flex shrink-0 cursor-pointer items-center gap-1.5 rounded-[7px] px-3 py-1.5 font-typewriter text-xs transition',
                             isCurrent
                               ? 'bg-lilac-300 text-primary-ink'
-                              : 'border border-lilac-200 bg-cream text-ink hover:bg-lilac-100',
+                              : 'bg-paper-2/70 text-ink hover:bg-paper-2',
                           )}
                         >
                           <Timer size={13} aria-hidden="true" />
@@ -548,11 +541,11 @@ export function StudyPage() {
               )}
 
               {doneStudyTasks.length > 0 && (
-                <div className="border-t border-divider pt-3">
-                  <span className="mb-1.5 block text-xs uppercase tracking-wider text-ink-soft">
+                <div className="border-t border-divider/65 pt-3">
+                  <span className="mb-1.5 block font-typewriter text-[11px] uppercase tracking-[0.06em] text-ink-soft">
                     Completed study ({doneStudyTasks.length})
                   </span>
-                  <ul className="divide-y divide-divider/60 opacity-75">
+                  <ul className="divide-y divide-divider/55 opacity-75">
                     {doneStudyTasks.map((task) => {
                       const taskMins = getTaskStudiedMinutes(task.id);
                       return (
@@ -569,7 +562,7 @@ export function StudyPage() {
                             <span className="flex-1 truncate text-sm">{task.title}</span>
                           </div>
                           {taskMins > 0 && (
-                            <span className="shrink-0 text-xs tabular-nums text-ink-soft no-underline">
+                            <span className="shrink-0 font-typewriter text-[11px] tabular-nums text-ink-soft no-underline">
                               {formatMinutes(taskMins)} studied
                             </span>
                           )}

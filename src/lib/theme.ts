@@ -20,6 +20,6 @@ export function applyTheme(mode: ThemeMode = 'system'): void {
 
   const meta = document.querySelector('meta[name="theme-color"]');
   if (meta) {
-    meta.setAttribute('content', resolved === 'dark' ? '#1B1511' : '#F4EBDD');
+    meta.setAttribute('content', resolved === 'dark' ? '#131B16' : '#F3F5EE');
   }
 }

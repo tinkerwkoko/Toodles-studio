@@ -64,7 +64,7 @@ export function HabitForm({ initial, submitLabel, onSubmit, onDelete }: HabitFor
       </Field>
 
       <fieldset className="space-y-2">
-        <legend className="text-xs font-medium uppercase tracking-wider text-ink-soft">
+        <legend className="font-typewriter text-[11px] uppercase tracking-[0.06em] text-ink-soft">
           How often?
         </legend>
         <div className="flex flex-wrap gap-2">
@@ -75,10 +75,10 @@ export function HabitForm({ initial, submitLabel, onSubmit, onDelete }: HabitFor
               aria-pressed={frequency === option}
               onClick={() => setFrequency(option)}
               className={cx(
-                'min-h-10 rounded-[4px] border px-4 text-sm font-medium transition',
+                'min-h-10 rounded-[8px] px-4 font-typewriter text-xs transition cursor-pointer',
                 frequency === option
-                  ? 'border-lilac-300 bg-lilac-300 text-primary-ink'
-                  : 'border-lilac-200 bg-cream text-ink hover:bg-lilac-100',
+                  ? 'bg-lilac-300 text-primary-ink'
+                  : 'bg-paper-2/65 text-ink hover:bg-paper-2',
               )}
             >
               {option === 'daily' ? 'Every day' : 'Certain weekdays'}
@@ -89,7 +89,7 @@ export function HabitForm({ initial, submitLabel, onSubmit, onDelete }: HabitFor
 
       {frequency === 'weekly' && (
         <fieldset className="space-y-2">
-          <legend className="text-xs font-medium uppercase tracking-wider text-ink-soft">
+          <legend className="font-typewriter text-[11px] uppercase tracking-[0.06em] text-ink-soft">
             Which days?
           </legend>
           <div className="flex flex-wrap gap-1.5">
@@ -101,10 +101,10 @@ export function HabitForm({ initial, submitLabel, onSubmit, onDelete }: HabitFor
                 aria-pressed={weekdays.includes(day)}
                 onClick={() => toggleDay(day)}
                 className={cx(
-                  'grid h-10 w-10 place-items-center rounded-[4px] border text-xs font-medium transition',
+                  'grid h-10 w-10 place-items-center rounded-[8px] font-typewriter text-xs transition cursor-pointer',
                   weekdays.includes(day)
-                    ? 'border-lilac-300 bg-lilac-300 text-primary-ink'
-                    : 'border-lilac-200 bg-cream text-ink hover:bg-lilac-100',
+                    ? 'bg-lilac-300 text-primary-ink'
+                    : 'bg-paper-2/65 text-ink hover:bg-paper-2',
                 )}
               >
                 {weekdayInitials([day])}
@@ -115,8 +115,8 @@ export function HabitForm({ initial, submitLabel, onSubmit, onDelete }: HabitFor
       )}
 
       <fieldset className="space-y-2">
-        <legend className="text-xs font-medium uppercase tracking-wider text-ink-soft">
-          Ink colour
+        <legend className="font-typewriter text-[11px] uppercase tracking-[0.06em] text-ink-soft">
+          Colour
         </legend>
         <div className="flex flex-wrap gap-2">
           {ACCENT_KEYS.map((key) => (
@@ -127,7 +127,7 @@ export function HabitForm({ initial, submitLabel, onSubmit, onDelete }: HabitFor
               aria-pressed={color === key}
               onClick={() => setColor(key)}
               className={cx(
-                'h-8 w-8 rounded-[4px] border-2 transition',
+                'h-8 w-8 rounded-[8px] border-2 transition cursor-pointer',
                 accent(key).mid,
                 color === key ? 'scale-105 border-ink' : 'border-transparent hover:scale-105',
               )}
@@ -136,7 +136,7 @@ export function HabitForm({ initial, submitLabel, onSubmit, onDelete }: HabitFor
         </div>
       </fieldset>
 
-      <div className="flex items-center justify-end gap-2 border-t border-divider pt-4">
+      <div className="flex items-center justify-end gap-2 border-t border-divider/65 pt-4">
         {onDelete && (
           <Button variant="ghost" className="text-rose-700 hover:bg-rose-100" onClick={onDelete}>
             Delete habit

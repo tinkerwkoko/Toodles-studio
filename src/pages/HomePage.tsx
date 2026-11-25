@@ -8,6 +8,7 @@ import { ComingUpList } from '../components/home/ComingUpList';
 import { TodayFeelingCard } from '../components/home/TodayFeelingCard';
 import { TodayHabitsCard } from '../components/home/TodayHabitsCard';
 import { ProjectCard } from '../components/projects/ProjectCard';
+import { BotanicalDivider, LeafMark } from '../components/ui/BotanicalOrnaments';
 import { formatLongDay, greetingTimeOfDay, todayString } from '../lib/date';
 import { filterByScope } from '../lib/task';
 import { columnsForProject } from '../store/mutations';
@@ -45,23 +46,24 @@ export function HomePage() {
 
   return (
     <div className="space-y-8">
-      {/* Diary entry header: handwritten date + editorial serif greeting */}
-      <header className="pb-4 border-b border-divider flex flex-col gap-1">
-        <p className="font-hand text-xl text-accent leading-none">
-          {formatLongDay(today)}
-        </p>
-        <div className="flex items-center gap-3 pt-0.5">
-          <h1 className="font-display text-4xl sm:text-[2.75rem] font-semibold text-ink leading-none tracking-tight">
-            {greetingHeading}
-          </h1>
-          <Cat pose={isNight ? 'sleepy' : 'happy'} size={42} animated />
+      <header className="space-y-3">
+        <div className="flex flex-col gap-1.5">
+          <p className="inline-flex items-center gap-1.5 font-typewriter text-xs tracking-wide text-fern">
+            <LeafMark className="h-3.5 w-3.5 text-fern/80" />
+            <span>{formatLongDay(today)}</span>
+          </p>
+          <div className="flex items-center gap-3">
+            <h1 className="font-display text-3xl sm:text-[2.55rem] text-ink leading-tight tracking-tight">
+              {greetingHeading}
+            </h1>
+            <Cat pose={isNight ? 'sleepy' : 'happy'} size={42} animated />
+          </div>
         </div>
+        <BotanicalDivider />
       </header>
 
-      {/* Open letter-paper welcome anchor */}
       <HeroCard hasTasks={data.tasks.length > 0} />
 
-      {/* Archival ledger index strip */}
       <NookStats
         upcomingCount={counts.upcoming}
         overdueCount={counts.overdue}
@@ -69,14 +71,13 @@ export function HomePage() {
         completedCount={counts.completed}
       />
 
-      {/* Active projects folio shelf */}
       {activeProjects.length > 0 && (
-        <section className="space-y-3.5">
-          <div className="flex items-baseline justify-between border-b border-divider pb-2">
-            <h2 className="font-display text-2xl font-semibold text-ink">Active projects</h2>
+        <section className="space-y-4">
+          <div className="flex items-baseline justify-between border-b border-divider/70 pb-2">
+            <h2 className="font-display text-2xl text-ink">Active projects</h2>
             <Link
               to="/projects"
-              className="text-xs font-sans text-ink-soft hover:text-accent underline underline-offset-4 transition tabular-nums"
+              className="font-typewriter text-xs text-ink-soft hover:text-accent underline underline-offset-4 transition tabular-nums"
             >
               See all ({counts.projects})
             </Link>
@@ -94,7 +95,6 @@ export function HomePage() {
         </section>
       )}
 
-      {/* Asymmetric two-column diary spread: main ledger + margin notes */}
       <div className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_320px] items-start">
         <div className="space-y-8 min-w-0">
           <TodayListCard />

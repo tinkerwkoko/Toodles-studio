@@ -15,10 +15,10 @@ import {
 import { Check, ChevronDown } from 'lucide-react';
 import { cx } from '../../lib/cx';
 
-/* Shared stationery input: warm paper fill, crisp 4px corners, fine archival border. */
+/* Integrated botanical form control: warm ivory fill, whisper-thin border, calm forest focus. */
 const CONTROL =
-  'w-full rounded-[4px] border border-lilac-200 bg-cream px-3 py-2 text-ink font-sans text-sm placeholder:text-text-faint ' +
-  'transition duration-150 focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/15 disabled:opacity-55';
+  'w-full rounded-[6px] border border-divider/90 bg-cream/90 px-3 py-2 text-ink font-sans text-sm placeholder:text-text-faint ' +
+  'transition duration-150 focus:border-forest focus:bg-cream focus:outline-none focus:ring-2 focus:ring-forest/15 disabled:opacity-55';
 
 export interface FieldProps {
   label: string;
@@ -33,12 +33,12 @@ export function Field({ label, htmlFor, hint, children, className }: FieldProps)
     <div className={cx('flex flex-col gap-1.5', className)}>
       <label
         htmlFor={htmlFor}
-        className="text-[13px] font-sans font-medium text-ink tracking-[0.01em]"
+        className="font-typewriter text-[12.5px] text-ink-soft"
       >
         {label}
       </label>
       {children}
-      {hint && <p className="text-xs text-ink-soft font-sans italic">{hint}</p>}
+      {hint && <p className="font-typewriter text-[11.5px] text-text-faint">{hint}</p>}
     </div>
   );
 }
@@ -56,8 +56,18 @@ export function Input({ className, compact = false, ...rest }: InputProps) {
   );
 }
 
-export function Textarea({ className, rows = 4, ...rest }: TextareaHTMLAttributes<HTMLTextAreaElement>) {
-  return <textarea rows={rows} className={cx(CONTROL, 'resize-y leading-relaxed', className)} {...rest} />;
+export function Textarea({
+  className,
+  rows = 4,
+  ...rest
+}: TextareaHTMLAttributes<HTMLTextAreaElement>) {
+  return (
+    <textarea
+      rows={rows}
+      className={cx(CONTROL, 'resize-y leading-relaxed', className)}
+      {...rest}
+    />
+  );
 }
 
 export interface SelectProps extends Omit<SelectHTMLAttributes<HTMLSelectElement>, 'size'> {
@@ -80,7 +90,11 @@ export const Select = forwardRef<HTMLSelectElement, SelectProps>(function Select
   const options: ParsedOption[] = [];
   Children.forEach(children, (child) => {
     if (isValidElement(child)) {
-      const el = child as ReactElement<{ value?: string | number; disabled?: boolean; children?: ReactNode }>;
+      const el = child as ReactElement<{
+        value?: string | number;
+        disabled?: boolean;
+        children?: ReactNode;
+      }>;
       const optVal = el.props.value !== undefined ? String(el.props.value) : '';
       options.push({
         value: optVal,
@@ -150,7 +164,7 @@ export const Select = forwardRef<HTMLSelectElement, SelectProps>(function Select
           CONTROL,
           'flex items-center justify-between gap-2 text-left cursor-pointer',
           compact && 'px-2.5 py-1.5 text-sm',
-          open && 'border-accent ring-2 ring-accent/15',
+          open && 'border-forest ring-2 ring-forest/15',
           className,
         )}
       >
@@ -158,14 +172,17 @@ export const Select = forwardRef<HTMLSelectElement, SelectProps>(function Select
         <ChevronDown
           size={15}
           aria-hidden="true"
-          className={cx('shrink-0 text-ink-soft transition-transform duration-150', open && 'rotate-180')}
+          className={cx(
+            'shrink-0 text-ink-soft transition-transform duration-150',
+            open && 'rotate-180',
+          )}
         />
       </button>
 
       {open && (
         <div
           role="listbox"
-          className="absolute left-0 right-0 top-full mt-1 z-50 max-h-56 overflow-y-auto rounded-[4px] border border-lilac-200 bg-cream p-1 shadow-lift motion-safe:animate-fade-in"
+          className="absolute left-0 right-0 top-full z-50 mt-1 max-h-56 overflow-y-auto rounded-[8px] border border-divider bg-cream p-1 shadow-lift motion-safe:animate-fade-in"
         >
           {options.map((opt) => {
             const isSelected = String(opt.value) === String(value);
@@ -178,15 +195,17 @@ export const Select = forwardRef<HTMLSelectElement, SelectProps>(function Select
                 disabled={opt.disabled}
                 onClick={() => handleSelect(opt)}
                 className={cx(
-                  'flex w-full items-center justify-between rounded-[3px] px-2.5 py-1.5 text-sm font-sans text-left transition cursor-pointer',
+                  'flex w-full cursor-pointer items-center justify-between rounded-[5px] px-2.5 py-1.5 text-left font-sans text-sm transition',
                   isSelected
                     ? 'bg-paper-2 text-ink font-medium'
-                    : 'text-ink-soft hover:bg-paper-2/50 hover:text-ink',
-                  opt.disabled && 'opacity-40 cursor-not-allowed',
+                    : 'text-ink-soft hover:bg-paper-2/55 hover:text-ink',
+                  opt.disabled && 'cursor-not-allowed opacity-40',
                 )}
               >
                 <span className="truncate">{opt.label}</span>
-                {isSelected && <Check size={14} className="shrink-0 text-accent" aria-hidden="true" />}
+                {isSelected && (
+                  <Check size={14} className="shrink-0 text-forest" aria-hidden="true" />
+                )}
               </button>
             );
           })}

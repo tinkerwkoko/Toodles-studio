@@ -26,7 +26,7 @@ export function MonthPicker({ value, onChange }: MonthPickerProps) {
           type="button"
           onClick={() => step(-1)}
           aria-label="Previous month"
-          className="grid h-9 w-9 place-items-center rounded-[4px] border border-lilac-200 bg-cream text-ink-soft transition hover:bg-lilac-100 hover:text-ink"
+          className="grid h-9 w-9 place-items-center rounded-[8px] bg-cream/95 border border-divider/60 text-ink-soft transition hover:bg-paper-2 hover:text-ink cursor-pointer"
         >
           <ChevronLeft size={16} aria-hidden="true" />
         </button>
@@ -34,10 +34,10 @@ export function MonthPicker({ value, onChange }: MonthPickerProps) {
 
       <p
         className={cx(
-          'flex min-w-36 items-center justify-center gap-2 rounded-[4px] border px-3.5 py-2 text-xs font-medium',
+          'flex min-w-36 items-center justify-center gap-2 rounded-[8px] px-3.5 py-2 font-typewriter text-xs',
           hasYear
-            ? 'border-lilac-200 bg-paper-2 text-ink'
-            : 'border-lilac-200 bg-cream text-ink-soft',
+            ? 'bg-paper-2/85 text-ink'
+            : 'bg-cream/95 border border-divider/60 text-ink-soft',
         )}
       >
         <CalendarDays size={14} aria-hidden="true" />
@@ -51,7 +51,7 @@ export function MonthPicker({ value, onChange }: MonthPickerProps) {
           type="button"
           onClick={() => step(1)}
           aria-label="Next month"
-          className="grid h-9 w-9 place-items-center rounded-[4px] border border-lilac-200 bg-cream text-ink-soft transition hover:bg-lilac-100 hover:text-ink"
+          className="grid h-9 w-9 place-items-center rounded-[8px] bg-cream/95 border border-divider/60 text-ink-soft transition hover:bg-paper-2 hover:text-ink cursor-pointer"
         >
           <ChevronRight size={16} aria-hidden="true" />
         </button>
@@ -61,7 +61,7 @@ export function MonthPicker({ value, onChange }: MonthPickerProps) {
         <button
           type="button"
           onClick={() => onChange(null)}
-          className="min-h-9 rounded-[4px] px-2.5 text-xs font-medium text-lilac-700 transition hover:bg-lilac-100"
+          className="min-h-9 rounded-[8px] px-2.5 font-typewriter text-xs text-accent transition hover:bg-paper-2/70 cursor-pointer"
         >
           Show all
         </button>

@@ -17,12 +17,12 @@ export interface ProjectHeaderProps {
 }
 
 const PRESET_COVERS = [
-  { name: 'Aged Parchment', value: 'linear-gradient(135deg, #efe4d2 0%, #dcc8ad 100%)' },
-  { name: 'Pressed Olive', value: 'linear-gradient(135deg, #d7e0d4 0%, #a5b5a2 100%)' },
-  { name: 'Dusty Rose', value: 'linear-gradient(135deg, #ebd9d6 0%, #c8a29c 100%)' },
-  { name: 'Terracotta Clay', value: 'linear-gradient(135deg, #ecd8c9 0%, #c9997f 100%)' },
-  { name: 'Archival Slate', value: 'linear-gradient(135deg, #d7e0e6 0%, #9eb1bf 100%)' },
-  { name: 'Library Night', value: 'linear-gradient(135deg, #3c2b26 0%, #241916 100%)' },
+  { name: 'Sunlit Sage', value: 'linear-gradient(135deg, #e5ece0 0%, #b8c8b0 100%)' },
+  { name: 'Deep Forest', value: 'linear-gradient(135deg, #4b6754 0%, #2a3e31 100%)' },
+  { name: 'Wildflower Blush', value: 'linear-gradient(135deg, #f2e4e0 0%, #d5b4ae 100%)' },
+  { name: 'Soft Mauve', value: 'linear-gradient(135deg, #e9e0ea 0%, #c4b3c7 100%)' },
+  { name: 'Warm Ivory', value: 'linear-gradient(135deg, #f6f1e4 0%, #dfd5c0 100%)' },
+  { name: 'Forest Night', value: 'linear-gradient(135deg, #213026 0%, #131b16 100%)' },
 ];
 
 function cropAndCompress(
@@ -137,14 +137,14 @@ export function ProjectHeader({ project, doneCount, totalCount, children }: Proj
   const verticalPos = project.coverPosition ?? 50;
 
   return (
-    <header className="mb-7 pb-5 border-b border-divider">
+    <header className="mb-7 pb-5 border-b border-divider/65">
       {/* Top back link + Add header button */}
       <div className="mb-4 flex items-center justify-between">
         <Link
           to="/projects"
-          className="inline-flex items-center gap-1.5 text-xs sm:text-sm font-sans text-ink-soft hover:text-accent transition"
+          className="inline-flex items-center gap-1.5 font-typewriter text-xs text-ink-soft hover:text-accent transition"
         >
-          <ArrowLeft size={15} aria-hidden="true" />
+          <ArrowLeft size={14} aria-hidden="true" />
           <span>All projects</span>
         </Link>
 
@@ -152,7 +152,7 @@ export function ProjectHeader({ project, doneCount, totalCount, children }: Proj
           <button
             type="button"
             onClick={() => setCoverDialogOpen(true)}
-            className="inline-flex items-center gap-1.5 rounded-[4px] border border-divider bg-cream px-3 py-1.5 text-xs font-sans text-ink-soft hover:text-ink hover:border-dusty-rose transition cursor-pointer"
+            className="inline-flex items-center gap-1.5 rounded-[8px] bg-paper-2/70 px-3 py-1.5 font-typewriter text-xs text-ink-soft hover:text-ink hover:bg-paper-2 transition cursor-pointer"
           >
             <Camera size={13} aria-hidden="true" />
             <span>Add header</span>
@@ -162,7 +162,7 @@ export function ProjectHeader({ project, doneCount, totalCount, children }: Proj
 
       {/* Custom Cover Banner */}
       {hasCustomCover && (
-        <div className="relative mb-6 overflow-hidden rounded-[5px] border border-lilac-200 bg-card shadow-soft">
+        <div className="relative mb-6 overflow-hidden rounded-[12px] bg-card shadow-soft">
           <div
             className="h-44 sm:h-56 md:h-60 w-full transition-all duration-200"
             style={{
@@ -257,7 +257,7 @@ export function ProjectHeader({ project, doneCount, totalCount, children }: Proj
               onClick={() => setIconDialogOpen(true)}
               aria-label="Change project icon"
               title="Change project icon"
-              className={`grid h-12 w-12 sm:h-14 sm:w-14 place-items-center rounded-[5px] border border-lilac-200 bg-card shadow-soft overflow-hidden transition group-hover:border-accent cursor-pointer ${
+              className={`grid h-12 w-12 sm:h-14 sm:w-14 place-items-center rounded-[10px] bg-paper-2/75 shadow-soft overflow-hidden transition group-hover:ring-2 group-hover:ring-accent/40 cursor-pointer ${
                 project.icon &&
                 (project.icon.startsWith('data:image') ||
                   project.icon.startsWith('http') ||
@@ -273,21 +273,21 @@ export function ProjectHeader({ project, doneCount, totalCount, children }: Proj
               onClick={() => setIconDialogOpen(true)}
               aria-label="Change icon"
               title="Change icon"
-              className="absolute -bottom-1 -right-1 grid h-5 w-5 place-items-center rounded-[3px] bg-card border border-lilac-200 text-ink-soft hover:text-accent transition cursor-pointer"
+              className="absolute -bottom-1 -right-1 grid h-5 w-5 place-items-center rounded-[5px] bg-card shadow-soft text-ink-soft hover:text-accent transition cursor-pointer"
             >
               <Camera size={11} aria-hidden="true" />
             </button>
           </div>
 
           <div className="min-w-0 flex-1">
-            <h1 className="wrap-break-word font-display text-3xl sm:text-4xl font-semibold text-ink leading-tight">
+            <h1 className="wrap-break-word font-display text-3xl sm:text-4xl text-ink leading-tight">
               {project.name}
             </h1>
           </div>
         </div>
 
         {project.description && (
-          <p className="text-sm sm:text-[15px] font-sans italic text-ink-soft max-w-2xl leading-relaxed">
+          <p className="font-typewriter text-xs sm:text-[13px] text-ink-soft max-w-2xl leading-relaxed">
             {project.description}
           </p>
         )}
@@ -299,7 +299,7 @@ export function ProjectHeader({ project, doneCount, totalCount, children }: Proj
             size="md"
             tone={percent === 100 && totalCount > 0 ? 'bg-mint-500' : 'bg-lilac-300'}
           />
-          <p className="mt-1.5 text-xs font-sans text-ink-soft tabular-nums">
+          <p className="mt-1.5 font-typewriter text-xs text-ink-soft tabular-nums">
             {totalCount === 0
               ? 'No tasks yet. Add the first one to get going.'
               : `${doneCount} of ${totalCount} done · ${openCount} still open`}
@@ -317,8 +317,8 @@ export function ProjectHeader({ project, doneCount, totalCount, children }: Proj
         size="md"
       >
         <div className="space-y-4">
-          <p className="text-xs sm:text-sm font-sans italic text-ink-soft">
-            Choose an archival tone or upload your own header photograph.
+          <p className="font-typewriter text-xs text-ink-soft">
+            Choose a soft botanical backdrop or upload your own header photograph.
           </p>
 
           <div className="grid grid-cols-2 sm:grid-cols-3 gap-2.5">
@@ -327,10 +327,10 @@ export function ProjectHeader({ project, doneCount, totalCount, children }: Proj
                 key={preset.name}
                 type="button"
                 onClick={() => handleSelectPresetCover(preset.value)}
-                className="h-16 rounded-[4px] border border-lilac-200 p-2 text-left transition hover:border-accent flex flex-col justify-end cursor-pointer"
+                className="h-16 rounded-[8px] p-2 text-left transition hover:ring-2 hover:ring-accent/60 flex flex-col justify-end cursor-pointer shadow-soft"
                 style={{ background: preset.value }}
               >
-                <span className="text-[11px] font-sans font-medium text-ink bg-card/90 px-1.5 py-0.5 rounded-[3px] backdrop-blur-sm self-start">
+                <span className="font-typewriter text-[10px] text-ink bg-card/90 px-1.5 py-0.5 rounded-[5px] backdrop-blur-sm self-start">
                   {preset.name}
                 </span>
               </button>

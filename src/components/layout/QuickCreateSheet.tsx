@@ -21,25 +21,25 @@ export function QuickCreateSheet() {
       title="What would you like to add?"
       description="Pick one and we will keep it quick."
     >
-      <ul className="divide-y divide-divider">
+      <ul className="divide-y divide-divider/60">
         {options.map((option) => (
           <li key={option.kind}>
             <button
               type="button"
               onClick={() => openCreate(option.kind)}
-              className="flex w-full items-center gap-3.5 px-2 py-3 text-left transition hover:bg-paper-2/60 rounded-[4px] cursor-pointer"
+              className="flex w-full items-center gap-3.5 px-2.5 py-3 text-left transition hover:bg-paper-2/60 rounded-[9px] cursor-pointer"
             >
               <span
                 aria-hidden="true"
-                className="grid h-10 w-10 shrink-0 place-items-center rounded-[4px] border border-divider bg-cream text-accent"
+                className="grid h-10 w-10 shrink-0 place-items-center rounded-[9px] bg-paper-2/75 text-accent"
               >
                 <option.icon size={18} strokeWidth={1.8} />
               </span>
               <span className="min-w-0">
-                <span className="block font-display text-lg font-semibold text-ink leading-tight">
+                <span className="block font-display text-lg text-ink leading-tight">
                   {option.label}
                 </span>
-                <span className="block text-xs font-sans italic text-ink-soft">{option.hint}</span>
+                <span className="block font-typewriter text-xs text-ink-soft">{option.hint}</span>
               </span>
             </button>
           </li>

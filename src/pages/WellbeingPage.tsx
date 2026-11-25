@@ -11,6 +11,7 @@ import { Dialog } from '../components/ui/Dialog';
 import { EmptyState } from '../components/ui/EmptyState';
 import { PageHeader } from '../components/ui/PageHeader';
 import { Textarea } from '../components/ui/Field';
+import { LeafMark } from '../components/ui/BotanicalOrnaments';
 import { formatLongDay, todayString } from '../lib/date';
 import { useToodles } from '../store/useToodles';
 import { useUi } from '../store/useUi';
@@ -51,12 +52,13 @@ export function WellbeingPage() {
 
   const moodPanel = (
     <Card padding="lg" className="space-y-5">
-      <div className="border-b border-divider pb-3">
-        <p className="font-hand text-[1.05rem] leading-none text-ink-soft">
-          {selectedDate === today ? 'Today’s reflection' : formatLongDay(selectedDate)}
+      <div className="border-b border-divider/65 pb-3">
+        <p className="inline-flex items-center gap-1.5 font-typewriter text-xs text-fern">
+          <LeafMark className="h-3.5 w-3.5 text-fern/75" />
+          <span>{formatLongDay(selectedDate)}</span>
         </p>
-        <h2 className="mt-1 font-display text-2xl font-semibold text-ink">Mood Almanac</h2>
-        <p className="mt-0.5 text-sm text-ink-soft">
+        <h2 className="mt-1 font-display text-2xl text-ink">Mood</h2>
+        <p className="mt-0.5 font-typewriter text-xs text-ink-soft">
           {selectedDate === today ? 'How is today feeling?' : `How was ${selectedDate}?`}
         </p>
       </div>
@@ -68,8 +70,9 @@ export function WellbeingPage() {
           rows={2}
           value={selectedLog ? selectedLog.note : note}
           onChange={(event) => setNote(event.target.value)}
-          placeholder="A short margin note (optional)"
+          placeholder="A short note for this day (optional)"
           aria-label="Note for this day"
+          className="font-typewriter text-[13px]"
         />
 
         <div className="flex flex-wrap items-center gap-2">
@@ -101,7 +104,7 @@ export function WellbeingPage() {
         </div>
       </div>
 
-      <div className="border-t border-divider pt-5">
+      <div className="border-t border-divider/65 pt-5">
         <MoodCalendar
           year={cursor.year}
           month={cursor.month}
@@ -116,11 +119,8 @@ export function WellbeingPage() {
 
   const habitPanel = (
     <Card variant="aged" padding="lg" className="space-y-4">
-      <div className="flex items-end justify-between gap-2 border-b border-divider pb-3">
-        <div>
-          <p className="font-hand text-[1.05rem] leading-none text-ink-soft">Daily practice</p>
-          <h2 className="mt-1 font-display text-2xl font-semibold text-ink">Habits</h2>
-        </div>
+      <div className="flex items-end justify-between gap-2 border-b border-divider/65 pb-3">
+        <h2 className="font-display text-2xl text-ink">Habits</h2>
         <Button size="sm" icon={<Plus size={14} aria-hidden="true" />} onClick={() => setCreating(true)}>
           New habit
         </Button>
@@ -136,7 +136,7 @@ export function WellbeingPage() {
           onAction={() => setCreating(true)}
         />
       ) : (
-        <ul className="divide-y divide-divider/75">
+        <ul className="divide-y divide-divider/65">
           {habits.map((habit) => (
             <HabitCard
               key={habit.id}

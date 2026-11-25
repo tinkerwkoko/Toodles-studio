@@ -50,7 +50,7 @@ export function AccountDialog({ open, onClose }: AccountDialogProps) {
     setErrorMessage(null);
     try {
       const signedIn = await actions.signInWithGoogle();
-      pushToast(`Signed in as ${signedIn.name} — cloud sync is active ✨`, 'success');
+      pushToast(`Signed in as ${signedIn.name} — cloud sync is active`, 'success');
       onClose();
     } catch (error) {
       const code =
@@ -93,8 +93,8 @@ export function AccountDialog({ open, onClose }: AccountDialogProps) {
       >
         {account ? (
           <div className="space-y-5">
-            <div className="flex items-center gap-3.5 pb-4 border-b border-divider">
-              <div className="grid h-12 w-12 place-items-center rounded-[4px] bg-paper-2 overflow-hidden border border-lilac-200 shrink-0">
+            <div className="flex items-center gap-3.5 pb-4 border-b border-divider/65">
+              <div className="grid h-12 w-12 place-items-center rounded-[10px] bg-paper-2 overflow-hidden shrink-0">
                 {account.avatar ? (
                   <img
                     src={account.avatar}
@@ -108,31 +108,31 @@ export function AccountDialog({ open, onClose }: AccountDialogProps) {
               </div>
               <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-2.5 flex-wrap">
-                  <h3 className="font-display text-2xl font-semibold text-ink truncate leading-tight">
+                  <h3 className="font-display text-2xl text-ink truncate leading-tight">
                     {account.name}
                   </h3>
-                  <span className="inline-flex items-center gap-1 text-xs font-sans font-medium text-mint-700">
+                  <span className="inline-flex items-center gap-1 font-typewriter text-xs text-fern">
                     <Cloud size={12} aria-hidden="true" />
                     {cloudSyncing ? 'Syncing…' : 'Synced'}
                   </span>
                 </div>
-                <p className="font-sans text-xs text-ink-soft truncate">{account.email}</p>
+                <p className="font-typewriter text-xs text-ink-soft truncate">{account.email}</p>
               </div>
             </div>
 
-            <div className="space-y-3 text-xs font-sans text-ink-soft leading-relaxed">
+            <div className="space-y-3 font-typewriter text-xs text-ink-soft leading-relaxed">
               <p>
                 Signed in with Google. Every task, project, board column, diary entry, mood, habit,
                 and focus session persists automatically to your private cloud workspace and stays
                 in sync across all your devices.
               </p>
-              <div className="flex items-center gap-2 rounded-[4px] border border-divider bg-paper-2/55 p-3 text-xs">
+              <div className="flex items-center gap-2.5 rounded-[8px] bg-paper-2/60 p-3 text-xs">
                 <Shield size={14} className="text-accent shrink-0" aria-hidden="true" />
                 <span>Protected by verified Google OAuth and strict per-user database rules.</span>
               </div>
             </div>
 
-            <div className="flex items-center justify-between border-t border-divider pt-3.5">
+            <div className="flex items-center justify-between border-t border-divider/65 pt-3.5">
               <Button
                 variant="danger"
                 size="sm"
@@ -148,13 +148,13 @@ export function AccountDialog({ open, onClose }: AccountDialogProps) {
           </div>
         ) : (
           <div className="space-y-4">
-            <div className="flex items-center gap-3.5 pb-4 border-b border-divider">
+            <div className="flex items-center gap-3.5 pb-4 border-b border-divider/65">
               <Cat pose="wave" size={44} animated={false} />
-              <div className="space-y-1 text-xs font-sans text-ink-soft leading-relaxed">
-                <p className="font-display text-lg font-semibold text-ink">
+              <div className="space-y-1 text-xs text-ink-soft leading-relaxed">
+                <p className="font-display text-lg text-ink">
                   Keep Toodles with you everywhere
                 </p>
-                <p>
+                <p className="font-typewriter text-xs">
                   Sign in with Google to back up your workspace to the cloud and sync seamlessly
                   across phone, tablet, and desktop. Existing guest items will upload automatically.
                 </p>
@@ -164,7 +164,7 @@ export function AccountDialog({ open, onClose }: AccountDialogProps) {
             {errorMessage && (
               <div
                 role="alert"
-                className="rounded-[4px] border border-rose-200 bg-rose-100 px-3.5 py-2.5 text-xs font-sans text-rose-700"
+                className="rounded-[8px] bg-rose-100 px-3.5 py-2.5 font-typewriter text-xs text-rose-700"
               >
                 {errorMessage}
               </div>
@@ -174,13 +174,13 @@ export function AccountDialog({ open, onClose }: AccountDialogProps) {
               type="button"
               disabled={signingIn}
               onClick={() => void handleGoogleSignIn()}
-              className="flex min-h-11 w-full items-center justify-center gap-3 rounded-[4px] border border-lilac-200 bg-cream px-5 py-2.5 font-sans text-sm font-medium text-ink transition hover:border-accent hover:bg-paper-2/80 active:translate-y-[0.5px] disabled:opacity-60 cursor-pointer"
+              className="flex min-h-11 w-full items-center justify-center gap-3 rounded-[8px] border border-divider/80 bg-cream px-5 py-2.5 font-sans text-sm font-medium text-ink transition hover:border-accent/60 hover:bg-paper-2/70 active:translate-y-[0.5px] disabled:opacity-60 cursor-pointer"
             >
               <GoogleMark />
               <span>{signingIn ? 'Signing in with Google…' : 'Continue with Google'}</span>
             </button>
 
-            <div className="flex items-center justify-center gap-1.5 text-xs font-sans text-ink-soft pt-1">
+            <div className="flex items-center justify-center gap-1.5 font-typewriter text-xs text-ink-soft pt-1">
               <Shield size={13} className="text-accent shrink-0" aria-hidden="true" />
               <span>Only you can read or modify your personal Toodles data.</span>
             </div>
@@ -195,7 +195,7 @@ export function AccountDialog({ open, onClose }: AccountDialogProps) {
         size="sm"
       >
         <div className="space-y-4">
-          <p className="text-sm font-sans text-ink-soft leading-relaxed">
+          <p className="font-typewriter text-xs text-ink-soft leading-relaxed">
             Your cloud workspace stays safely saved under your Google account. Signing back in on
             any device will restore everything right away.
           </p>

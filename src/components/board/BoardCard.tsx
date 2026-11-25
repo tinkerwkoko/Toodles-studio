@@ -27,7 +27,7 @@ export interface BoardCardProps {
   dragEnabled: boolean;
 }
 
-/** Tactile index card for the kanban board — crisp stationery look without heavy borders or pill clutter. */
+/** Tactile botanical ivory card for the kanban board. */
 export function BoardCard({ task, columns, onOpen, dragEnabled }: BoardCardProps) {
   const { actions } = useToodles();
   const { pushToast, celebrate } = useUi();
@@ -74,7 +74,7 @@ export function BoardCard({ task, columns, onOpen, dragEnabled }: BoardCardProps
         actions.toggleTaskDone(task.id);
         if (done) return;
         celebrate(task.id);
-        pushToast(`“${task.title}” done ✨`, 'success');
+        pushToast(`“${task.title}” done`, 'success');
       },
     },
     {
@@ -93,8 +93,8 @@ export function BoardCard({ task, columns, onOpen, dragEnabled }: BoardCardProps
       ref={setNodeRef}
       style={{ transform: CSS.Transform.toString(transform), transition }}
       className={cx(
-        'paper-sheet rounded-[4px] border border-divider/90 p-3 transition',
-        isDragging && 'opacity-80 shadow-lift ring-1 ring-accent',
+        'paper-sheet rounded-[9px] p-3.5 transition',
+        isDragging && 'opacity-85 shadow-lift ring-1 ring-accent',
       )}
     >
       <div className="flex items-start gap-1.5">
@@ -104,7 +104,7 @@ export function BoardCard({ task, columns, onOpen, dragEnabled }: BoardCardProps
             {...attributes}
             {...listeners}
             aria-label={`Drag ${task.title}`}
-            className="mt-0.5 grid h-7 w-6 shrink-0 cursor-grab touch-none place-items-center rounded-[3px] text-text-faint hover:bg-paper-2 hover:text-ink"
+            className="mt-0.5 grid h-7 w-6 shrink-0 cursor-grab touch-none place-items-center rounded-[5px] text-text-faint hover:bg-paper-2 hover:text-ink"
           >
             <GripVertical size={14} aria-hidden="true" />
           </button>
@@ -138,12 +138,12 @@ export function BoardCard({ task, columns, onOpen, dragEnabled }: BoardCardProps
       </div>
 
       {(task.dueDate || progress.total > 0) && (
-        <div className="mt-2.5 flex flex-wrap items-center gap-x-3 gap-y-1 text-[11px] font-sans text-ink-soft tabular-nums">
+        <div className="mt-2.5 flex flex-wrap items-center gap-x-3 gap-y-1 font-typewriter text-[11px] text-ink-soft tabular-nums">
           {task.dueDate && (
             <span
               className={cx(
                 'inline-flex items-center gap-1',
-                overdue ? 'text-rose-700 font-medium' : isToday(task.dueDate) ? 'text-accent font-medium' : '',
+                overdue ? 'text-rose-700' : isToday(task.dueDate) ? 'text-accent' : '',
               )}
             >
               <CalendarDays size={12} aria-hidden="true" />
@@ -179,14 +179,14 @@ export function BoardCard({ task, columns, onOpen, dragEnabled }: BoardCardProps
           type="button"
           onClick={() => setShowSteps((current) => !current)}
           aria-expanded={showSteps}
-          className="mt-2 text-xs font-sans text-accent hover:underline underline-offset-4 cursor-pointer tabular-nums"
+          className="mt-2 font-typewriter text-[11px] text-accent hover:underline underline-offset-4 cursor-pointer tabular-nums"
         >
           {showSteps ? 'Hide steps' : `Steps (${progress.done}/${progress.total})`}
         </button>
       )}
 
       {showSteps && (
-        <div className="mt-2.5 border-t border-divider pt-2.5">
+        <div className="mt-2.5 border-t border-divider/65 pt-2.5">
           <SubtaskChecklist task={task} />
         </div>
       )}

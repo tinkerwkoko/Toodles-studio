@@ -6,14 +6,13 @@ import { cx } from '../../lib/cx';
 export interface TaskCheckboxProps {
   checked: boolean;
   onChange: () => void;
-  /** Required: describes the thing being ticked. */
   label: string;
   color?: AccentColor;
   size?: 'sm' | 'md';
   className?: string;
 }
 
-/** Journal ink checkbox. State is shown with a crisp tick and strikethrough, not colour alone. */
+/** Organic botanical checkbox with forest/wildflower ink fill on completion. */
 export function TaskCheckbox({
   checked,
   onChange,
@@ -35,19 +34,19 @@ export function TaskCheckbox({
         onChange();
       }}
       className={cx(
-        'grid shrink-0 place-items-center rounded-[3px] border-[1.5px] transition duration-150 cursor-pointer',
+        'grid shrink-0 cursor-pointer place-items-center rounded-[5px] border-[1.5px] transition duration-150',
         'focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent',
         dimension,
         checked
           ? cx('border-transparent', tone.solid)
-          : 'border-lilac-200 bg-cream hover:border-accent',
+          : 'border-sage/75 bg-cream hover:border-forest',
         className,
       )}
     >
       {checked && (
         <Check
           size={size === 'sm' ? 12 : 14}
-          strokeWidth={2.8}
+          strokeWidth={2.7}
           aria-hidden="true"
           className="motion-safe:animate-pop"
         />

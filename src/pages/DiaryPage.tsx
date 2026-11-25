@@ -12,7 +12,7 @@ import { PageHeader } from '../components/ui/PageHeader';
 import { useToodles } from '../store/useToodles';
 import { useUi } from '../store/useUi';
 
-/** `/diary`: private pages, newest first, with search and month navigation. */
+/** `/diary`: private typewritten pages, newest first, with search and month navigation. */
 export function DiaryPage() {
   const { data, actions } = useToodles();
   const { openCreate, pushToast } = useUi();
@@ -70,7 +70,7 @@ export function DiaryPage() {
               <Search
                 size={15}
                 aria-hidden="true"
-                className="pointer-events-none absolute top-1/2 left-3 -translate-y-1/2 text-ink-soft"
+                className="pointer-events-none absolute top-1/2 left-3.5 -translate-y-1/2 text-ink-soft"
               />
               <input
                 type="search"
@@ -78,14 +78,14 @@ export function DiaryPage() {
                 onChange={(event) => setQuery(event.target.value)}
                 placeholder="Search your pages…"
                 aria-label="Search diary entries"
-                className="w-full rounded-[4px] border border-lilac-200 bg-cream py-2 pr-9 pl-9 text-sm text-ink placeholder:text-ink-soft/75 transition focus:border-lilac-400 focus:outline-none focus:ring-2 focus:ring-lilac-200/70"
+                className="w-full rounded-[8px] bg-cream/95 border border-divider/60 py-2 pr-9 pl-9.5 font-typewriter text-xs text-ink placeholder:text-text-faint transition focus:border-accent/60 focus:outline-none focus:ring-2 focus:ring-accent/15 shadow-soft"
               />
               {query.length > 0 && (
                 <button
                   type="button"
                   onClick={() => setQuery('')}
                   aria-label="Clear search"
-                  className="absolute top-1/2 right-1.5 grid h-7 w-7 -translate-y-1/2 place-items-center rounded-[3px] text-ink-soft transition hover:bg-lilac-100 hover:text-ink"
+                  className="absolute top-1/2 right-1.5 grid h-7 w-7 -translate-y-1/2 place-items-center rounded-[6px] text-ink-soft transition hover:bg-paper-2 hover:text-ink cursor-pointer"
                 >
                   <X size={14} aria-hidden="true" />
                 </button>

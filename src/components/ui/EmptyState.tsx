@@ -1,10 +1,10 @@
 import type { ReactNode } from 'react';
 import { Cat, type CatPose } from '../Cat';
 import { Button } from './Button';
+import { BotanicalDivider, FernSprig } from './BotanicalOrnaments';
 import { cx } from '../../lib/cx';
 
 export interface EmptyStateProps {
-  /** One warm sentence: never a cold "no data" message. */
   sentence: string;
   title?: string;
   actionLabel?: string;
@@ -15,7 +15,7 @@ export interface EmptyStateProps {
   className?: string;
 }
 
-/** Understated vintage bookplate empty state — quiet paper spacing, no clunky dashed pill boxes. */
+/** Airy botanical empty state with fine fern sprig and Special Elite prose — no clunky boxes. */
 export function EmptyState({
   sentence,
   title,
@@ -29,28 +29,25 @@ export function EmptyState({
   return (
     <div
       className={cx(
-        'flex flex-col items-center px-6 text-center',
-        small
-          ? 'gap-2 py-7'
-          : 'gap-3 py-12 rounded-[5px] border border-divider/80 bg-cream/65',
+        'relative flex flex-col items-center overflow-hidden px-6 text-center',
+        small ? 'gap-2.5 py-7' : 'gap-3.5 rounded-[12px] bg-cream/65 py-12',
         className,
       )}
     >
-      <Cat pose={pose} size={small ? 68 : 108} title="Toodles the cat" />
+      {!small && (
+        <FernSprig className="absolute -bottom-3 -right-3 h-24 w-32 text-sage/40" />
+      )}
+      <Cat pose={pose} size={small ? 64 : 100} title="Toodles the cat" />
       {title && (
-        <h3
-          className={cx(
-            'font-display font-semibold text-ink',
-            small ? 'text-lg' : 'text-2xl',
-          )}
-        >
+        <h3 className={cx('font-display text-ink', small ? 'text-lg' : 'text-2xl')}>
           {title}
         </h3>
       )}
+      {!small && <BotanicalDivider className="w-36" />}
       <p
         className={cx(
-          'max-w-md font-sans italic text-ink-soft leading-relaxed',
-          small ? 'text-sm' : 'text-[0.95rem]',
+          'max-w-md font-typewriter leading-relaxed text-ink-soft',
+          small ? 'text-xs' : 'text-[13px]',
         )}
       >
         {sentence}

@@ -31,7 +31,6 @@ export function TaskDetail({ task, onDeleted }: TaskDetailProps) {
 
   return (
     <div className="space-y-6">
-      {/* Entry heading & quiet metadata */}
       <div className="flex items-start gap-3">
         <TaskCheckbox
           checked={done}
@@ -41,7 +40,7 @@ export function TaskDetail({ task, onDeleted }: TaskDetailProps) {
             actions.toggleTaskDone(task.id);
             if (!done) {
               celebrate(task.id);
-              pushToast(`“${task.title}” done ✨`, 'success');
+              pushToast(`“${task.title}” done`, 'success');
             }
           }}
           className="mt-1"
@@ -49,15 +48,15 @@ export function TaskDetail({ task, onDeleted }: TaskDetailProps) {
         <div className="min-w-0 flex-1">
           <h2
             className={cx(
-              'font-display text-2xl sm:text-[1.65rem] font-semibold leading-tight wrap-break-word',
+              'font-display text-2xl sm:text-[1.6rem] leading-tight wrap-break-word',
               done ? 'text-ink-soft line-through' : 'text-ink',
             )}
           >
             {task.title}
           </h2>
 
-          <div className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs font-sans text-ink-soft tabular-nums">
-            <span className={done ? 'text-mint-700 font-medium' : 'text-accent font-medium'}>
+          <div className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1 font-typewriter text-xs text-ink-soft tabular-nums">
+            <span className={done ? 'text-mint-700' : 'text-accent'}>
               {done ? 'Completed' : 'Open'}
             </span>
             {project && (
@@ -82,7 +81,7 @@ export function TaskDetail({ task, onDeleted }: TaskDetailProps) {
               </span>
             ) : null}
             {task.priority !== 'none' && (
-              <span className={cx('font-medium', PRIORITY_STYLES[task.priority].icon)}>
+              <span className={cx(PRIORITY_STYLES[task.priority].icon)}>
                 {PRIORITY_STYLES[task.priority].label} priority
               </span>
             )}
@@ -94,21 +93,19 @@ export function TaskDetail({ task, onDeleted }: TaskDetailProps) {
             )}
           </div>
 
-          <p className="mt-1.5 text-[11px] font-sans italic text-text-faint">
+          <p className="mt-1.5 font-typewriter text-[11px] text-text-faint">
             Added {formatTimestamp(task.createdAt)}
             {task.completedAt ? ` · Completed ${formatTimestamp(task.completedAt)}` : ''}
           </p>
         </div>
       </div>
 
-      {/* Subtasks — separated by hairline rule, no nested rounded card */}
-      <div className="border-t border-divider pt-5">
+      <div className="border-t border-divider/65 pt-5">
         <SubtaskChecklist task={task} />
       </div>
 
-      {/* Edit details — clean hairline section */}
-      <section className="border-t border-divider pt-5">
-        <h3 className="mb-3.5 font-display text-xl font-semibold text-ink">Edit details</h3>
+      <section className="border-t border-divider/65 pt-5">
+        <h3 className="mb-3.5 font-display text-xl text-ink">Edit details</h3>
         <TaskForm
           key={task.id}
           initial={taskToFormValues(task)}
@@ -121,9 +118,8 @@ export function TaskDetail({ task, onDeleted }: TaskDetailProps) {
         />
       </section>
 
-      {/* Quiet delete bar */}
-      <div className="flex flex-wrap items-center justify-between gap-2 border-t border-divider pt-4">
-        <p className="text-xs font-sans italic text-ink-soft">Done with this one for good?</p>
+      <div className="flex flex-wrap items-center justify-between gap-2 border-t border-divider/65 pt-4">
+        <p className="font-typewriter text-xs text-ink-soft">Done with this one for good?</p>
         <Button
           variant="ghost"
           size="sm"

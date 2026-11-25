@@ -3,7 +3,6 @@ import { cx } from '../../lib/cx';
 export interface SegmentedOption<T extends string> {
   value: T;
   label: string;
-  /** Optional count, e.g. number of tasks in that view. */
   count?: number;
 }
 
@@ -15,7 +14,7 @@ export interface SegmentedControlProps<T extends string> {
   className?: string;
 }
 
-/** Library index strip: restrained paper tabs without bubbly pills. */
+/** Soft botanical segmented control without boxed outlines. */
 export function SegmentedControl<T extends string>({
   options,
   value,
@@ -28,7 +27,7 @@ export function SegmentedControl<T extends string>({
       role="tablist"
       aria-label={label}
       className={cx(
-        'no-scrollbar inline-flex max-w-full items-center gap-1 overflow-x-auto rounded-[4px] border border-lilac-200/80 bg-paper-2/70 p-1',
+        'no-scrollbar inline-flex max-w-full items-center gap-1 overflow-x-auto rounded-[8px] bg-paper-2/75 p-1',
         className,
       )}
     >
@@ -42,9 +41,9 @@ export function SegmentedControl<T extends string>({
             aria-selected={active}
             onClick={() => onChange(option.value)}
             className={cx(
-              'inline-flex min-h-[34px] shrink-0 items-center gap-1.5 rounded-[3px] px-3.5 text-xs sm:text-sm font-sans transition cursor-pointer',
+              'inline-flex min-h-[34px] shrink-0 cursor-pointer items-center gap-1.5 rounded-[6px] px-3.5 font-sans text-xs whitespace-nowrap transition sm:text-sm',
               active
-                ? 'bg-cream text-ink font-semibold shadow-[0_1px_2px_rgba(69,56,47,0.12)]'
+                ? 'bg-cream text-ink font-medium shadow-soft'
                 : 'text-ink-soft hover:text-ink',
             )}
           >
@@ -52,8 +51,8 @@ export function SegmentedControl<T extends string>({
             {typeof option.count === 'number' && (
               <span
                 className={cx(
-                  'text-[11px] tabular-nums',
-                  active ? 'text-accent font-semibold' : 'text-text-faint',
+                  'font-typewriter text-[11px] tabular-nums',
+                  active ? 'text-forest' : 'text-text-faint',
                 )}
               >
                 {option.count}

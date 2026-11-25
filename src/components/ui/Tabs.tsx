@@ -17,7 +17,7 @@ export interface TabsProps {
 }
 
 /**
- * Editorial ledger tabs with a refined burgundy rule beneath the active tab.
+ * Editorial botanical tabs with a refined forest-green line beneath the active tab.
  */
 export function Tabs({
   items,
@@ -49,7 +49,7 @@ export function Tabs({
       aria-label={ariaLabel}
       onKeyDown={handleKeyDown}
       className={cx(
-        'flex items-center gap-6 overflow-x-auto no-scrollbar border-b border-lilac-200/80',
+        'no-scrollbar flex items-center gap-6 overflow-x-auto border-b border-divider/80',
         className,
       )}
     >
@@ -64,10 +64,10 @@ export function Tabs({
             tabIndex={isActive ? 0 : -1}
             onClick={() => onChange(tab.id)}
             className={cx(
-              'group relative -mb-px inline-flex shrink-0 items-center gap-1.5 pb-2.5 pt-1 text-sm font-sans transition duration-150 cursor-pointer',
-              'focus-visible:outline-none focus-visible:text-accent',
+              'group relative -mb-px inline-flex shrink-0 cursor-pointer items-center gap-1.5 pb-2.5 pt-1 font-sans text-sm whitespace-nowrap transition duration-150',
+              'focus-visible:outline-none focus-visible:text-forest',
               isActive
-                ? 'border-b-2 border-accent font-semibold text-ink'
+                ? 'border-b-2 border-forest font-medium text-ink'
                 : 'border-b-2 border-transparent text-ink-soft hover:text-ink',
             )}
           >
@@ -75,7 +75,7 @@ export function Tabs({
               <span
                 className={cx(
                   'transition duration-150',
-                  isActive ? 'text-accent' : 'text-text-faint group-hover:text-ink',
+                  isActive ? 'text-forest' : 'text-text-faint group-hover:text-ink',
                 )}
               >
                 {tab.icon}
@@ -85,8 +85,8 @@ export function Tabs({
             {typeof tab.count === 'number' && (
               <span
                 className={cx(
-                  'ml-0.5 text-xs tabular-nums transition',
-                  isActive ? 'text-accent font-semibold' : 'text-text-faint',
+                  'ml-0.5 font-typewriter text-[11px] tabular-nums transition',
+                  isActive ? 'text-forest' : 'text-text-faint',
                 )}
               >
                 {tab.count}

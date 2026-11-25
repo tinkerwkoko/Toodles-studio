@@ -31,8 +31,8 @@ export function TaskList({
 
   if (!groupByDate) {
     return (
-      <div className="paper-sheet rounded-[5px] border border-divider/80 overflow-visible">
-        <ul className="divide-y divide-divider">
+      <div className="paper-sheet rounded-[10px] overflow-visible">
+        <ul className="divide-y divide-divider/65">
           {tasks.map((task) => (
             <li key={task.id} className="relative">
               <TaskCard
@@ -60,8 +60,8 @@ export function TaskList({
           tone={tone}
           action={sectionAction?.(group.date)}
         >
-          <div className="paper-sheet rounded-[5px] border border-divider/80 overflow-visible">
-            <ul className="divide-y divide-divider">
+          <div className="paper-sheet rounded-[10px] overflow-visible">
+            <ul className="divide-y divide-divider/65">
               {group.items.map((task) => (
                 <li key={task.id} className="relative">
                   <TaskCard

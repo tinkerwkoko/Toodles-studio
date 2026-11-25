@@ -6,6 +6,7 @@ import { accent } from '../lib/color';
 import { Button } from '../components/ui/Button';
 import { Card } from '../components/ui/Card';
 import { TaskCheckbox } from '../components/ui/TaskCheckbox';
+import { BotanicalDivider, LeafMark } from '../components/ui/BotanicalOrnaments';
 import { cx } from '../lib/cx';
 import { useToodles } from '../store/useToodles';
 import { useUi } from '../store/useUi';
@@ -19,7 +20,6 @@ export function getTaskHourRange(
   if (!dueTime) return null;
   const clean = dueTime.trim();
 
-  // Range pattern like "8 am - 10 am", "8am - 10am", "08:00 - 10:00", "8 - 10", "8am to 10am", "8:00-10:00"
   const rangeMatch = clean.match(
     /^(\d{1,2})(?::(\d{2}))?\s*(am|pm)?\s*(?:-|–|—|to)\s*(\d{1,2})(?::(\d{2}))?\s*(am|pm)?$/i,
   );
@@ -30,7 +30,6 @@ export function getTaskHourRange(
     const endMin = rangeMatch[5] ? parseInt(rangeMatch[5], 10) : 0;
     const endAmPm = rangeMatch[6]?.toLowerCase();
 
-    // If start has no am/pm but end does: e.g. "8 - 10 am" or "1 - 3 pm"
     if (!startAmPm && endAmPm) {
       if (endAmPm === 'pm' && start < 12 && end <= 12 && start < end) {
         start += 12;
@@ -46,7 +45,6 @@ export function getTaskHourRange(
     return { startHour: start, endHour: Math.max(start + 1, computedEnd) };
   }
 
-  // Standard "HH:mm" or "8am" or "8"
   const singleMatch = clean.match(/^(\d{1,2})(?::(\d{2}))?\s*(am|pm)?$/i);
   if (singleMatch) {
     let startHour = parseInt(singleMatch[1], 10);
@@ -71,7 +69,6 @@ export function CalendarPage() {
   const [selectedDate, setSelectedDate] = useState(today);
   const [viewMode, setViewMode] = useState<'day' | 'week'>('day');
 
-  // Week days starting from Monday of current selectedDate
   const weekDays = useMemo(() => {
     const curr = new Date(selectedDate + 'T12:00:00');
     const day = curr.getDay();
@@ -93,7 +90,6 @@ export function CalendarPage() {
     }
   }
 
-  // Tasks for the selected day: due on or starting on this day
   const dayTasks = useMemo(() => {
     return data.tasks.filter((t) => {
       if (t.status !== 'todo') return false;
@@ -104,12 +100,10 @@ export function CalendarPage() {
     });
   }, [data.tasks, selectedDate]);
 
-  // Scheduled tasks (tasks that have a dueTime)
   const scheduledTasks = useMemo(() => {
     return dayTasks.filter((t) => !!getTaskHourRange(t.dueTime, t.estimate));
   }, [dayTasks]);
 
-  // Unscheduled tasks (due today but without a specific time block)
   const unscheduledTasks = useMemo(() => {
     return dayTasks.filter((t) => !getTaskHourRange(t.dueTime, t.estimate));
   }, [dayTasks]);
@@ -123,94 +117,96 @@ export function CalendarPage() {
 
   return (
     <div className="mx-auto max-w-5xl space-y-6 pb-6">
-      {/* Editorial Almanac Header */}
-      <header className="flex flex-wrap items-end justify-between gap-4 border-b border-divider pb-5">
-        <div className="space-y-1">
-          <p className="font-hand text-[1.1rem] leading-none text-ink-soft">
-            {formatLongDay(selectedDate)}
-          </p>
-          <div className="flex flex-wrap items-center gap-3">
-            <h1 className="font-display text-3xl font-semibold tracking-tight text-ink sm:text-[2.15rem]">
-              Time Blocking
-            </h1>
-            {selectedMood && (
-              <span className="inline-flex items-center gap-1.5 text-xs text-ink-soft">
-                <span aria-hidden="true" className="text-divider">·</span>
-                <CatFace mood={selectedMood.mood} size={18} decorative />
-                <span className="italic capitalize">{selectedMood.mood}</span>
-              </span>
-            )}
+      <header className="space-y-3">
+        <div className="flex flex-wrap items-end justify-between gap-4">
+          <div className="space-y-1">
+            <p className="inline-flex items-center gap-1.5 font-typewriter text-xs text-fern">
+              <LeafMark className="h-3.5 w-3.5 text-fern/75" />
+              <span>{formatLongDay(selectedDate)}</span>
+            </p>
+            <div className="flex flex-wrap items-center gap-3">
+              <h1 className="font-display text-3xl tracking-tight text-ink sm:text-[2.2rem]">
+                Time Blocking
+              </h1>
+              {selectedMood && (
+                <span className="inline-flex items-center gap-1.5 font-typewriter text-xs text-ink-soft">
+                  <span aria-hidden="true" className="text-divider">·</span>
+                  <CatFace mood={selectedMood.mood} size={18} decorative />
+                  <span className="capitalize">{selectedMood.mood}</span>
+                </span>
+              )}
+            </div>
+          </div>
+
+          <div className="flex flex-wrap items-center gap-2">
+            <div className="inline-flex items-center rounded-[8px] bg-cream/95 border border-divider/60 p-0.5 shadow-soft">
+              <button
+                type="button"
+                onClick={() => stepDate(-1)}
+                aria-label="Previous"
+                className="grid h-8 w-8 place-items-center rounded-[6px] text-ink-soft transition hover:bg-paper-2 hover:text-ink cursor-pointer"
+              >
+                <ChevronLeft size={16} />
+              </button>
+              <button
+                type="button"
+                onClick={() => setSelectedDate(today)}
+                className="px-2.5 font-typewriter text-xs text-ink transition hover:text-accent cursor-pointer"
+              >
+                Today
+              </button>
+              <button
+                type="button"
+                onClick={() => stepDate(1)}
+                aria-label="Next"
+                className="grid h-8 w-8 place-items-center rounded-[6px] text-ink-soft transition hover:bg-paper-2 hover:text-ink cursor-pointer"
+              >
+                <ChevronRight size={16} />
+              </button>
+            </div>
+
+            <div className="inline-flex rounded-[8px] bg-paper-2/70 p-0.5">
+              <button
+                type="button"
+                onClick={() => setViewMode('day')}
+                className={cx(
+                  'rounded-[6px] px-3 py-1.5 font-typewriter text-xs transition cursor-pointer',
+                  viewMode === 'day'
+                    ? 'bg-cream text-ink shadow-soft'
+                    : 'text-ink-soft hover:text-ink',
+                )}
+              >
+                Day
+              </button>
+              <button
+                type="button"
+                onClick={() => setViewMode('week')}
+                className={cx(
+                  'rounded-[6px] px-3 py-1.5 font-typewriter text-xs transition cursor-pointer',
+                  viewMode === 'week'
+                    ? 'bg-cream text-ink shadow-soft'
+                    : 'text-ink-soft hover:text-ink',
+                )}
+              >
+                Week
+              </button>
+            </div>
+
+            <Button
+              size="sm"
+              variant="primary"
+              icon={<Plus size={14} />}
+              onClick={() => openCreate('task', { defaults: { dueDate: selectedDate } })}
+            >
+              New task
+            </Button>
           </div>
         </div>
-
-        {/* Date & View Controls */}
-        <div className="flex flex-wrap items-center gap-2">
-          <div className="inline-flex items-center rounded-[4px] border border-lilac-200 bg-cream p-0.5">
-            <button
-              type="button"
-              onClick={() => stepDate(-1)}
-              aria-label="Previous"
-              className="grid h-8 w-8 place-items-center rounded-[3px] text-ink-soft transition hover:bg-lilac-100 hover:text-ink"
-            >
-              <ChevronLeft size={16} />
-            </button>
-            <button
-              type="button"
-              onClick={() => setSelectedDate(today)}
-              className="px-2.5 text-xs font-medium text-ink transition hover:text-lilac-700"
-            >
-              Today
-            </button>
-            <button
-              type="button"
-              onClick={() => stepDate(1)}
-              aria-label="Next"
-              className="grid h-8 w-8 place-items-center rounded-[3px] text-ink-soft transition hover:bg-lilac-100 hover:text-ink"
-            >
-              <ChevronRight size={16} />
-            </button>
-          </div>
-
-          <div className="inline-flex rounded-[4px] border border-lilac-200 bg-paper-2 p-0.5">
-            <button
-              type="button"
-              onClick={() => setViewMode('day')}
-              className={cx(
-                'rounded-[3px] px-3 py-1.5 text-xs font-medium transition',
-                viewMode === 'day'
-                  ? 'bg-cream text-ink shadow-soft'
-                  : 'text-ink-soft hover:text-ink',
-              )}
-            >
-              Day
-            </button>
-            <button
-              type="button"
-              onClick={() => setViewMode('week')}
-              className={cx(
-                'rounded-[3px] px-3 py-1.5 text-xs font-medium transition',
-                viewMode === 'week'
-                  ? 'bg-cream text-ink shadow-soft'
-                  : 'text-ink-soft hover:text-ink',
-              )}
-            >
-              Week
-            </button>
-          </div>
-
-          <Button
-            size="sm"
-            variant="primary"
-            icon={<Plus size={14} />}
-            onClick={() => openCreate('task', { defaults: { dueDate: selectedDate } })}
-          >
-            New task
-          </Button>
-        </div>
+        <BotanicalDivider />
       </header>
 
-      {/* Week Almanac Strip */}
-      <div className="paper-sheet grid grid-cols-7 divide-x divide-divider/70 overflow-hidden rounded-[5px]">
+      {/* Week Strip */}
+      <div className="paper-sheet grid grid-cols-7 divide-x divide-divider/55 overflow-hidden rounded-[10px]">
         {weekDays.map((d) => {
           const dateObj = new Date(d + 'T12:00:00');
           const dayName = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'][dateObj.getDay()];
@@ -225,25 +221,25 @@ export function CalendarPage() {
               type="button"
               onClick={() => setSelectedDate(d)}
               className={cx(
-                'relative flex flex-col items-center justify-center gap-0.5 py-2.5 px-1 transition',
+                'relative flex flex-col items-center justify-center gap-0.5 py-2.5 px-1 transition cursor-pointer',
                 isSelected
                   ? 'bg-lilac-300 text-primary-ink'
                   : isToday
                     ? 'bg-paper-2/70 text-ink hover:bg-paper-2'
-                    : 'bg-transparent text-ink-soft hover:bg-lilac-100/50 hover:text-ink',
+                    : 'bg-transparent text-ink-soft hover:bg-paper-2/40 hover:text-ink',
               )}
             >
               <span
                 className={cx(
-                  'text-[10px] uppercase tracking-wider',
-                  isSelected ? 'text-primary-ink/80' : 'text-ink-soft',
+                  'font-typewriter text-[10px] uppercase tracking-wider',
+                  isSelected ? 'text-primary-ink/85' : 'text-ink-soft',
                 )}
               >
                 {dayName}
               </span>
               <span
                 className={cx(
-                  'font-display text-lg font-semibold tabular-nums leading-tight',
+                  'font-display text-lg tabular-nums leading-tight',
                   isSelected ? 'text-primary-ink' : 'text-ink',
                 )}
               >
@@ -267,11 +263,10 @@ export function CalendarPage() {
         })}
       </div>
 
-      {/* Main Hourly Ledger & Margin List */}
+      {/* Main Hourly Schedule & Unscheduled List */}
       <div className="grid items-start gap-8 lg:grid-cols-[1fr_290px]">
-        {/* Time Blocking Schedule Ledger */}
         <Card padding="none" className="overflow-hidden">
-          <div className="divide-y divide-divider/65">
+          <div className="divide-y divide-divider/55">
             {HOURS.map((hour) => {
               const hourString = `${String(hour).padStart(2, '0')}:00`;
               const tasksInHour = scheduledTasks.filter((t) => {
@@ -283,14 +278,12 @@ export function CalendarPage() {
               return (
                 <div
                   key={hour}
-                  className="group flex min-h-[56px] items-stretch transition hover:bg-lilac-100/35"
+                  className="group flex min-h-[56px] items-stretch transition hover:bg-paper-2/30"
                 >
-                  {/* Hour margin */}
-                  <span className="w-16 shrink-0 border-r border-divider/60 px-3 py-2.5 text-right text-xs tabular-nums text-ink-soft">
+                  <span className="w-16 shrink-0 border-r border-divider/55 px-3 py-2.5 text-right font-typewriter text-xs tabular-nums text-ink-soft">
                     {hourString}
                   </span>
 
-                  {/* Hour slot */}
                   <div className="flex flex-1 flex-wrap items-center gap-2 px-3 py-2">
                     {tasksInHour.map((task) => {
                       const tone = accent(task.color);
@@ -299,9 +292,8 @@ export function CalendarPage() {
                           key={task.id}
                           onClick={() => setDetailTaskId(task.id)}
                           className={cx(
-                            'flex cursor-pointer items-center gap-2 rounded-[4px] border px-2.5 py-1.5 text-xs transition hover:brightness-[0.98]',
+                            'flex cursor-pointer items-center gap-2 rounded-[7px] px-2.5 py-1.5 text-xs transition hover:brightness-[0.97]',
                             tone.soft,
-                            tone.border,
                           )}
                         >
                           <TaskCheckbox
@@ -314,7 +306,7 @@ export function CalendarPage() {
                             {task.title}
                           </span>
                           {task.estimate && (
-                            <span className="text-[11px] tabular-nums text-ink-soft">
+                            <span className="font-typewriter text-[11px] tabular-nums text-ink-soft">
                               {task.estimate}m
                             </span>
                           )}
@@ -333,7 +325,7 @@ export function CalendarPage() {
                         })
                       }
                       title={`Add task at ${hourString}`}
-                      className="inline-flex items-center gap-1 rounded-[3px] px-2 py-1 text-[11px] text-ink-soft opacity-0 transition hover:bg-lilac-100 hover:text-ink focus:opacity-100 group-hover:opacity-100"
+                      className="inline-flex items-center gap-1 rounded-[6px] px-2 py-1 font-typewriter text-[11px] text-ink-soft opacity-0 transition hover:bg-paper-2 hover:text-ink focus:opacity-100 group-hover:opacity-100 cursor-pointer"
                     >
                       <Plus size={12} />
                       <span>{tasksInHour.length === 0 ? `Plan at ${hourString}` : 'Add another'}</span>
@@ -345,24 +337,23 @@ export function CalendarPage() {
           </div>
         </Card>
 
-        {/* Unscheduled Margin Notes */}
         <aside className="space-y-4">
           <Card variant="aged" padding="md" className="space-y-3">
-            <div className="flex items-baseline justify-between border-b border-divider pb-2">
-              <h2 className="font-display text-xl font-semibold text-ink">
+            <div className="flex items-baseline justify-between border-b border-divider/65 pb-2">
+              <h2 className="font-display text-xl text-ink">
                 Unscheduled for today
               </h2>
-              <span className="text-xs tabular-nums text-ink-soft">
+              <span className="font-typewriter text-xs tabular-nums text-ink-soft">
                 {unscheduledTasks.length}
               </span>
             </div>
 
             {unscheduledTasks.length === 0 ? (
-              <p className="py-4 text-center text-xs italic text-ink-soft">
+              <p className="py-4 text-center font-typewriter text-xs text-ink-soft">
                 All tasks for today have a quiet time slot.
               </p>
             ) : (
-              <ul className="divide-y divide-divider/65">
+              <ul className="divide-y divide-divider/55">
                 {unscheduledTasks.map((task) => (
                   <li
                     key={task.id}
@@ -371,14 +362,14 @@ export function CalendarPage() {
                     <button
                       type="button"
                       onClick={() => setDetailTaskId(task.id)}
-                      className="min-w-0 flex-1 truncate text-left text-xs font-medium text-ink transition hover:text-lilac-700"
+                      className="min-w-0 flex-1 truncate text-left text-xs font-medium text-ink transition hover:text-accent cursor-pointer"
                     >
                       {task.title}
                     </button>
                     <button
                       type="button"
                       onClick={() => handleScheduleTask(task.id, 9)}
-                      className="inline-flex shrink-0 items-center gap-1 text-[11px] font-medium text-lilac-700 transition hover:underline"
+                      className="inline-flex shrink-0 items-center gap-1 font-typewriter text-[11px] text-accent transition hover:underline cursor-pointer"
                     >
                       <Clock size={11} aria-hidden="true" />
                       <span>Slot at 9am</span>

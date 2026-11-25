@@ -4,6 +4,7 @@ import { Cat } from '../components/Cat';
 import { Button } from '../components/ui/Button';
 import { Card } from '../components/ui/Card';
 import { Select } from '../components/ui/Field';
+import { BotanicalDivider, FernSprig } from '../components/ui/BotanicalOrnaments';
 import { cx } from '../lib/cx';
 import { nowTimestamp, todayString } from '../lib/date';
 import { useToodles } from '../store/useToodles';
@@ -26,13 +27,11 @@ export function FocusPage() {
   const [running, setRunning] = useState(false);
   const [selectedTaskId, setSelectedTaskId] = useState<string>('');
 
-  // Timestamp-based timing (survives tab switches and refreshes)
   const [totalSeconds, setTotalSeconds] = useState(DEFAULT_DURATIONS.focus * 60);
   const [secondsRemaining, setSecondsRemaining] = useState(DEFAULT_DURATIONS.focus * 60);
   const endTimeRef = useRef<number | null>(null);
   const sessionStartRef = useRef<string | null>(null);
 
-  // Switch modes
   function switchMode(newMode: Mode) {
     setRunning(false);
     endTimeRef.current = null;
@@ -43,7 +42,6 @@ export function FocusPage() {
     setSecondsRemaining(secs);
   }
 
-  // Timer loop checking Date.now()
   useEffect(() => {
     if (!running) return;
 
@@ -64,7 +62,6 @@ export function FocusPage() {
         setRunning(false);
         endTimeRef.current = null;
 
-        // Log session
         const actualMinutes = Math.round(totalSeconds / 60);
         actions.logFocusSession({
           taskId: selectedTaskId || null,
@@ -125,20 +122,26 @@ export function FocusPage() {
 
   return (
     <div className="mx-auto max-w-2xl space-y-6 pb-6">
-      <header className="space-y-1 border-b border-divider pb-5">
-        <p className="font-hand text-[1.1rem] leading-none text-ink-soft">Quiet clock</p>
-        <h1 className="font-display text-3xl font-semibold tracking-tight text-ink sm:text-[2.15rem]">
-          Focus Corner
-        </h1>
-        <p className="text-sm text-ink-soft">
-          Pick one thing, start the quiet clock, and work with a peaceful mind.
-        </p>
+      <header className="space-y-3">
+        <div className="space-y-1">
+          <h1 className="font-display text-3xl tracking-tight text-ink sm:text-[2.2rem]">
+            Focus Corner
+          </h1>
+          <p className="font-typewriter text-xs text-ink-soft leading-relaxed">
+            Pick one thing, start the quiet clock, and work with a peaceful mind.
+          </p>
+        </div>
+        <BotanicalDivider />
       </header>
 
-      {/* Main Timer Folio */}
-      <Card variant="stack" padding="lg" className="flex flex-col items-center gap-6 text-center">
-        {/* Mode Selector */}
-        <div className="inline-flex flex-wrap items-center justify-center rounded-[4px] border border-lilac-200 bg-paper-2 p-0.5">
+      <Card
+        variant="stack"
+        padding="lg"
+        className="relative overflow-hidden flex flex-col items-center gap-6 text-center"
+      >
+        <FernSprig className="absolute -top-2 -right-3 w-32 text-fern/20" />
+
+        <div className="relative inline-flex flex-wrap items-center justify-center rounded-[8px] bg-paper-2/75 p-1">
           {(
             [
               ['focus', 'Focus (25m)'],
@@ -151,7 +154,7 @@ export function FocusPage() {
               type="button"
               onClick={() => switchMode(value)}
               className={cx(
-                'rounded-[3px] px-3.5 py-1.5 text-xs font-medium transition',
+                'rounded-[6px] px-3.5 py-1.5 font-typewriter text-xs transition cursor-pointer',
                 mode === value ? 'bg-cream text-ink shadow-soft' : 'text-ink-soft hover:text-ink',
               )}
             >
@@ -160,30 +163,27 @@ export function FocusPage() {
           ))}
         </div>
 
-        {/* Mascot */}
         <Cat
           pose={mode === 'focus' ? (running ? 'happy' : 'curious') : 'sleepy'}
           size={110}
           animated
         />
 
-        {/* Clock display */}
         <div className="space-y-3">
-          <div className="font-display text-6xl font-semibold tracking-wider tabular-nums text-ink sm:text-7xl">
+          <div className="font-display text-6xl tracking-wider tabular-nums text-ink sm:text-7xl">
             {formattedTime}
           </div>
-          <div className="mx-auto h-1.5 w-56 overflow-hidden rounded-[2px] bg-paper-2 sm:w-72">
+          <div className="mx-auto h-1.5 w-56 overflow-hidden rounded-full bg-paper-2 sm:w-72">
             <div
-              className="h-full rounded-[2px] bg-lilac-300 transition-all duration-300"
+              className="h-full rounded-full bg-lilac-300 transition-all duration-300"
               style={{ width: `${progressPercent}%` }}
             />
           </div>
         </div>
 
-        {/* Task linking */}
         {mode === 'focus' && openTasks.length > 0 && (
           <div className="w-full max-w-sm text-left">
-            <label className="mb-1 block text-xs uppercase tracking-wider text-ink-soft">
+            <label className="mb-1.5 block font-typewriter text-[11px] uppercase tracking-[0.06em] text-ink-soft">
               Focus on a task (optional)
             </label>
             <Select
@@ -201,7 +201,6 @@ export function FocusPage() {
           </div>
         )}
 
-        {/* Controls */}
         <div className="flex items-center gap-2.5">
           {running ? (
             <Button variant="soft" size="lg" icon={<Pause size={16} />} onClick={handlePause}>
@@ -225,19 +224,18 @@ export function FocusPage() {
         </div>
       </Card>
 
-      {/* Hairline-Divided Daily Focus Ledger */}
-      <div className="paper-sheet grid grid-cols-2 divide-x divide-divider/70 rounded-[5px]">
+      <div className="rounded-[10px] bg-paper-2/45 grid grid-cols-2 divide-x divide-divider/60">
         <div className="px-5 py-4">
-          <div className="text-[11px] uppercase tracking-wider text-ink-soft">Focused today</div>
-          <div className="mt-1 font-display text-3xl font-semibold tabular-nums text-ink">
+          <div className="font-typewriter text-[11px] tracking-wide text-ink-soft">Focused today</div>
+          <div className="mt-1.5 font-display text-3xl tabular-nums text-ink">
             {todayFocusMinutes}m
           </div>
         </div>
         <div className="px-5 py-4">
-          <div className="text-[11px] uppercase tracking-wider text-ink-soft">
+          <div className="font-typewriter text-[11px] tracking-wide text-ink-soft">
             Sessions completed
           </div>
-          <div className="mt-1 font-display text-3xl font-semibold tabular-nums text-ink">
+          <div className="mt-1.5 font-display text-3xl tabular-nums text-ink">
             {todaySessions.length}
           </div>
         </div>

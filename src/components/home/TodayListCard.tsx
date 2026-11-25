@@ -59,14 +59,14 @@ export function TodayListCard() {
     <Card padding="md" className="space-y-4">
       <div className="flex flex-wrap items-baseline justify-between gap-2">
         <div className="flex flex-wrap items-baseline gap-2.5">
-          <h2 className="font-display text-2xl font-semibold text-ink">Today&apos;s list</h2>
+          <h2 className="font-display text-2xl text-ink">Today&apos;s list</h2>
           {totalDue > 0 && (
-            <span className="text-xs font-sans text-ink-soft tabular-nums">
+            <span className="font-typewriter text-xs text-ink-soft tabular-nums">
               {undoneCount} of {totalDue} left
             </span>
           )}
           {committedText && (
-            <span className="text-xs font-sans italic text-text-faint tabular-nums">
+            <span className="font-typewriter text-xs text-text-faint tabular-nums">
               · {committedText}
             </span>
           )}
@@ -79,7 +79,7 @@ export function TodayListCard() {
               setTargetMoveDate(addDays(today, 1));
               setMoveUnfinishedOpen(true);
             }}
-            className="text-xs font-sans text-ink-soft hover:text-accent underline underline-offset-4 transition cursor-pointer"
+            className="font-typewriter text-xs text-ink-soft hover:text-accent underline underline-offset-4 transition cursor-pointer"
           >
             Move unfinished
           </button>
@@ -99,13 +99,13 @@ export function TodayListCard() {
       {displayedTasks.length === 0 ? (
         <div className="flex flex-col items-center justify-center py-7 text-center">
           <Cat pose="sleepy" size={56} animated={false} />
-          <p className="mt-2.5 text-sm font-sans italic text-ink-soft max-w-sm">
+          <p className="mt-2.5 font-typewriter text-[13px] text-ink-soft max-w-sm leading-relaxed">
             {activeTab === 'todo'
               ? 'Nothing is due today. Add something small if you feel like it.'
               : 'No tasks completed today yet.'}
           </p>
           {activeTab === 'todo' && (
-            <div className="mt-3.5">
+            <div className="mt-4">
               <Button
                 size="sm"
                 variant="outline"
@@ -118,11 +118,11 @@ export function TodayListCard() {
           )}
         </div>
       ) : (
-        <ul className="divide-y divide-divider">
+        <ul className="divide-y divide-divider/70">
           {displayedTasks.map((task) => (
             <li
               key={task.id}
-              className="flex items-center justify-between gap-3 py-3 transition hover:bg-lilac-50/70 rounded-[4px] px-1.5"
+              className="flex items-center justify-between gap-3 py-3 transition hover:bg-lilac-50/75 rounded-[8px] px-2 -mx-1"
             >
               <div className="flex flex-1 items-center gap-3 min-w-0">
                 <TaskCheckbox
@@ -144,7 +144,7 @@ export function TodayListCard() {
                     {task.title}
                   </p>
                   {(task.dueTime || task.estimate) && (
-                    <p className="mt-0.5 font-sans text-xs text-text-faint tabular-nums">
+                    <p className="mt-0.5 font-typewriter text-[11px] text-text-faint tabular-nums">
                       {task.dueTime ? task.dueTime : ''}
                       {task.dueTime && task.estimate ? ' · ' : ''}
                       {task.estimate ? formatEstimate(task.estimate) : ''}
@@ -178,7 +178,7 @@ export function TodayListCard() {
                   },
                 ]}
               >
-                <span className="grid h-7 w-7 place-items-center rounded-[4px] text-ink-soft hover:bg-paper-2 hover:text-ink">
+                <span className="grid h-7 w-7 place-items-center rounded-[6px] text-ink-soft hover:bg-paper-2/75 hover:text-ink">
                   <MoreVertical size={15} />
                 </span>
               </Menu>
@@ -217,7 +217,7 @@ export function TodayListCard() {
         size="sm"
       >
         <div className="space-y-4">
-          <p className="text-xs sm:text-sm font-sans text-ink-soft leading-relaxed">
+          <p className="font-typewriter text-xs sm:text-[13px] text-ink-soft leading-relaxed">
             Choose which day you would like to move your {undoneCount} unfinished task{undoneCount === 1 ? '' : 's'} to:
           </p>
 
@@ -225,10 +225,10 @@ export function TodayListCard() {
             <button
               type="button"
               onClick={() => setTargetMoveDate(addDays(today, 1))}
-              className={`rounded-[4px] border px-3 py-2 text-xs font-sans font-medium transition cursor-pointer ${
+              className={`rounded-[8px] px-3 py-2 font-typewriter text-xs transition cursor-pointer ${
                 targetMoveDate === addDays(today, 1)
-                  ? 'border-accent bg-rose-100 text-rose-700'
-                  : 'border-divider bg-cream text-ink-soft hover:bg-paper-2'
+                  ? 'bg-lilac-300 text-primary-ink'
+                  : 'bg-paper-2/60 text-ink-soft hover:bg-paper-2'
               }`}
             >
               Tomorrow
@@ -236,10 +236,10 @@ export function TodayListCard() {
             <button
               type="button"
               onClick={() => setTargetMoveDate(addDays(today, 7))}
-              className={`rounded-[4px] border px-3 py-2 text-xs font-sans font-medium transition cursor-pointer ${
+              className={`rounded-[8px] px-3 py-2 font-typewriter text-xs transition cursor-pointer ${
                 targetMoveDate === addDays(today, 7)
-                  ? 'border-accent bg-rose-100 text-rose-700'
-                  : 'border-divider bg-cream text-ink-soft hover:bg-paper-2'
+                  ? 'bg-lilac-300 text-primary-ink'
+                  : 'bg-paper-2/60 text-ink-soft hover:bg-paper-2'
               }`}
             >
               Next week
@@ -247,7 +247,7 @@ export function TodayListCard() {
           </div>
 
           <div className="space-y-1.5">
-            <span className="text-xs font-sans font-medium text-ink">Or pick a specific day</span>
+            <span className="font-typewriter text-xs text-ink">Or pick a specific day</span>
             <DatePicker
               value={targetMoveDate}
               onChange={(d) => setTargetMoveDate(d || addDays(today, 1))}
@@ -255,7 +255,7 @@ export function TodayListCard() {
             />
           </div>
 
-          <div className="flex items-center justify-end gap-2 border-t border-divider pt-3">
+          <div className="flex items-center justify-end gap-2 border-t border-divider/70 pt-3">
             <Button variant="ghost" size="sm" onClick={() => setMoveUnfinishedOpen(false)}>
               Cancel
             </Button>

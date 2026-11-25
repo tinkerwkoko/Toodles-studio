@@ -24,7 +24,7 @@ export interface BoardColumnViewProps {
   onAddTask: (column: BoardColumn) => void;
 }
 
-/** Library catalogue card tray: aged parchment column with crisp index cards. */
+/** Soft botanical board column with warm ivory cards. */
 export function BoardColumnView({
   column,
   index,
@@ -89,16 +89,16 @@ export function BoardColumnView({
     <section
       aria-label={`${column.name} column`}
       className={cx(
-        'flex w-[84vw] max-w-[19rem] shrink-0 snap-start flex-col rounded-[5px] border border-divider/90 bg-paper-2/55 p-3',
-        isOver && 'ring-2 ring-accent/50 bg-paper-2/90',
+        'flex w-[84vw] max-w-[19rem] shrink-0 snap-start flex-col rounded-[12px] bg-paper-2/50 p-3.5 transition',
+        isOver && 'ring-2 ring-accent/45 bg-paper-2/85',
       )}
     >
-      <header className="flex items-center gap-2 border-b border-divider pb-2.5">
+      <header className="flex items-center gap-2 border-b border-divider/65 pb-2.5">
         <span className={cx('h-2.5 w-2.5 shrink-0 rounded-full', tone.mid)} aria-hidden="true" />
-        <h3 className="min-w-0 flex-1 truncate font-display text-xl font-semibold text-ink leading-none">
+        <h3 className="min-w-0 flex-1 truncate font-display text-lg text-ink leading-none">
           {column.name}
         </h3>
-        <span className="text-xs font-sans text-text-faint tabular-nums">
+        <span className="font-typewriter text-xs text-text-faint tabular-nums">
           {tasks.length}
         </span>
         <div className="flex items-center">
@@ -108,7 +108,7 @@ export function BoardColumnView({
             onClick={() => actions.moveColumn(column.id, -1)}
             aria-label={`Move ${column.name} column left`}
             title="Move left"
-            className="grid h-7 w-7 place-items-center rounded-[3px] text-ink-soft hover:bg-cream/80 hover:text-ink disabled:opacity-25 disabled:pointer-events-none transition cursor-pointer"
+            className="grid h-7 w-7 place-items-center rounded-[6px] text-ink-soft hover:bg-cream/80 hover:text-ink disabled:opacity-25 disabled:pointer-events-none transition cursor-pointer"
           >
             <ChevronLeft size={14} />
           </button>
@@ -118,7 +118,7 @@ export function BoardColumnView({
             onClick={() => actions.moveColumn(column.id, 1)}
             aria-label={`Move ${column.name} column right`}
             title="Move right"
-            className="grid h-7 w-7 place-items-center rounded-[3px] text-ink-soft hover:bg-cream/80 hover:text-ink disabled:opacity-25 disabled:pointer-events-none transition cursor-pointer"
+            className="grid h-7 w-7 place-items-center rounded-[6px] text-ink-soft hover:bg-cream/80 hover:text-ink disabled:opacity-25 disabled:pointer-events-none transition cursor-pointer"
           >
             <ChevronRight size={14} />
           </button>
@@ -144,7 +144,7 @@ export function BoardColumnView({
       </SortableContext>
 
       {tasks.length === 0 && (
-        <p className="mt-2 flex-1 py-4 text-center text-xs font-sans italic text-text-faint">
+        <p className="mt-2 flex-1 py-4 text-center font-typewriter text-xs text-text-faint">
           {dragEnabled ? 'Drop a card here' : 'Nothing here yet'}
         </p>
       )}

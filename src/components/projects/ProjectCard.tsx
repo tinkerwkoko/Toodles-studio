@@ -12,7 +12,7 @@ export interface ProjectCardProps {
   columns: BoardColumn[];
 }
 
-/** Archival folio folder summary with subtle top stationery band and progress rule. */
+/** Soft borderless botanical project card with subtle top accent rule and typewritten stats. */
 export function ProjectCard({ project, tasks, columns }: ProjectCardProps) {
   const tone = accent(project.color);
   const open = tasks.filter((task) => task.status === 'todo').length;
@@ -22,19 +22,18 @@ export function ProjectCard({ project, tasks, columns }: ProjectCardProps) {
   return (
     <Link
       to={`/projects/${project.id}`}
-      className="group relative flex flex-col gap-3.5 overflow-hidden paper-sheet rounded-[5px] border border-divider/90 p-5 transition duration-150 hover:border-dusty-rose hover:-translate-y-[1px]"
+      className="group relative flex flex-col gap-3.5 overflow-hidden paper-sheet rounded-[10px] p-5 transition duration-200 hover:-translate-y-[2px] hover:shadow-lift"
     >
-      {/* Subtle stationery top rule */}
       <span
         aria-hidden="true"
-        className={cx('absolute inset-x-0 top-0 h-[3px]', tone.mid)}
+        className={cx('absolute inset-x-0 top-0 h-[2px] opacity-80', tone.mid)}
       />
 
       <div className="flex items-start gap-3 pt-0.5">
         <span
           aria-hidden="true"
           className={cx(
-            'grid h-10 w-10 shrink-0 place-items-center rounded-[4px] border border-divider overflow-hidden',
+            'grid h-10 w-10 shrink-0 place-items-center rounded-[8px] overflow-hidden',
             tone.soft,
             tone.text,
           )}
@@ -42,11 +41,11 @@ export function ProjectCard({ project, tasks, columns }: ProjectCardProps) {
           <ProjectIconDisplay icon={project.icon} emoji={project.emoji} size={20} />
         </span>
         <div className="min-w-0 flex-1">
-          <h2 className="truncate font-display text-xl font-semibold text-ink group-hover:text-accent transition-colors leading-tight">
+          <h2 className="truncate font-display text-xl text-ink group-hover:text-accent transition-colors leading-tight">
             {project.name}
           </h2>
           {project.description && (
-            <p className="mt-1 line-clamp-2 text-xs font-sans italic text-ink-soft leading-relaxed">
+            <p className="mt-1 line-clamp-2 font-typewriter text-xs text-ink-soft leading-relaxed">
               {project.description}
             </p>
           )}
@@ -59,7 +58,7 @@ export function ProjectCard({ project, tasks, columns }: ProjectCardProps) {
         tone={percent === 100 && tasks.length > 0 ? 'bg-mint-500' : tone.mid}
       />
 
-      <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs font-sans text-ink-soft tabular-nums">
+      <div className="flex flex-wrap items-center gap-x-3 gap-y-1 font-typewriter text-[11px] text-ink-soft tabular-nums">
         <span className="inline-flex items-center gap-1">
           <ListChecks size={13} aria-hidden="true" />
           {open} open
@@ -71,7 +70,7 @@ export function ProjectCard({ project, tasks, columns }: ProjectCardProps) {
             {columns.length} cols
           </span>
         )}
-        <span className="ml-auto font-medium text-ink">{percent}%</span>
+        <span className="ml-auto text-ink">{percent}%</span>
       </div>
     </Link>
   );

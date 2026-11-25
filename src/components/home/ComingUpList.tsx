@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
 import { TaskCheckbox } from '../ui/TaskCheckbox';
+import { LeafMark } from '../ui/BotanicalOrnaments';
 import { formatDay, todayString } from '../../lib/date';
 import { useToodles } from '../../store/useToodles';
 import { useUi } from '../../store/useUi';
@@ -28,27 +29,28 @@ export function ComingUpList() {
 
   return (
     <section className="space-y-3">
-      <div className="flex items-baseline justify-between gap-2 border-b border-divider pb-2">
-        <h2 className="font-display text-2xl font-semibold text-ink">Coming up</h2>
+      <div className="flex items-baseline justify-between gap-2 border-b border-divider/70 pb-2">
+        <h2 className="font-display text-2xl text-ink">Coming up</h2>
         <Link
           to="/tasks?tab=upcoming"
-          className="text-xs font-sans text-ink-soft hover:text-accent underline underline-offset-4 transition"
+          className="font-typewriter text-xs text-ink-soft hover:text-accent underline underline-offset-4 transition"
         >
           See all
         </Link>
       </div>
 
-      <div className="divide-y divide-divider">
+      <div className="divide-y divide-divider/60">
         {Object.entries(grouped).map(([date, tasks]) => (
           <div key={date} className="py-3 first:pt-1">
-            <span className="block font-hand text-lg text-accent leading-none mb-2">
-              {formatDay(date)}
+            <span className="inline-flex items-center gap-1.5 font-typewriter text-xs text-fern leading-none mb-2">
+              <LeafMark className="h-3 w-3 text-fern/75" />
+              <span>{formatDay(date)}</span>
             </span>
             <ul className="space-y-1">
               {tasks.map((task) => (
                 <li
                   key={task.id}
-                  className="flex items-center gap-3 py-1.5 px-1.5 rounded-[4px] hover:bg-cream/80 transition cursor-pointer"
+                  className="flex items-center gap-3 py-1.5 px-2 -mx-1 rounded-[8px] hover:bg-cream/80 transition cursor-pointer"
                   onClick={() => setDetailTaskId(task.id)}
                 >
                   <TaskCheckbox
@@ -60,7 +62,7 @@ export function ComingUpList() {
                     {task.title}
                   </span>
                   {task.dueTime && (
-                    <span className="font-sans text-xs text-text-faint tabular-nums">
+                    <span className="font-typewriter text-[11px] text-text-faint tabular-nums">
                       {task.dueTime}
                     </span>
                   )}
